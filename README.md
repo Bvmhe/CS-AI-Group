@@ -22,7 +22,7 @@
 
 | No. | Member Name (Class Roster) | Student ID | Relevant Strengths and Experience | Skills to Develop | Main Responsibility |
 |---|---|---|---|---|---|
-| 1 | [Member 1 Name] | [Student ID] | [Strengths and experience] | [Skills to develop] | Project coordination, workflow monitoring, and final submission |
+| 1 | [林元甲] | [1820262260] | [Strengths and experience] | [Skills to develop] | Project coordination, workflow monitoring, and final submission |
 | 2 | [黄施杰] | [1820262194] | [Persistent, determined and resilient] | [AI Fundamentals and Problem Solving] | Markdown Creator and Book Researcher |
 | 3 | [Member 3 Name] | [Student ID] | [Strengths and experience] | [Skills to develop] | Research and explanation of uninformed search algorithms |
 | 4 | [Member 4 Name] | [Student ID] | [Strengths and experience] | [Skills to develop] | Research and explanation of heuristic search algorithms |
