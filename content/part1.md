@@ -55,18 +55,6 @@ By the end of this module you will be able to:
 5. **Use** a simple *roofline* calculation to decide whether a workload is limited by compute or by memory.
 6. **Analyse** how the Apple Neural Engine brings AI onto a phone, and judge its trade-offs.
 
-### Module map
-
-| Section | Topic | Depth in this version | Approx. time |
-|---|---|---|---|
-| 1 | Definition and fundamental concepts | Full, with worked example and code lab | 60 min |
-| 2 | CPU vs GPU vs TPU (and NPU) | Full, with step-through of a systolic array | 60 min |
-| 3 | Parallel processing and AI acceleration | Full, with two worked examples | 60 min |
-| 4 | Memory hierarchy and computational efficiency | Full, with worked example, chart and activity | 80 min |
-| 5 | Case study: Apple Neural Engine | Full | 50 min |
-| 6 | The wider hardware landscape and what comes next | Overview, links to Modules 02-05 | 30 min |
-| 7 | Review: summary, practice questions, glossary | Full | 40 min |
-
 ### A running example
 
 Throughout the module we return to one small, concrete task so that every idea has something to attach to:
@@ -233,54 +221,7 @@ This distinction explains much of the hardware landscape. The first Google TPU w
 
 > **Why does the batch size matter?** Section 4 shows that a single-user request (batch size 1) tends to be limited by *memory*, whereas a large training batch tends to be limited by *compute*. That one fact shapes whole product lines.
 
-## 1.6 Efficiency metrics to remember
 
-| Metric | Meaning | Why it matters |
-|---|---|---|
-| **Throughput** (TOPS, FLOP/s) | Operations per second | Training speed |
-| **Latency** | Time for one request | User experience; real-time control |
-| **Performance per watt** | Operations per joule | Battery life; data-centre power bill |
-| **Utilisation** | Share of peak performance actually achieved | Money paid for idle silicon |
-| **Performance per dollar** | Operations per unit of cost | Budget decisions |
-| **Memory capacity** | How big a model fits | Which models can run at all |
-
-> **Caution: peak is not typical.** A chip's quoted "peak" number is what it could do if every arithmetic unit were busy every cycle. Real programs are usually far below that. Sections 3 and 4 explain why.
-
-## 1.7 Code lab: counting MACs
-
-This short Python program counts the MACs and FLOPs for any dense layer. You do not need to install anything beyond Python 3.
-
-```python
-def dense_layer_cost(n_inputs, n_outputs, bytes_per_value=4):
-    """Return MACs, FLOPs and weight size for a fully connected layer."""
-    macs = n_inputs * n_outputs            # one MAC per weight
-    flops = 2 * macs                       # 1 MAC = 1 multiply + 1 add
-    weight_bytes = macs * bytes_per_value  # one stored number per weight
-    return macs, flops, weight_bytes
-
-macs, flops, wbytes = dense_layer_cost(1024, 4096)   # FP32 => 4 bytes
-print(f"MACs   : {macs:,}")
-print(f"FLOPs  : {flops:,}")
-print(f"Weights: {wbytes:,} bytes = {wbytes/1e6:.1f} MB")
-```
-
-Expected output:
-
-```text
-MACs   : 4,194,304
-FLOPs  : 8,388,608
-Weights: 16,777,216 bytes = 16.8 MB
-```
-
-> **Try it.** Change `bytes_per_value` to 2 (FP16) and then 1 (INT8). By what factor does the weight size shrink? (Answer: 2× and 4×. Keep this in mind for Section 3.)
-
-> **Check your understanding (1.2).** A layer takes 2,048 inputs and produces 512 outputs. How many MACs and FLOPs is that for one input vector?
->
-> <details><summary>Expected answer</summary>
-> MACs = 2,048 × 512 = 1,048,576. FLOPs = 2 × 1,048,576 = 2,097,152.
-> </details>
-
----
 
 # 2. CPU vs GPU vs TPU
 
