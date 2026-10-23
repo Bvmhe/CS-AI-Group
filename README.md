@@ -20,7 +20,7 @@
 |---|---|---|---|---|
 | 1 | [纪小佩] | [1820262196] | [Violine888] | CEO — project plan, deadlines, coordination |
 | 2 | [Member 2 Name] | [Student ID] | [Github Username] | CIO — GitHub repo, file structure, ZIP, report |
-| 3 | [Member 3 Name] | [Student ID] | [Github Username] | Content Lead — scope, structure, accuracy review |
+| 3 | [温俊强] | [1820262253] | [nktjahjadi22] | Content Lead — scope, structure, accuracy review |
 | 4 | [Member 4 Name] | [Student ID] | [Github Username] | Content Lead — content, examples, fact-check |
 | 5 | [Member 5 Name] | [Student ID] | [Github Username] | Visual Design Lead — diagrams, slide visuals |
 | 6 | [李秀春] | [1820262266] | [jocelynemelie] | Video Lead — video planning, recording, editing |
