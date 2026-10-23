@@ -18,7 +18,7 @@
 
 | No. | Member Name (Class Roster) | Student ID | Github Username | Role |
 |---|---|---|---|---|
-| 1 | [Member 1 Name] | [Student ID] | [Github Username] | CEO — project plan, deadlines, coordination |
+| 1 | [纪小佩] | [1820262196] | [Violine888] | CEO — project plan, deadlines, coordination |
 | 2 | [Member 2 Name] | [Student ID] | [Github Username] | CIO — GitHub repo, file structure, ZIP, report |
 | 3 | [Member 3 Name] | [Student ID] | [Github Username] | Content Lead — scope, structure, accuracy review |
 | 4 | [Member 4 Name] | [Student ID] | [Github Username] | Content Lead — content, examples, fact-check |
@@ -33,7 +33,7 @@ This repository develops beginner-friendly learning content on **AI hardware, co
 ## Intended Learners
 
 - Education level: undergraduate, first/second year CS or IT
-- Prior knowledge: basic computer architecture, programming fundamentals, basic networking
+- Prior knowledge: Basic understanding of computer architecture, programming fundamentals, and computer networks.
 - Proficiency: beginner to intermediate
 
 ## Module Outline (5 sub-topics)
