@@ -44,3 +44,18 @@ This repository develops beginner-friendly learning content on **AI hardware, co
 5. AI System Integration & Optimization
 
 See [`content/module-outline.md`](content/module-outline.md) for the full outline and development status.
+
+## Project Plan & Task List
+- Plan: [`docs/project-plan.md`](docs/project-plan.md)
+- Master task list: [`docs/task-list.md`](docs/task-list.md)
+
+## Current Progress (Stage 1 snapshot)
+- [x] Repo created, folders organized
+- [x] Team roles and task list agreed
+- [x] Module outline drafted (all 5 sub-topics)
+- [x] V1.0 substantive content: **Topic 1 (AI Hardware)** developed with worked example, activity, answer, references
+- [ ] V1.0 substantive content for Topics 2–5 (outline only / needs drafting)
+- [ ] PDF readable copy export
+- [ ] Submission report + GitHub evidence
+
+**Remaining work:** draft Topics 2–5, peer review, export PDF, assemble ZIP.
