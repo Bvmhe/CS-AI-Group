@@ -53,7 +53,7 @@ See [`content/module-outline.md`](content/module-outline.md) for the full outlin
 - [x] Repo created, folders organized
 - [x] Team roles and task list agreed
 - [x] Module outline drafted (all 5 sub-topics)
-- [x] V1.0 substantive content: **Topic 1 (AI Hardware)** developed with worked example, activity, answer, references
+- [ ] V1.0 substantive content: **Topic 1 (AI Hardware)** developed with worked example, activity, answer, references
 - [ ] V1.0 substantive content for Topics 2–5 (outline only / needs drafting)
 - [ ] PDF readable copy export
 - [ ] Submission report + GitHub evidence
