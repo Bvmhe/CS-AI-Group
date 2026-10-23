@@ -405,3 +405,400 @@ A programmer usually does **not** write instructions for the MAC units directly.
 > </details>
 
 ---
+# 3. Parallel Processing and AI Acceleration
+ 
+> **Big idea.** Neural networks consist of huge numbers of independent MACs, so the way to go fast is to do many of them *at the same time*. But parallel hardware has limits, and the limits are as important as the speed-ups.
+ 
+## 3.1 Kinds of parallelism
+ 
+"Parallel" simply means "at the same time". Hardware does this at several different levels:
+ 
+| Level | Idea | Example |
+|---|---|---|
+| **Instruction-level** | A single core overlaps several instructions (like an assembly line) | Modern CPU pipelines |
+| **Data-level (SIMD / SIMT)** | **One instruction** acts on **many values** at once | GPU *warps*; CPU vector units |
+| **Matrix-level (systolic)** | A grid of MAC units passes data neighbour to neighbour | TPU matrix unit |
+| **Model- and data-level across chips** | Split the model, or the batch of data, over many chips | Training clusters (Module 05) |
+ 
+**Terms.**
+ 
+- **SIMD** (*Single Instruction, Multiple Data*): the same instruction is applied to a block of values in lock-step. On GPUs the equivalent idea is often called **SIMT** (*Single Instruction, Multiple Threads*): groups of threads (a **warp** on NVIDIA GPUs) execute together.
+- **Thread:** one stream of instructions. GPUs run tens of thousands at once.
+- **Data parallelism:** the *same operation* on *different data* at the same time (for example, 1,000 pixels each multiplied by the same filter weights).
+- **Model (task) parallelism:** *different operations* at the same time, or one big model split across several chips (for example, one chip handles layers 1-10 while another handles layers 11-20).
+```mermaid
+flowchart TB
+    subgraph One chip
+    A[Instruction-level<br/>overlap steps in a core] --> B[Data-level SIMD/SIMT<br/>one instruction, many values]
+    B --> C[Matrix-level systolic<br/>grid of MACs]
+    end
+    C --> D[Across chips<br/>split batch or model]
+    D --> E[Across machines<br/>racks and clusters - Module 02]
+```
+ 
+GPUs are built for data parallelism. A very useful trick they use is **latency hiding**: when one group of threads has to wait for memory, the GPU switches instantly to another group that is ready. With thousands of threads available, the arithmetic units rarely sit idle. CPUs take the opposite approach: they spend silicon on big caches and prediction logic so that *one* thread rarely waits at all.
+ 
+## 3.2 Worked example 3.A: how many MACs, and how long?
+ 
+**Problem.** A dense (fully connected) layer takes an input vector of 1,024 numbers and produces 4,096 outputs. The weight matrix is 1,024 × 4,096. Estimate the time for one pass on (a) a single idealised CPU core and (b) an idealised parallel accelerator.
+ 
+**Step 1: Count the MACs.** Each of the 4,096 outputs needs 1,024 multiplications and additions.
+ 
+MACs = 1,024 × 4,096 = **4,194,304** (about 4.2 million).
+ 
+**Step 2: Convert to FLOPs.** One MAC = 2 FLOPs (one multiply, one add).
+ 
+FLOPs = 2 × 4,194,304 = **8,388,608** (about 8.4 million).
+ 
+**Step 3: Estimate time on two idealised chips** *(illustrative assumptions)*.
+ 
+| Chip (idealised) | Assumption | Calculation | Time for one pass |
+|---|---|---|---|
+| Single CPU core, one MAC per cycle, 3 GHz | 3 × 10⁹ MACs/s | 4,194,304 ÷ 3 × 10⁹ | ≈ **1.4 ms** |
+| Accelerator with 4,096 MAC units working in parallel, 1 GHz | 4,096 × 10⁹ = 4.096 × 10¹² MACs/s | 4,194,304 ÷ 4.096 × 10¹² | ≈ **1.0 µs** |
+ 
+**Step 4: Interpret.** The idealised parallel accelerator is about **1,365×** faster (roughly 1,400×) on this layer, *even though its clock is slower*, because it does 4,096 MACs per cycle instead of 1.
+ 
+> **Important caveat.** These are *ideal* numbers. They assume the data is always ready the instant it is needed. Section 4 explains why real chips often cannot reach them.
+ 
+> **Check your understanding (3.1).** The same layer is changed so that the output has 8,192 values instead of 4,096. What happens to the MAC count?
+>
+> <details><summary>Expected answer</summary>
+> It doubles: 1,024 × 8,192 = 8,388,608 MACs, because each additional output needs another 1,024 MACs.
+> </details>
+ 
+> **Check your understanding (3.2).** With the same 4,096-unit accelerator, roughly how long would the 8,192-output layer take?
+>
+> <details><summary>Expected answer</summary>
+> About twice as long: 8,388,608 ÷ 4.096 × 10¹² ≈ 2.0 µs (assuming the data keeps flowing and the 4,096 units are the limit).
+> </details>
+ 
+## 3.3 Amdahl's law: parallel hardware has limits
+ 
+If a fraction **p** of a job can be parallelised over **N** units, the best possible speed-up is
+ 
+$$ S = \frac{1}{(1-p) + \dfrac{p}{N}} $$
+ 
+In plain text: `S = 1 / ((1 - p) + p / N)`.
+ 
+The part `(1 - p)` is the **serial** fraction, the work that cannot be split up, however many units you have.
+ 
+### Worked example 3.B (illustrative)
+ 
+A pipeline spends 95 % of its time in matrix maths (p = 0.95) and 5 % in serial pre-processing. With N = 100 accelerator units:
+ 
+```text
+S = 1 / (0.05 + 0.95/100)
+  = 1 / (0.05 + 0.0095)
+  = 1 / 0.0595
+  ≈ 16.8x          (not 100x)
+```
+ 
+Even with infinitely many units the limit is 1 / 0.05 = **20×**.
+ 
+![Amdahl's law curves for four values of p](assets/fig_amdahl.png)
+ 
+*Figure 3.1: Speed-up against the number of parallel units for different parallel fractions. Dotted lines show the ceiling 1/(1-p) for each curve. (Chart generated by the author from the formula.)*
+ 
+**The lesson for AI systems:** speed up the *serial* parts too (data loading, tokenisation, networking), or the accelerator sits idle waiting for them.
+ 
+| p (parallel fraction) | N = 10 | N = 100 | N = 1000 | Ceiling 1/(1-p) |
+|---|---|---|---|---|
+| 0.50 | 1.8× | 2.0× | 2.0× | 2× |
+| 0.90 | 5.3× | 9.2× | 9.9× | 10× |
+| 0.95 | 6.9× | 16.8× | 19.6× | 20× |
+| 0.99 | 9.2× | 50.3× | 91.0× | 100× |
+ 
+> **Check your understanding (3.3).** A job is 99 % parallelisable. What speed-up do 100 units give, and why is it nowhere near 100×?
+>
+> <details><summary>Expected answer</summary>
+> S = 1 / (0.01 + 0.99/100) = 1 / 0.0199 ≈ 50.3×. The 1 % serial part takes as long as it always did, and with 100 units it becomes about half of the total time, which limits the gain.
+> </details>
+ 
+## 3.4 Other acceleration techniques
+ 
+Parallel MAC units are only one trick. Designers combine several:
+ 
+| Technique | What it does | Why it helps |
+|---|---|---|
+| **Lower precision (quantisation)** | Use INT8 or FP16 instead of FP32 | Smaller numbers: more fit in the same memory and more can be processed per cycle |
+| **Specialised units** | NVIDIA *Tensor Cores* and Apple's Neural Engine are circuits that do small matrix multiplications as a single hardware step | Fewer instructions and less control overhead per MAC |
+| **Batching** | Process several inputs together so the same weights are reused | Fetch weights once, use them many times (Section 4) |
+| **Sparsity** | Skip multiplications by zero | No work for values that cannot change the answer |
+| **Operator fusion** | Combine several steps (for example multiply, add bias, apply ReLU) into one pass | Avoid writing and re-reading intermediate results |
+| **Weight stationary / data reuse** | Keep weights in place while data moves past them (systolic arrays) | Cut memory traffic |
+ 
+### Reduced precision (quantisation) in more detail
+ 
+**Quantisation** converts a model's numbers from a high-precision format (such as FP32) to a lower-precision one (such as INT8). Using fewer bits per number lets a chip **fit more MAC units in the same area** and **move fewer bytes**. The first TPU used 8-bit integers for inference (Jouppi et al., 2017); later accelerators support formats such as **bfloat16** (a 16-bit float with the same range as FP32) and **8-bit floating point**.
+ 
+| Format | Bits | Bytes | Typical use |
+|---|---|---|---|
+| FP32 | 32 | 4 | Classic training; "full" precision |
+| BF16 / FP16 | 16 | 2 | Training and inference on modern accelerators |
+| FP8 | 8 | 1 | Newer training/inference hardware |
+| INT8 | 8 | 1 | Inference on phones, edge devices, TPUs |
+| INT4 and below | 4 | 0.5 | Aggressively compressed models |
+ 
+### Worked example 3.C: quantising a weight
+ 
+*Illustrative.* Suppose a layer's weights lie between -1.0 and +1.0, and we want to store them as 8-bit signed integers (range -127 to +127).
+ 
+**Step 1: Choose a scale.** scale = 1.0 / 127 ≈ 0.00787.
+ 
+**Step 2: Quantise.** For a weight of 0.5: 0.5 ÷ 0.00787 ≈ 63.5, which rounds to **64**.
+ 
+**Step 3: Recover (dequantise).** 64 × 0.00787 ≈ **0.5039**.
+ 
+**Step 4: Error.** |0.5039 - 0.5| ≈ **0.004**, under 1 % of the weight's value.
+ 
+The cost is a **small, usually acceptable loss of numerical accuracy** and the gain is a 4× reduction in memory versus FP32. This is why almost every phone-based AI feature uses quantised models.
+ 
+> **Caution.** Not every model tolerates every format. Very aggressive quantisation can reduce accuracy noticeably, so models are tested after conversion.
+ 
+```python
+import numpy as np
+w = np.array([0.5, -0.31, 0.02, 0.97], dtype=np.float32)
+scale = 1.0 / 127
+q = np.round(w / scale).astype(np.int8)       # quantise
+w_back = q.astype(np.float32) * scale         # dequantise
+print(q)                  # [  64  -39    3  123]
+print(np.round(w_back,4)) # [ 0.5039 -0.3071  0.0236  0.9685]
+print("max error:", np.abs(w - w_back).max().round(4))
+```
+ 
+> **Application question (3.4).** A 7-billion-parameter model is stored in FP16. How much memory do its weights need? How much if converted to INT8? To 4-bit?
+>
+> <details><summary>Expected answer</summary>
+> FP16: 7 × 10⁹ × 2 bytes = 14 GB. INT8: 7 × 10⁹ × 1 byte = 7 GB. 4-bit: 7 × 10⁹ × 0.5 byte = 3.5 GB. (Ignoring small overheads such as scales and other tensors.) This is why a compressed model may fit in a phone's memory while the original cannot.
+> </details>
+ 
+---
+ 
+# 4. Memory Hierarchy and Computational Efficiency
+ 
+> **Big idea.** Arithmetic is cheap; **moving data is expensive**. Good AI hardware and good AI software are both organised to keep data in small, fast memory for as long as possible.
+ 
+## 4.1 The memory hierarchy
+ 
+Computers have several kinds of memory. **Fast memory is small and expensive; large memory is slow and cheap.** The arrangement from fastest to slowest is called the **memory hierarchy**.
+ 
+```text
+                 ▲  faster, smaller, costlier per byte, lower energy per access
+                / \
+               /   \        Registers (inside the core)
+              /─────\
+             /       \      On-chip SRAM: L1 / L2 cache, or
+            /─────────\     software-managed buffers (e.g. TPU's 28 MiB)
+           /           \    High-bandwidth memory (HBM) / GDDR
+          /─────────────\   (stacked next to the chip)
+         /               \  Main memory (DRAM)
+        /─────────────────\
+       /                   \ Flash / SSD storage
+      /─────────────────────\
+     /                       \ Network or cloud storage
+    /─────────────────────────\
+                 ▼  slower, larger, cheaper per byte, higher energy per access
+```
+ 
+*Figure 4.1: The memory pyramid.*
+ 
+```mermaid
+flowchart TD
+    R["Registers<br/>bytes, under 1 ns"] --> L1["L1 cache / on-chip buffers<br/>tens of KB to a few MB, about 1 ns"]
+    L1 --> L2["L2/L3 cache or large on-chip SRAM<br/>MBs to tens of MBs, a few to tens of ns"]
+    L2 --> M["Main memory: DRAM or HBM<br/>GBs, tens of ns to ~100 ns"]
+    M --> S["Storage: SSD<br/>hundreds of GB to TB, about 100 µs"]
+```
+ 
+*Figure 4.2: The same hierarchy as a flow chart, with typical orders of magnitude.*
+ 
+![Bar chart of typical access times across the memory hierarchy on a log scale](assets/fig_memory_latency.png)
+ 
+*Figure 4.3: Typical access times span about six orders of magnitude from registers to SSD. Figures are orders of magnitude, not exact values for any one product.*
+ 
+### Terms
+ 
+- **Cache:** a small, fast memory that keeps copies of recently used data close to the processor. Managed automatically by hardware.
+- **Scratchpad / software-managed buffer:** on-chip memory that the *program or compiler* controls explicitly, as in the TPU's 28 MiB unified buffer. It avoids the unpredictability of automatic caches.
+- **SRAM:** fast memory built into the chip (usually several transistors per bit; expensive in area).
+- **DRAM:** larger, slower memory outside the chip (one transistor plus a capacitor per bit; cheap per byte).
+- **HBM (High Bandwidth Memory):** DRAM stacked in layers and placed right next to a GPU/accelerator to deliver very high bandwidth. Newer TPUs pair each chip with tens of gigabytes of HBM; for example Google reported 192 GB per chip for Ironwood, six times the previous generation (as reported in press coverage of Google's 2025 announcement; verify against Google's own documentation before citing).
+- **Bandwidth:** how many bytes per second can be moved (for example, 500 GB/s).
+- **Latency (memory):** how long one access takes, as opposed to how many bytes per second can flow once it starts.
+- **Unified memory:** a design (used by Apple silicon) in which CPU, GPU and NPU share one pool of memory so data need not be copied between them.
+> **Analogy.** Think of cooking. **Registers** are the ingredients in your hands. **Cache/SRAM** is the chopping board in front of you. **DRAM** is the fridge across the kitchen. **Storage** is the supermarket. A cook who walks to the supermarket for every ingredient will never finish; a good cook plans the recipe so that everything needed is on the chopping board when required. Good AI hardware and software do the same.
+ 
+## 4.2 The surprising fact: data movement dominates energy
+ 
+Horowitz (2014) published approximate energy costs for a 45 nm chip process:
+ 
+| Operation | Approximate energy |
+|---|---|
+| 32-bit floating-point multiply | ~3.7 pJ |
+| Read 32 bits from small on-chip SRAM (8 KB) | ~5 pJ |
+| Read 32 bits from off-chip DRAM | ~640 pJ |
+ 
+(*pJ* = picojoule, 10⁻¹² joule.)
+ 
+![Bar chart comparing energy of a multiply, an SRAM read and a DRAM read](assets/fig_energy.png)
+ 
+*Figure 4.4: Fetching a number from DRAM costs about 170 times the energy of multiplying it (640 ÷ 3.7 ≈ 173) and about 128 times the energy of reading it from small on-chip SRAM. Data: Horowitz (2014); chart by the author.*
+ 
+Fetching a number from DRAM costs roughly **two orders of magnitude (about 100× or more)** more energy than multiplying it. Modern processes differ in the exact numbers, but the pattern remains. This is why AI chip designers focus on **reusing data already on the chip**.
+ 
+### Worked example 4.A: the energy bill of a layer
+ 
+*Illustrative, using the Horowitz figures.* Suppose the 4,194,304 weights of our layer are used **once** each (batch size 1) and every weight must be read from DRAM as a 32-bit number.
+ 
+- Energy to **fetch** the weights: 4,194,304 × 640 pJ = 2.68 × 10⁹ pJ ≈ **2.7 mJ**
+- Energy to **multiply** with them: 4,194,304 × 3.7 pJ ≈ 1.55 × 10⁷ pJ ≈ **0.016 mJ** (adds cost slightly more, but the order of magnitude is the same)
+The fetching costs roughly **170 times** as much energy as the arithmetic. Now suppose a batch of 32 inputs reuses each fetched weight 32 times: the fetch cost is shared across 32 inputs, so the energy *per input* falls by nearly a factor of 32, while the arithmetic per input stays the same. This is the energy side of the same idea that the roofline model expresses as time.
+ 
+## 4.3 Arithmetic intensity and the roofline model
+ 
+To judge whether a workload is limited by computing or by memory, we use **arithmetic intensity**:
+ 
+```text
+arithmetic intensity (FLOPs per byte) = total FLOPs ÷ total bytes moved from memory
+```
+ 
+A chip has two limits:
+ 
+- **Peak compute** (FLOP/s): the most arithmetic it can do.
+- **Memory bandwidth** (bytes/s): the most data it can fetch.
+The **roofline model** (Williams, Waterman & Patterson, 2009) says:
+ 
+```text
+attainable performance = min( peak compute , arithmetic intensity × memory bandwidth )
+```
+ 
+The **ridge point** is where the two limits meet: `peak compute ÷ bandwidth`.
+ 
+- Intensity **below** the ridge point → **memory-bound** (the chip waits for data).
+- Intensity **above** the ridge point → **compute-bound** (the chip is busy computing).
+Why is it called a "roofline"? Plot performance against intensity and the picture looks like a roof: a sloping line on the left (memory limit) that meets a flat line on the right (compute limit). Your workload's performance can never poke through the roof.
+ 
+## 4.4 Worked example 4.B: why batching matters
+ 
+Use the same layer as Section 3.A (1,024 × 4,096 weights), stored in **FP32** (4 bytes per number). Assume a hypothetical accelerator with:
+ 
+- Peak compute = **10 TFLOP/s** (10 × 10¹² FLOP/s)
+- Memory bandwidth = **500 GB/s** (500 × 10⁹ bytes/s)
+(*This accelerator is invented for teaching; it is not a real product.*)
+ 
+**Step 1: Ridge point.** 10 × 10¹² ÷ 500 × 10⁹ = **20 FLOP/byte**.
+ 
+**Step 2: Weight bytes.** 4,194,304 weights × 4 bytes = **16,777,216 bytes** (about 16.8 MB). These must be fetched from memory once per pass, regardless of how many inputs are processed together.
+ 
+**Step 3: Bytes for the inputs and outputs, per sample.** Input: 1,024 × 4 = 4,096 bytes. Output: 4,096 × 4 = 16,384 bytes. Total per sample = **20,480 bytes**.
+ 
+**Step 4: Batch size 1.**
+ 
+- FLOPs = 8,388,608
+- Bytes = 16,777,216 + 20,480 = 16,797,696
+- Intensity = 8,388,608 ÷ 16,797,696 ≈ **0.50 FLOP/byte** (far below 20, so **memory-bound**)
+- Attainable = 0.50 × 500 GB/s ≈ **0.25 TFLOP/s**, which is only **2.5 %** of peak
+**Step 5: Batch size 32.** Weights are fetched once and reused for all 32 inputs.
+ 
+- FLOPs = 32 × 8,388,608 = 268,435,456
+- Bytes = 16,777,216 + 32 × 20,480 = 17,432,576
+- Intensity ≈ **15.4 FLOP/byte** (still below 20, so still memory-bound)
+- Attainable ≈ 15.4 × 0.5 ≈ **7.7 TFLOP/s** (77 % of peak)
+**Step 6: Find the smallest batch that reaches the ridge point.** We need intensity ≥ 20:
+ 
+8,388,608 B ≥ 20 × (16,777,216 + 20,480 B)  →  B × (8,388,608 − 409,600) ≥ 335,544,320  →  B ≥ 42.06
+ 
+So **batch 43** is the smallest batch that makes the layer compute-bound.
+ 
+**Summary table**
+ 
+| Batch | FLOPs | Bytes moved | Intensity (FLOP/byte) | Attainable (TFLOP/s) | % of peak | Limited by |
+|---|---|---|---|---|---|---|
+| 1 | 8.39 × 10⁶ | 1.680 × 10⁷ | 0.50 | 0.25 | 2.5 % | Memory |
+| 8 | 6.71 × 10⁷ | 1.694 × 10⁷ | 3.96 | 1.98 | 19.8 % | Memory |
+| 32 | 2.68 × 10⁸ | 1.743 × 10⁷ | 15.4 | 7.70 | 77 % | Memory |
+| 64 | 5.37 × 10⁸ | 1.809 × 10⁷ | 29.7 | 10.0 | 100 % | Compute |
+ 
+![Roofline chart with the four batch sizes marked](assets/fig_roofline.png)
+ 
+*Figure 4.5: Roofline for the hypothetical accelerator. Batching moves the workload to the right, up the memory slope and onto the flat compute roof. (Chart by the author.)*
+ 
+**Interpretation.** Almost all the traffic is the *weights*, and they do not change with batch size. Larger batches reuse them, so intensity rises almost in proportion. **A phone answering a single request (batch 1) is therefore memory-bound, whereas a training cluster is compute-bound.** This is why phones and servers need different hardware priorities.
+ 
+### What else raises arithmetic intensity?
+ 
+The weights dominate the bytes, so shrinking them helps just like batching does. The next figure shows intensity against batch size for three precisions (same layer, same accelerator).
+ 
+![Intensity against batch size for FP32, FP16 and INT8](assets/fig_batch_precision.png)
+ 
+*Figure 4.6: Lower precision shifts the curve upwards, so the ridge point is reached at a smaller batch. Smallest batch with intensity ≥ 20: FP32 → 43, FP16 → 21, INT8 → 11. (Computed by the author with the same method as Example 4.B.)*
+ 
+This is the quantitative reason that **quantisation helps memory-bound inference**: it not only makes the arithmetic units smaller, it also moves fewer bytes per useful operation.
+ 
+## 4.5 Learner activity: roofline for a different layer
+ 
+**Setting.** Same hypothetical accelerator (10 TFLOP/s, 500 GB/s, ridge point 20 FLOP/byte). A layer has **512 inputs and 2,048 outputs**, stored in **FP16** (2 bytes per value).
+ 
+**Tasks.**
+ 
+1. Compute the number of weights and the weight size in bytes.
+2. Compute FLOPs for one input vector (batch 1).
+3. For batch sizes 1, 8 and 32, compute the bytes moved (weights + inputs + outputs) and the arithmetic intensity. State whether each case is memory-bound or compute-bound.
+4. For each batch size, compute the attainable performance in TFLOP/s and as a percentage of peak.
+5. What is the smallest batch size that makes the layer compute-bound?
+6. **Reflect (2-3 sentences):** A voice assistant must answer one user at a time within milliseconds. What does the result of Task 3 imply for the hardware you would choose, and why?
+**Hints.** Weights are fetched once per batch; inputs and outputs are fetched/written once per sample. Intensity = FLOPs ÷ bytes. Attainable = min(10 TFLOP/s, intensity × 0.5 TFLOP/s per unit intensity).
+ 
+<details><summary><strong>Expected answers</strong></summary>
+1. Weights = 512 × 2,048 = **1,048,576**. Size = 1,048,576 × 2 = **2,097,152 bytes** (about 2.1 MB).
+2. FLOPs per input = 2 × 1,048,576 = **2,097,152**.
+3. Bytes per input vector = 512 × 2 = 1,024; per output vector = 2,048 × 2 = 4,096; so extra bytes = **5,120 per sample**.
+   - **Batch 1:** FLOPs = 2,097,152. Bytes = 2,097,152 + 5,120 = 2,102,272. Intensity ≈ **1.0** → memory-bound.
+   - **Batch 8:** FLOPs = 16,777,216. Bytes = 2,097,152 + 8 × 5,120 = 2,138,112. Intensity ≈ **7.85** → memory-bound.
+   - **Batch 32:** FLOPs = 67,108,864. Bytes = 2,097,152 + 32 × 5,120 = 2,260,992. Intensity ≈ **29.7** → compute-bound.
+4. Attainable = min(10 TFLOP/s, intensity × 0.5 TFLOP/s per unit intensity):
+   - Batch 1: ≈ **0.5 TFLOP/s** (5 % of peak)
+   - Batch 8: ≈ **3.9 TFLOP/s** (39 % of peak)
+   - Batch 32: **10 TFLOP/s** (100 %)
+5. Solve intensity ≥ 20: batch 21 gives ≈ 19.98 (just under), batch 22 gives ≈ 20.9. So the smallest batch is about **22**.
+6. A single-user request means batch ≈ 1, which is memory-bound, so extra raw compute would sit idle. Better choices are hardware with high memory bandwidth, large on-chip memory that keeps weights close, and low-precision (quantised) weights that reduce the bytes moved. This is the design logic behind on-device NPUs, which Section 5 explores.
+</details>
+## 4.6 Further efficiency ideas
+ 
+A designer who understands the roofline has a checklist of ways to improve a memory-bound workload:
+ 
+| Idea | How it helps | Where you will see it |
+|---|---|---|
+| **Bigger on-chip memory** | Weights and activations stay close to the MACs | TPU's 28 MiB buffer; large caches in GPUs; NPUs |
+| **Higher bandwidth memory** | Raises the slope of the roofline | HBM stacked beside the chip |
+| **Weight reuse (batching, weight-stationary arrays)** | More operations per byte fetched | Systolic arrays, batched serving |
+| **Lower precision** | Fewer bytes per weight | INT8/FP8/4-bit inference |
+| **Compression and pruning** | Smaller or sparser models | Mobile model deployment |
+| **Operator fusion** | Intermediate values never leave the chip | Compilers such as XLA and Core ML |
+| **Unified memory** | No copy between CPU, GPU and NPU | Apple silicon |
+ 
+### A caution about batching
+ 
+Batching raises intensity but **increases latency per request** if requests must wait to form a batch. Servers therefore balance *throughput* (large batches) against *latency* (answer quickly). This trade-off is why the same model may be run differently in a data centre than on a phone.
+ 
+> **Check your understanding (4.1).** A designer doubles the number of MAC units on a memory-bound chip but leaves memory bandwidth unchanged. What happens to performance on a memory-bound workload?
+>
+> <details><summary>Expected answer</summary>
+> Almost nothing. Attainable performance on the memory-bound slope equals intensity × bandwidth, which does not depend on peak compute. The extra MAC units wait for data. To improve, raise bandwidth, increase reuse (batching, on-chip memory), or lower precision.
+> </details>
+ 
+> **Check your understanding (4.2).** The first TPU had four of six benchmarks memory-bandwidth limited. Which single hardware change did the authors say would have tripled achieved TOPS in a revised design?
+>
+> <details><summary>Expected answer</summary>
+> Using faster GDDR5 memory (as used in the GPU) instead of the memory in the original design (Jouppi et al., 2017).
+> </details>
+ 
+> **Check your understanding (4.3).** Rank from lowest to highest energy per access: DRAM read, register access, small SRAM read.
+>
+> <details><summary>Expected answer</summary>
+> Register (lowest), small SRAM, DRAM (highest, roughly two orders of magnitude above on-chip memory in Horowitz's figures).
+> </details>
+ 
+---
+ 
