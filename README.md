@@ -24,7 +24,7 @@
 | 4 | [汤丽嘉] | [1820262206] | [elliciathoenger] | Content Lead — content, examples, fact-check |
 | 5 | [Member 5 Name] | [Student ID] | [Github Username] | Visual Design Lead — diagrams, slide visuals |
 | 6 | [李秀春] | [1820262266] | [jocelynemelie] | Video Lead — video planning, recording, editing |
-| 7 | [Member 7 Name] | [Student ID] | [Github Username] | Quality Lead — accuracy, usability, final check |
+| 7 | [黄施杰] | [1820262194] | [benedictttt110] | Quality Lead — accuracy, usability, final check |
 
 ## Project Purpose
 
