@@ -336,11 +336,9 @@ FLOPs = 2 × 4,194,304 = 8,388,608 (about 8.4 million).
  
 > **Check your understanding (3.1).** The same layer is changed so that the output has 8,192 values instead of 4,096. What happens to the MAC count?
 >
-> *Expected answer:* (collapsed in source)
  
 > **Check your understanding (3.2).** With the same 4,096-unit accelerator, roughly how long would the 8,192-output layer take?
 >
-> *Expected answer:* (collapsed in source)
  
 ### 3.4 Other acceleration techniques
  
@@ -352,7 +350,7 @@ Parallel MAC units are only one trick. Designers combine several:
 | Specialised units | NVIDIA Tensor Cores and Apple's Neural Engine are circuits that do small matrix multiplications as a single hardware step | Fewer instructions and less control overhead per MAC |
 | Batching | Process several inputs together so the same weights are reused | Fetch weights once, use them many times (Section 4) |
 | Sparsity | Skip multiplications by zero | No work for values that cannot change the answer |
-| Operator fusion | Combine several steps (for example multiply, add bias, apply ReLU) into one pass | Avoid writing and re-reading intermediate results |
+| Operator fusion | Combine several steps (for example, multiply, add bias, apply ReLU) into one pass | Avoid writing and re-reading intermediate results |
 | Weight stationary / data reuse | Keep weights in place while data moves past them (systolic arrays) | Cut memory traffic |
  
 #### Reduced precision (quantisation) in more detail
@@ -382,7 +380,6 @@ print("max error:", np.abs(w - w_back).max().round(4))
  
 > **Application question (3.4).** A 7-billion-parameter model is stored in FP16. How much memory do its weights need? How much if converted to INT8? To 4-bit?
 >
-> *Expected answer:* (collapsed in source)
  
 ---
  
@@ -484,8 +481,7 @@ The **ridge point** is where the two limits meet: peak compute ÷ bandwidth.
 5. What is the smallest batch size that makes the layer compute-bound?
 6. Reflect (2-3 sentences): A voice assistant must answer one user at a time within milliseconds. What does the result of Task 3 imply for the hardware you would choose, and why?
 **Hints.** Weights are fetched once per batch; inputs and outputs are fetched/written once per sample. Intensity = FLOPs ÷ bytes. Attainable = min(10 TFLOP/s, intensity × 0.5 TFLOP/s per unit intensity).
- 
-*Expected answers:* (collapsed in source)
+
  
 ### 4.6 Further efficiency ideas
  
@@ -507,15 +503,12 @@ Batching raises intensity but increases latency per request if requests must wai
  
 > **Check your understanding (4.1).** A designer doubles the number of MAC units on a memory-bound chip but leaves memory bandwidth unchanged. What happens to performance on a memory-bound workload?
 >
-> *Expected answer:* (collapsed in source)
  
 > **Check your understanding (4.2).** The first TPU had four of six benchmarks memory-bandwidth limited. Which single hardware change did the authors say would have tripled achieved TOPS in a revised design?
 >
-> *Expected answer:* (collapsed in source)
  
 > **Check your understanding (4.3).** Rank from lowest to highest energy per access: DRAM read, register access, small SRAM read.
 >
-> *Expected answer:* (collapsed in source)
  
 ---
  
@@ -570,7 +563,7 @@ This shows how specialized AI hardware supports the practical use of trained AI 
  
 ![Face ID components. Infrared Camera: reads the dot pattern, captures an infrared image, then sends the data to the Secure Enclave in the A11 Bionic chip to confirm a match. Flood Illuminator: invisible infrared light helps identify your face even when it's dark. Dot Projector: more than 30,000 invisible dots are projected onto your face to build your unique facial map.](image-face-id.png)
  
-*Image source: techtime.news (image not embedded in this conversion).*
+*Image source: techtime.news (image not embedded in this conversation).*
  
 Face ID is a real-world example of how Apple's AI hardware performs facial recognition.
  
