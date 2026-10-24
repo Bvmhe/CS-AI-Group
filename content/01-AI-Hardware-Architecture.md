@@ -391,30 +391,7 @@ print("max error:", np.abs(w - w_back).max().round(4))
  
 Computers have several kinds of memory. Fast memory is small and expensive; large memory is slow and cheap. The arrangement from fastest to slowest is called the **memory hierarchy**.
  
-```
-  ▲  faster, smaller, costlier per byte, lower energy per access
-        /\
-       /  \      Registers (inside the core)
-      /────\
-     /      \    On-chip SRAM: L1 / L2 cache, or
-    /────────\   software-managed buffers (e.g. TPU's 28 MiB)
-   /          \  High-bandwidth memory (HBM) / GDDR
-  /────────────\ (stacked next to the chip)
- /              \  Main memory (DRAM)
-/────────────────\
-/                  \ Flash / SSD storage
-/──────────────────\
-/                    \ Network or cloud storage
-  ▼  slower, larger, cheaper per byte, higher energy per access
-```
- 
-*Figure 4.1: The memory pyramid.*
- 
-*Figure 4.2: The same hierarchy as a flow chart, with typical orders of magnitude.* (figure not included in this conversion)
- 
-*Figure 4.3: Typical access times span about six orders of magnitude from registers to SSD.* (figure not included in this conversion)
- 
-*Figures are orders of magnitude, not exact values for any one product.*
+![Alt text describing the image](../images/Memory%20Hierarchy.png)
  
 #### Terms
  
