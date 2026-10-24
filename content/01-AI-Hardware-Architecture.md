@@ -496,8 +496,6 @@ Batching raises intensity but increases latency per request if requests must wai
 ![Alt text describing the image](../images/CS-01.png)
 Source: tomshardware.com
  
-*Image source: tomshardware.com (image not embedded in this conversion).*
- 
 The Apple Neural Engine (ANE) is a specialized processor built into Apple's chips to improve the speed and efficiency of artificial intelligence (AI) tasks.
  
 It was first introduced in 2017 with the A11 Bionic chip in the iPhone X.
@@ -529,8 +527,7 @@ This makes AI applications faster and more energy-efficient.
  
 Training and inference are two important stages of AI processing.
  
-![Alt text describing the image](../images/CS-02.png)
- 
+![Alt text describing the image](../images/CS-02.png) 
 **Training:** AI models are trained using large amounts of data, usually on powerful computers equipped with GPUs or other AI accelerators.
  
 **Inference:** Once trained, the model can be used on an iPhone. The Neural Engine helps process new information quickly without needing to retrain the entire model.
