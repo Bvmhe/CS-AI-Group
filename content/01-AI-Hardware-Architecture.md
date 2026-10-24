@@ -10,7 +10,7 @@
  
 ## Module overview
  
-When people talk about artificial intelligence, they usually talk about software: models, data and algorithms. But every AI model is, in the end, an enormous number of arithmetic operations running on physical chips. The choice of chip decides:
+When people talk about artificial intelligence, they usually talk about software: models, data, and algorithms. But every AI model is, in the end, an enormous number of arithmetic operations running on physical chips. The choice of chip decides:
  
 - how fast a model can be trained (days or months),
 - how much electricity it uses (and therefore what it costs and what it emits),
@@ -23,11 +23,12 @@ This module explains why AI needs specialised hardware and how that hardware is 
 By the end of this module, you will be able to:
  
 1. Define AI hardware and explain why general-purpose processors are not always enough.
-2. Compare CPUs, GPUs and TPUs in terms of architecture and the kind of work each does best.
+2. Compare CPUs, GPUs, and TPUs in terms of architecture and the kind of work each does best.
 3. Explain how parallel processing, systolic arrays, and reduced-precision arithmetic speed up the core operation of neural networks (matrix multiplication).
 4. Describe the memory hierarchy and explain why moving data often costs more than computing on it.
 5. Use a simple roofline calculation to decide whether a workload is limited by compute or by memory.
 6. Analyse how the Apple Neural Engine brings AI onto a phone, and judge its trade-offs.
+
 ## A running example
  
 Throughout the module we return to one small, concrete task so that every idea has something to attach to:
