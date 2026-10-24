@@ -43,7 +43,7 @@ This repository develops beginner-friendly learning content on **AI hardware, co
 4. AI Sensors & Intelligent Systems
 5. AI System Integration & Optimization
 
-See [`content/module-outline.md`](content/Module-Outline.md) for the full outline and development status.
+See [`module-outline.md`](content/Module-Outline.md) for the full outline and development status.
 
 ## Current Progress (Stage 1 snapshot)
 - [x] Repo created, folders organized
