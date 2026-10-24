@@ -1,6 +1,7 @@
 # Module 01: AI Hardware Architecture
  
 | | |
+|---|---|
 | **Course** | Hardware, Networks & Behaviourist AI |
 | **Version** | V1.0 (substantive draft, Stage 1) |
 | **Audience** | Beginners with basic programming knowledge and no hardware background |
