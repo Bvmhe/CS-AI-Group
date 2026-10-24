@@ -19,10 +19,10 @@
 | No. | Member Name (Class Roster) | Student ID | Github Username | Role |
 |---|---|---|---|---|
 | 1 | [纪小佩] | [1820262196] | [Violine888] | CEO — project plan, deadlines, coordination |
-| 2 | [Member 2 Name] | [Student ID] | [Github Username] | CIO — GitHub repo, file structure, ZIP, report |
+| 2 | [林元甲] | [1820262260] | [Bvmhe] | CIO — GitHub repo, file structure, ZIP, report |
 | 3 | [温俊强] | [1820262253] | [nktjahjadi22] | Content Lead — scope, structure, accuracy review |
 | 4 | [汤丽嘉] | [1820262206] | [elliciathoenger] | Content Lead — content, examples, fact-check |
-| 5 | [Member 5 Name] | [Student ID] | [Github Username] | Visual Design Lead — diagrams, slide visuals |
+| 5 | [曾富良] | [1820262261] | [LimunZ] | Visual Design Lead — diagrams, slide visuals |
 | 6 | [李秀春] | [1820262266] | [jocelynemelie] | Video Lead — video planning, recording, editing |
 | 7 | [黄施杰] | [1820262194] | [benedictttt110] | Quality Lead — accuracy, usability, final check |
 
