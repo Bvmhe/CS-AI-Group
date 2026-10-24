@@ -273,21 +273,20 @@ A programmer usually does not write instructions for the MAC units directly. The
  
 ### 2.7 Activities for Section 2
  
-> **Check your understanding (2.1).** Which of the three chips would you choose for (a) a web server running mixed tasks, (b) training a large image model, (c) a fixed, high-volume inference service in a data centre? Justify briefly.
+> **Check your understanding (2.1).** Which of the three chips would you choose for? Justify briefly.
+>  (a) a web server running mixed tasks,
+> (b) training a large image model,
+> (c) a fixed, high-volume inference service in a data centre? 
 >
-> *Expected answer:* (collapsed in source)
  
 > **Check your understanding (2.2).** In the 2 × 2 systolic example, how many times was each weight read from memory, and how many times was each input read?
 >
-> *Expected answer:* (collapsed in source)
  
-> **Application question (2.3).** A start-up wants to add a voice assistant to a smart speaker that runs on a small battery. Arrange CPU, GPU and NPU in order from most to least suitable and give one reason for your ordering.
+> **Application question (2.3).** A start-up wants to add a voice assistant to a smart speaker that runs on a small battery. Arrange CPU, GPU and NPU in order from most to least suitable and give one reason for your ordering!
 >
-> *Expected answer:* (collapsed in source)
  
 > **Discussion (2.4).** The first TPU was faster and more energy-efficient than its contemporaries on Google's workloads, but a start-up with a different workload might still pick a GPU. Give two reasons.
 >
-> *Expected answer:* (collapsed in source)
  
 ---
  
