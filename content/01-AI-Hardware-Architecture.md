@@ -36,8 +36,6 @@ Throughout the module we return to one small, concrete task so that every idea h
  
 Every hardware idea in this module (parallel units, low precision, on-chip memory) exists because of pressures like these.
  
----
- 
 ## 1. Definition and Fundamental Concepts
  
 > **Big idea.** AI hardware is not magic: it is ordinary computing hardware that has been arranged so that the one kind of arithmetic that AI does all day is cheap in time, energy, and money.
