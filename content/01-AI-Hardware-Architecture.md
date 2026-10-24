@@ -149,9 +149,6 @@ For decades, the answer to "make computers faster" was simply "wait for the next
  
 1. doing more things at once (parallelism), and
 2. moving less data (memory efficiency).
-> **Check your understanding (1.1).** In your own words, why is "multiply-accumulate" such an important operation for AI hardware designers?
->
-> *Expected answer:* (collapsed in source)
  
 ### 1.5 Training versus inference
  
