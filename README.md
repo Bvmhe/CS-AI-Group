@@ -54,4 +54,4 @@ See [`module-outline.md`](module-outline.md) for the full outline and developmen
 - [x] PDF readable copy export
 - [x] Submission report + GitHub evidence
 
-**Remaining work:** draft Topics 2–5, peer review, export PDF, assemble ZIP.
+**Remaining work:** draft Topics 2–5, peer review, export PDF, assemble ZIP, videos , mini lecture and powerpoints to present.
