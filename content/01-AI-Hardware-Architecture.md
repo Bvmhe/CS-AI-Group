@@ -11,12 +11,11 @@
 ## Module overview
  
 When people talk about artificial intelligence, they usually talk about software: models, data, and algorithms. But every AI model is, in the end, an enormous number of arithmetic operations running on physical chips. The choice of chip decides:
- 
 - how fast a model can be trained (days or months),
 - how much electricity it uses (and therefore what it costs and what it emits),
 - how quickly it can answer one request (milliseconds or seconds),
 - and whether it can run on a phone at all, or only in a data centre.
-This module explains why AI needs specialised hardware and how that hardware is designed. It ends with a case study of the hardware inside a phone you may be holding right now: the Apple Neural Engine.
+This module explains why AI needs specialised hardware and how it's designed. It ends with a case study of the hardware inside a phone you may be holding right now: the Apple Neural Engine.
  
 ## Learning objectives
  
