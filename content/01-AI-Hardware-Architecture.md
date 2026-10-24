@@ -68,10 +68,10 @@ Before comparing chips, we need to know what the chips are asked to do.
 A neural network is built from layers. Most layers do one dominant operation: multiply a block of numbers (the **weights**, which the model learned during training) by another block of numbers (the **inputs**), then add the results together.
  
 For one output value, the calculation looks like this:
- 
-```
-output = (w1 × x1) + (w2 × x2) + (w3 × x3) + ... + (wn × xn)
-```
+
+'''
+Output = (w1 × x1) + (w2 × x2) + (w3 × x3) + ... + (wn × xn)
+'''
  
 Each "multiply, then add to a running total" step is called a **MAC** (multiply-accumulate).
  
@@ -97,16 +97,16 @@ Now scale it up. One layer might have 4,096 neurons, each with 1,024 inputs. Tha
 #### Matrices: the same thing, written compactly
  
 Writing out every MAC is tedious, so we group the weights into a table called a **matrix**, and the inputs into a list called a **vector**. "Multiply the weight matrix by the input vector" means "do all the neuron calculations at once". When we process several inputs at the same time, they form a second matrix, and we speak of **matrix multiplication**. Almost all of AI hardware is, at heart, hardware for multiplying matrices. A generalisation to higher dimensions is called a **tensor**, which is where the "T" in TPU comes from.
- 
-```
+
+'''
 Weight matrix W          Input vector x     Output vector y
 (rows = neurons)
  
 [ w11 w12 w13 ]          [ x1 ]             [ w11·x1 + w12·x2 + w13·x3 ]
 [ w21 w22 w23 ]    ×     [ x2 ]      =      [ w21·x1 + w22·x2 + w23·x3 ]
 [ w31 w32 w33 ]          [ x3 ]             [ w31·x1 + w32·x2 + w33·x3 ]
-```
- 
+'''
+
 Each output value = 3 MACs. Whole layer = 3 × 3 = 9 MACs.
  
 ### 1.3 Key terms
