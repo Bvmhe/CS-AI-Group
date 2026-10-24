@@ -391,8 +391,7 @@ print("max error:", np.abs(w - w_back).max().round(4))
  
 Computers have several kinds of memory. Fast memory is small and expensive; large memory is slow and cheap. The arrangement from fastest to slowest is called the **memory hierarchy**.
  
-![Alt text describing the image](../images/Memory%20Hierarchy.png)
- 
+![Alt text describing the image](../images/Memory%20Hierarchy.png) 
 #### Terms
  
 - **Cache:** a small, fast memory that keeps copies of recently used data close to the processor. Managed automatically by hardware.
@@ -580,10 +579,3 @@ By combining the CPU, GPU, Neural Engine, and memory, iPhones can process AI tas
 The case study also shows the relationship between training and inference: AI models are generally trained using powerful computers, while the Neural Engine helps run those trained models directly on the iPhone.
  
 This makes everyday features such as Face ID, image recognition, and AI-powered photography possible.
- 
-## References
- 
-- Apple Machine Learning Research – *Deploying Transformers on the Apple Neural Engine*
-- Apple Support – *About Face ID Advanced Technology*
-- Apple Developer – *Core ML Documentation*
- 
