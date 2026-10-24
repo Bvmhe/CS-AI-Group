@@ -493,7 +493,8 @@ Batching raises intensity but increases latency per request if requests must wai
  
 ## 1. Introduction
  
-![A17 Pro chip diagram with the 16-core Neural Engine highlighted ("Up to 2x faster"). Source: tomshardware.com](image-a17-pro.png)
+![Alt text describing the image](../images/Memory%20CS-01.png)
+Source: tomshardware.com
  
 *Image source: tomshardware.com (image not embedded in this conversion).*
  
@@ -528,7 +529,7 @@ This makes AI applications faster and more energy-efficient.
  
 Training and inference are two important stages of AI processing.
  
-![Diagram. Training: "AI learns patterns from large datasets." Inference: "AI uses learned patterns to recognize new inputs." Example: Face ID — Train facial recognition model → Deploy model on iPhone → Recognize user's face](image-training-inference.png)
+![Alt text describing the image](../images/Memory%20CS-02.png)
  
 **Training:** AI models are trained using large amounts of data, usually on powerful computers equipped with GPUs or other AI accelerators.
  
@@ -538,9 +539,9 @@ This shows how specialized AI hardware supports the practical use of trained AI 
  
 ## 4. Real-Life Application: Face ID
  
-![Face ID components. Infrared Camera: reads the dot pattern, captures an infrared image, then sends the data to the Secure Enclave in the A11 Bionic chip to confirm a match. Flood Illuminator: invisible infrared light helps identify your face even when it's dark. Dot Projector: more than 30,000 invisible dots are projected onto your face to build your unique facial map.](image-face-id.png)
+![Alt text describing the image](../images/Memory%20CS-03.png)
  
-*Image source: techtime.news (image not embedded in this conversation).*
+Source: techtime.news
  
 Face ID is a real-world example of how Apple's AI hardware performs facial recognition.
  
