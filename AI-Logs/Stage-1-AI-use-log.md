@@ -50,9 +50,7 @@ It gave plain-language explanations and analogies. We asked follow-up questions 
  
 **Evidence**
  
-<img src="assets/AI-01.png" alt="AI-01" width="400">
-*Studying the difference between SIMD and SIMT*
- 
+<img src="assets/AI-01.png" alt="AI-01" width="400"> 
 ---
  
 ## 3. Research & Case Study Development
