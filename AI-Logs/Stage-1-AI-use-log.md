@@ -50,7 +50,7 @@ It gave plain-language explanations and analogies. We asked follow-up questions 
  
 **Evidence**
  
-![Studying the difference between SIMD and SIMT](images/simd-vs-simt.png)
+![AI-01](assets/AI-01.png)
 *Studying the difference between SIMD and SIMT*
  
 ---
