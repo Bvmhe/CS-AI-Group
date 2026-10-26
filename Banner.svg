@@ -1,184 +1,225 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="300" viewBox="0 0 1000 300">
+
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 1000 320">
   <defs>
-    <!-- Background -->
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#18181b"/>
-      <stop offset="100%" stop-color="#09090b"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#17121f"/>
+      <stop offset="1" stop-color="#422016"/>
     </linearGradient>
-    
-    <!-- Wok Gradients -->
-    <linearGradient id="wokBody" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#555"/>
-      <stop offset="30%" stop-color="#222"/>
-      <stop offset="100%" stop-color="#050505"/>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#ffe9a3"/>
+      <stop offset="1" stop-color="#ffab27"/>
     </linearGradient>
-    
-    <linearGradient id="wokInner" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#0a0a0a"/>
-      <stop offset="100%" stop-color="#333"/>
+    <linearGradient id="pan" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#626262"/>
+      <stop offset="1" stop-color="#111111"/>
     </linearGradient>
-
-    <!-- Handle Gradients -->
-    <linearGradient id="metalNeck" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#333"/>
-      <stop offset="100%" stop-color="#000"/>
+    <linearGradient id="flame" x1="0" y1="1" x2="0" y2="0">
+      <stop stop-color="#ff3b12"/>
+      <stop offset=".65" stop-color="#ff9d18"/>
+      <stop offset="1" stop-color="#fff08a"/>
     </linearGradient>
-    <linearGradient id="woodHandle" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#9b5a35"/>
-      <stop offset="20%" stop-color="#d19b6a"/>
-      <stop offset="60%" stop-color="#8a4f2a"/>
-      <stop offset="100%" stop-color="#3a1f0c"/>
-    </linearGradient>
-
-    <!-- Shrimp & Peas Gradients -->
-    <linearGradient id="shrimpColor" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ff9e8e"/>
-      <stop offset="100%" stop-color="#e84a35"/>
-    </linearGradient>
-    <linearGradient id="peaColor" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#a4de5c"/>
-      <stop offset="100%" stop-color="#5a9c27"/>
-    </linearGradient>
-
-    <!-- Text Gradient -->
-    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#ffdf73"/>
-      <stop offset="100%" stop-color="#ff9f1c"/>
-    </linearGradient>
-    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="3" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
+    <radialGradient id="glow">
+      <stop stop-color="#ff7518" stop-opacity=".7"/>
+      <stop offset="1" stop-color="#ff7518" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="8"/>
     </filter>
   </defs>
 
-  <!-- Base Background -->
-  <rect width="1000" height="300" fill="url(#bgGrad)"/>
+  <!-- Background -->
+  <rect width="1000" height="320" rx="16" fill="url(#bg)"/>
+  <circle cx="825" cy="165" r="190" fill="#ff9c32" opacity=".06"/>
+  <path d="M0 270 Q280 245 520 285 T1000 265 V320 H0Z"
+        fill="#100b09" opacity=".7"/>
 
-  <!-- ================= LEFT SIDE (TEXT) ================= -->
-  <g transform="translate(100, 150)">
-    <text x="0" y="-20" font-family="'Arial Black', sans-serif" font-size="48" font-weight="900" fill="url(#textGrad)" filter="url(#glow)" letter-spacing="1">
-      FENGWEI
-    </text>
-    <text x="0" y="30" font-family="'Arial Black', sans-serif" font-size="42" font-weight="900" fill="#ffffff" letter-spacing="2">
-      FRIED RICE
-    </text>
-    <line x1="0" y1="50" x2="280" y2="50" stroke="#ff9f1c" stroke-width="3" opacity="0.8"/>
-    <text x="0" y="80" font-family="'Courier New', monospace" font-size="16" fill="#a0a0a0" letter-spacing="2">
-      &lt; Wok Mastery &amp; Code /&gt;
-    </text>
+  <!-- Decorative sparkles -->
+  <g fill="#ffbd55">
+    <circle cx="52" cy="44" r="3"/>
+    <circle cx="490" cy="55" r="2"/>
+    <circle cx="540" cy="250" r="3"/>
+    <circle cx="970" cy="50" r="3"/>
+    <path d="M530 90 l4 10 10 4 -10 4 -4 10 -4 -10 -10 -4 10 -4Z"/>
+    <path d="M45 230 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3Z"/>
   </g>
 
-  <!-- ================= RIGHT SIDE (ILLUSTRATION) ================= -->
-  <!-- WOK DIMIRINGKAN (ROTASI) -->
-  <g transform="translate(700, 150) rotate(-15)">
-    
-    <!-- WOK GROUP (Goyang Animasi) -->
-    <g>
-      <animateTransform attributeName="transform" type="translate" 
-        values="0,0; -5,3; 5,-2; 0,0" dur="0.5s" repeatCount="indefinite" />
+  <!-- Left-side team name -->
+  <path d="M35 67 Q45 48 75 50 H485 Q510 52 510 78
+           V240 Q510 257 485 257 H60 Q35 257 35 233Z"
+        fill="#0c0909" opacity=".55"/>
 
-      <!-- Konektor Metal -->
-      <path d="M 120 -10 L 180 -25 L 180 5 L 120 20 Z" fill="url(#metalNeck)"/>
-      
-      <!-- Gagang Kayu -->
-      <path d="M 180 -25 Q 240 -40 260 -50 L 265 -30 Q 240 -20 180 5 Z" fill="url(#woodHandle)"/>
-      
-      <!-- Bodi Wok -->
-      <path d="M -160 0 A 160 110 0 0 0 160 0 Z" fill="url(#wokBody)"/>
-      
-      <!-- Rongga Dalam Wok -->
-      <ellipse cx="0" cy="0" rx="160" ry="35" fill="url(#wokInner)" stroke="#bbb" stroke-width="2"/>
-      
-      <!-- Minyak di dasar wok -->
-      <ellipse cx="0" cy="10" rx="110" ry="18" fill="#1c1008" opacity="0.9"/>
-      <path d="M -60 5 Q 0 -5 60 5" fill="none" stroke="#555" stroke-width="2" opacity="0.6"/>
+  <text x="65" y="126"
+        font-family="Trebuchet MS, Arial, sans-serif"
+        font-size="57" font-weight="900"
+        fill="#fff1d1">Fengwei</text>
+
+  <text x="65" y="190"
+        font-family="Trebuchet MS, Arial, sans-serif"
+        font-size="53" font-weight="900"
+        fill="url(#gold)">Fried Rice</text>
+
+  <path d="M68 205 Q260 219 455 203"
+        fill="none" stroke="#ffb52d" stroke-width="4"
+        stroke-linecap="round"/>
+
+  <text x="69" y="235"
+        font-family="Arial, sans-serif"
+        font-size="13" letter-spacing="3"
+        fill="#e8c99a">FRESH FROM THE WOK</text>
+
+  <!-- Animated steam -->
+  <g fill="none" stroke="#fff0d6" stroke-width="4"
+     stroke-linecap="round" opacity=".7">
+    <path d="M695 96 Q670 72 695 49 Q714 31 698 16">
+      <animate attributeName="opacity" values=".1;.8;.1"
+               dur="1.8s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="translate"
+               values="0 8;0 -8;0 8" dur="1.8s"
+               repeatCount="indefinite"/>
+    </path>
+    <path d="M785 75 Q762 54 785 32 Q803 18 790 5">
+      <animate attributeName="opacity" values=".8;.1;.8"
+               dur="2.2s" repeatCount="indefinite"/>
+    </path>
+    <path d="M875 103 Q855 80 877 60 Q895 44 880 28">
+      <animate attributeName="opacity" values=".1;.7;.1"
+               dur="1.6s" repeatCount="indefinite"/>
+    </path>
+  </g>
+
+  <!-- Fire glow -->
+  <ellipse cx="805" cy="266" rx="155" ry="42" fill="url(#glow)"
+           filter="url(#softGlow)">
+    <animate attributeName="rx" values="135;165;140;155"
+             dur=".45s" repeatCount="indefinite"/>
+  </ellipse>
+
+  <!-- Dancing flames -->
+  <g fill="url(#flame)">
+    <path d="M680 276 Q651 244 684 216 Q676 250 708 256
+             Q692 222 721 199 Q713 243 743 258 L757 279Z">
+      <animateTransform attributeName="transform" type="translate"
+          values="0 0;0 -7;0 0" dur=".38s" repeatCount="indefinite"/>
+    </path>
+    <path d="M740 279 Q713 241 751 213 Q741 246 770 255
+             Q760 224 792 195 Q782 242 816 259
+             Q810 232 836 217 Q831 254 861 279Z">
+      <animateTransform attributeName="transform" type="translate"
+          values="0 0;0 -10;0 0" dur=".48s" repeatCount="indefinite"/>
+    </path>
+    <path d="M830 279 Q811 249 841 225 Q833 254 862 260
+             Q851 230 881 207 Q876 252 907 267 L920 279Z">
+      <animateTransform attributeName="transform" type="translate"
+          values="0 0;0 -7;0 0" dur=".42s" repeatCount="indefinite"/>
+    </path>
+  </g>
+
+  <!-- Wok handle and pan: tilted cooking movement -->
+  <g>
+    <animateTransform attributeName="transform" type="rotate"
+        values="-7 810 190;-12 810 190;-7 810 190"
+        dur=".65s" repeatCount="indefinite"/>
+
+    <!-- Handle behind the wok -->
+    <path d="M845 181 L972 143 Q990 140 994 152
+             Q997 164 978 169 L850 209Z"
+          fill="#75421f" stroke="#b77a43" stroke-width="4"/>
+    <path d="M913 169 L978 150"
+          stroke="#d69c61" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- Pan body -->
+    <path d="M650 151 Q810 201 955 147
+             L928 222 Q898 265 808 272
+             Q718 266 681 218Z"
+          fill="url(#pan)" stroke="#9a938b" stroke-width="4"/>
+
+    <!-- Interior -->
+    <ellipse cx="805" cy="154" rx="159" ry="38"
+             fill="#171514" stroke="#c2a17d" stroke-width="4"/>
+
+    <!-- Rice in wok -->
+    <g id="rice">
+      <ellipse cx="805" cy="156" rx="145" ry="30"
+               fill="#d99635"/>
+
+      <g fill="#ffdf87">
+        <ellipse cx="700" cy="149" rx="8" ry="3" transform="rotate(25 700 149)"/>
+        <ellipse cx="720" cy="163" rx="8" ry="3" transform="rotate(-15 720 163)"/>
+        <ellipse cx="741" cy="143" rx="8" ry="3" transform="rotate(35 741 143)"/>
+        <ellipse cx="758" cy="159" rx="8" ry="3" transform="rotate(-25 758 159)"/>
+        <ellipse cx="780" cy="143" rx="8" ry="3" transform="rotate(20 780 143)"/>
+        <ellipse cx="799" cy="162" rx="8" ry="3" transform="rotate(-10 799 162)"/>
+        <ellipse cx="820" cy="145" rx="8" ry="3" transform="rotate(35 820 145)"/>
+        <ellipse cx="841" cy="160" rx="8" ry="3" transform="rotate(-25 841 160)"/>
+        <ellipse cx="861" cy="145" rx="8" ry="3" transform="rotate(15 861 145)"/>
+        <ellipse cx="881" cy="159" rx="8" ry="3" transform="rotate(-20 881 159)"/>
+        <ellipse cx="903" cy="148" rx="8" ry="3" transform="rotate(30 903 148)"/>
+        <ellipse cx="917" cy="160" rx="7" ry="3" transform="rotate(-20 917 160)"/>
+      </g>
+
+      <!-- Vegetables and egg -->
+      <g fill="#78b94b">
+        <rect x="729" y="151" width="12" height="7" rx="2" transform="rotate(30 729 151)"/>
+        <rect x="811" y="147" width="12" height="7" rx="2" transform="rotate(-25 811 147)"/>
+        <rect x="880" y="154" width="12" height="7" rx="2" transform="rotate(20 880 154)"/>
+      </g>
+      <g fill="#ef6540">
+        <rect x="752" y="164" width="11" height="8" rx="2"/>
+        <rect x="849" y="166" width="11" height="8" rx="2"/>
+        <rect x="897" y="142" width="11" height="8" rx="2"/>
+      </g>
+      <ellipse cx="788" cy="153" rx="10" ry="6" fill="#fff0c1"/>
+      <ellipse cx="868" cy="164" rx="9" ry="5" fill="#fff0c1"/>
     </g>
+  </g>
 
-    <!-- ================= NASI & TOPPING TERBANG ================= -->
-    <g>
-      <!-- Animasi melengkung: geser kiri, naik, lalu turun -->
-      <animateTransform attributeName="transform" type="translate" 
-        values="0,0; -15,-30; 0,0" dur="0.7s" repeatCount="indefinite" />
+  <!-- Rice toss: separate particles jump above the pan -->
+  <g fill="#ffdf87">
+    <ellipse cx="728" cy="125" rx="8" ry="4" transform="rotate(25 728 125)">
+      <animate attributeName="cy" values="143;89;143" dur=".65s" repeatCount="indefinite"/>
+      <animate attributeName="cx" values="728;712;728" dur=".65s" repeatCount="indefinite"/>
+    </ellipse>
+    <ellipse cx="775" cy="113" rx="8" ry="4" transform="rotate(-20 775 113)">
+      <animate attributeName="cy" values="140;69;140" dur=".8s" repeatCount="indefinite"/>
+      <animate attributeName="cx" values="775;790;775" dur=".8s" repeatCount="indefinite"/>
+    </ellipse>
+    <ellipse cx="823" cy="123" rx="8" ry="4" transform="rotate(30 823 123)">
+      <animate attributeName="cy" values="141;81;141" dur=".7s" repeatCount="indefinite"/>
+      <animate attributeName="cx" values="823;841;823" dur=".7s" repeatCount="indefinite"/>
+    </ellipse>
+    <ellipse cx="864" cy="108" rx="7" ry="4">
+      <animate attributeName="cy" values="135;75;135" dur=".9s" repeatCount="indefinite"/>
+    </ellipse>
+  </g>
 
-      <!-- Gundukan Nasi Utama (Bergelombang/Fluffy) -->
-      <path d="M -80 0 C -110 -40 -90 -90 -50 -110 C -20 -125 10 -140 40 -110 C 70 -80 90 -40 80 0 Z" fill="#fcf3d4" />
-      
-      <!-- Bayangan Nasi (Memberi tekstur gundukan) -->
-      <path d="M -60 -30 C -80 -60 -50 -90 -20 -100 C 10 -110 30 -90 50 -60" fill="none" stroke="#e6d5a3" stroke-width="12" stroke-linecap="round" opacity="0.6"/>
-      <path d="M 10 -110 C 30 -120 50 -100 60 -70" fill="none" stroke="#e6d5a3" stroke-width="8" stroke-linecap="round" opacity="0.6"/>
+  <g fill="#78b94b">
+    <rect x="750" y="94" width="11" height="7" rx="2">
+      <animate attributeName="y" values="124;76;124" dur=".7s" repeatCount="indefinite"/>
+      <animate attributeName="x" values="750;735;750" dur=".7s" repeatCount="indefinite"/>
+    </rect>
+  </g>
 
-      <!-- Butiran Nasi Detail (Bentuk beras melengkung) -->
-      <g fill="#fff6d9">
-        <path d="M -70 -20 Q -65 -25 -60 -20 Q -65 -15 -70 -20 Z" />
-        <path d="M -50 -60 Q -45 -65 -40 -60 Q -45 -55 -50 -60 Z" />
-        <path d="M -30 -90 Q -25 -95 -20 -90 Q -25 -85 -30 -90 Z" />
-        <path d="M 0 -110 Q 5 -115 10 -110 Q 5 -105 0 -110 Z" />
-        <path d="M 30 -100 Q 35 -105 40 -100 Q 35 -95 30 -100 Z" />
-        <path d="M 60 -70 Q 65 -75 70 -70 Q 65 -65 60 -70 Z" />
-        <path d="M 70 -30 Q 75 -35 80 -30 Q 75 -25 70 -30 Z" />
-      </g>
-      <g fill="#ffd966">
-        <path d="M -60 -40 Q -55 -45 -50 -40 Q -55 -35 -60 -40 Z" />
-        <path d="M -20 -70 Q -15 -75 -10 -70 Q -15 -65 -20 -70 Z" />
-        <path d="M 20 -120 Q 25 -125 30 -120 Q 25 -115 20 -120 Z" />
-        <path d="M 50 -90 Q 55 -95 60 -90 Q 55 -85 50 -90 Z" />
-      </g>
+  <circle cx="846" cy="87" r="6" fill="#ef6540">
+    <animate attributeName="cy" values="119;68;119" dur=".75s" repeatCount="indefinite"/>
+  </circle>
 
-      <!-- ================= TOPPING & HAMBURAN ================= -->
-      
-      <!-- Udang (Warna Coral/Merah Muda) -->
-      <g fill="url(#shrimpColor)" stroke="#c23b27" stroke-width="1.5">
-        <!-- Udang 1 -->
-        <path d="M -65 -30 C -80 -50 -50 -70 -40 -55 C -30 -40 -45 -15 -65 -30 Z" />
-        <circle cx="-50" cy="-55" r="2" fill="#fff" stroke="none" />
-        <!-- Udang 2 -->
-        <path d="M -20 -95 C -35 -115 -5 -130 5 -115 C 15 -100 0 -80 -20 -95 Z" />
-        <circle cx="5" cy="-115" r="2" fill="#fff" stroke="none" />
-        <!-- Udang 3 -->
-        <path d="M 40 -110 C 25 -130 55 -145 65 -125 C 75 -105 55 -90 40 -110 Z" />
-        <circle cx="65" cy="-125" r="2" fill="#fff" stroke="none" />
-        <!-- Udang 4 (Terbang Terpisah) -->
-        <path d="M -80 -100 C -95 -120 -65 -135 -55 -115 C -45 -95 -65 -80 -80 -100 Z" />
-        <circle cx="-55" cy="-115" r="2" fill="#fff" stroke="none" />
-      </g>
+  <!-- Spatula stirring back and forth -->
+  <g>
+    <animateTransform attributeName="transform" type="rotate"
+        values="-18 890 139;12 890 139;-18 890 139"
+        dur=".65s" repeatCount="indefinite"/>
+    <path d="M885 45 L894 45 L905 140 L889 144Z"
+          fill="#b9bfc5" stroke="#e8e8e8" stroke-width="2"/>
+    <path d="M881 130 Q894 122 909 134 L916 146
+             Q898 154 883 146Z"
+          fill="#d6d9dd" stroke="#8c9198" stroke-width="2"/>
+  </g>
 
-      <!-- Kacang Polong -->
-      <g fill="url(#peaColor)" stroke="#4a8a1f" stroke-width="1.5">
-        <circle cx="-45" cy="-20" r="6" />
-        <circle cx="-10" cy="-120" r="5" />
-        <circle cx="35" cy="-70" r="6" />
-        <circle cx="65" cy="-40" r="5.5" />
-        <circle cx="-60" cy="-80" r="5" />
-        <circle cx="15" cy="-130" r="5.5" />
-        <circle cx="80" cy="-80" r="5" />
-      </g>
-
-      <!-- Daun Bawang (Irisan) -->
-      <g fill="#4caf50" stroke="#2e7d32" stroke-width="1">
-        <rect x="-30" y="-50" width="10" height="4" transform="rotate(45 -30 -50)" rx="2"/>
-        <rect x="10" y="-90" width="10" height="4" transform="rotate(-20 10 -90)" rx="2"/>
-        <rect x="50" y="-50" width="10" height="4" transform="rotate(15 50 -50)" rx="2"/>
-        <rect x="-50" y="-110" width="10" height="4" transform="rotate(-60 -50 -110)" rx="2"/>
-        <rect x="30" y="-130" width="10" height="4" transform="rotate(30 30 -130)" rx="2"/>
-      </g>
-      
-      <!-- Efek Partikel Nasi yang Berputar di Udara -->
-      <g fill="#fff">
-        <circle cx="-100" cy="-70" r="2" opacity="0.8">
-          <animate attributeName="cy" values="-70;-90;-70" dur="1s" repeatCount="indefinite"/>
-          <animate attributeName="opacity" values="0.8;0.2;0.8" dur="1s" repeatCount="indefinite"/>
-        </circle>
-        <circle cx="90" cy="-20" r="2" opacity="0.8">
-          <animate attributeName="cy" values="-20;-40;-20" dur="1.2s" repeatCount="indefinite"/>
-        </circle>
-        <circle cx="-10" cy="-160" r="2" opacity="0.8">
-          <animate attributeName="cy" values="-160;-180;-160" dur="0.9s" repeatCount="indefinite"/>
-        </circle>
-      </g>
-
-    </g>
+  <!-- Motion lines -->
+  <g fill="none" stroke="#ffbd55" stroke-width="3"
+     stroke-linecap="round">
+    <path d="M649 106 l-14 -8"/>
+    <path d="M668 84 l-6 -13"/>
+    <path d="M926 91 l12 -10"/>
   </g>
 </svg>
