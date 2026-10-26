@@ -948,26 +948,18 @@ By the end of this section you should be able to:
 ## 4.1 The memory hierarchy
 
 Computers have several kinds of memory. Fast memory is small and expensive; large memory is slow and cheap. The arrangement from fastest to slowest is called the **memory hierarchy**.
-
-**Figure 4.1.** The memory hierarchy, from small, fast registers at the top to large, slow storage at the bottom. Each level down is larger, cheaper per byte and slower to access. *Source: author's own diagram, based on the standard memory hierarchy described in Hennessy & Patterson (2019).*
-
-```mermaid
-flowchart TD
-    R["Registers<br/>fastest, smallest"] --> C["On-chip SRAM / cache<br/>MB scale"]
-    C --> H["HBM / DRAM<br/>GB scale"]
-    H --> S["Storage (SSD, disk)<br/>TB scale, slowest"]
-```
-
-### Terms
-
+ 
+![Alt text describing the image](assets/Memory%20Hierarchy.png)
+#### Terms
+ 
 - **Cache:** a small, fast memory that keeps copies of recently used data close to the processor. Managed automatically by hardware.
 - **Scratchpad / software-managed buffer:** on-chip memory that the program or compiler controls explicitly, as in the TPU's 28 MiB unified buffer. It avoids the unpredictability of automatic caches.
 - **SRAM:** fast memory built into the chip (usually several transistors per bit; expensive in area).
 - **DRAM:** larger, slower memory outside the chip (one transistor plus a capacitor per bit; cheap per byte).
-- **HBM (High Bandwidth Memory):** DRAM stacked in layers and placed right next to a GPU or accelerator to deliver very high bandwidth. As announced in 2025, Google's Ironwood TPU pairs each chip with 192 GB of HBM (Google, 2025).
+- **HBM (High Bandwidth Memory):** DRAM stacked in layers and placed right next to a GPU/accelerator to deliver very high bandwidth. Newer TPUs pair each chip with tens of gigabytes of HBM; for example, Google reported 192 GB per chip for Ironwood, six times the previous generation (as reported in press coverage of Google's 2025 announcement; verify against Google's own documentation before citing).
 - **Bandwidth:** how many bytes per second can be moved (for example, 500 GB/s).
 - **Latency (memory):** how long one access takes, as opposed to how many bytes per second can flow once it starts.
-- **Unified memory:** a design (used by Apple silicon) in which CPU, GPU and NPU share one pool of memory so data need not be copied between them.
+- **Unified memory:** a design (used by Apple silicon) in which CPU, GPU, and NPU share one pool of memory so data need not be copied between them.
 
 > [!NOTE]
 > **Analogy.** Think of cooking. Registers are the ingredients in your hands. Cache/SRAM is the chopping board in front of you. DRAM is the fridge across the kitchen. Storage is the supermarket. A cook who walks to the supermarket for every ingredient will never finish; a good cook plans the recipe so that everything needed is on the chopping board when required. Good AI hardware and software do the same.
