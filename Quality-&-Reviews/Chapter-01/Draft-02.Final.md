@@ -41,6 +41,15 @@ By the end of this section you should be able to:
 
 A related term you will meet in Section 5 is **NPU** (Neural Processing Unit): a general name for a small, low-power AI accelerator inside a phone or laptop chip.
 
+**Figure 2.1.** The three chip families on the flexibility–efficiency trade-off. Moving right trades generality for efficiency on tensor arithmetic. *Source: author's own diagram, based on Hennessy & Patterson (2019).*
+
+```mermaid
+flowchart LR
+    CPU["CPU<br/>most flexible<br/>lowest AI efficiency"] --> GPU["GPU<br/>parallel throughput<br/>medium efficiency"]
+    GPU --> TPU["TPU<br/>tensor-only<br/>highest AI efficiency"]
+    TPU -.-> NPU["NPU<br/>same idea, few watts"]
+```
+
 > [!NOTE]
 > **An everyday analogy.**
 > A **CPU** is like a small team of expert chefs who can cook any dish in the book, but each works on one dish at a time.
@@ -80,7 +89,7 @@ A related term you will meet in Section 5 is **NPU** (Neural Processing Unit): a
 
 ## 2.3 Visual: where the chip area goes
 
-**Figure 2.1.** A simplified, not-to-scale sketch of where each design spends its silicon. A CPU devotes much of its area to caches and control logic that make a single thread fast; a GPU devotes most area to arithmetic units; a TPU devotes nearly all of it to the grid of MACs and the memory that feeds it. The positions are a qualitative teaching sketch, not measurements.
+**Figure 2.2.** A simplified, not-to-scale sketch of where each design spends its silicon. A CPU devotes much of its area to caches and control logic that make a single thread fast; a GPU devotes most area to arithmetic units; a TPU devotes nearly all of it to the grid of MACs and the memory that feeds it. The positions are a qualitative teaching sketch, not measurements. *Source: author's own sketch, based on the design descriptions in Jouppi et al. (2017) and Hennessy & Patterson (2019).*
 
 ```text
         CPU                       GPU                        TPU
@@ -92,8 +101,6 @@ A related term you will meet in Section 5 is **NPU** (Neural Processing Unit): a
 +------------------------+ +------------------------+ +------------------------+
    Few smart cores          Many simple cores          Matrix-multiply engine
 ```
-
-*Source: author's own sketch, based on the design descriptions in Jouppi et al. (2017) and Hennessy & Patterson (2019).*
 
 In a CPU much of the area is "overhead" (caches, prediction logic) that makes a single thread fast. In a GPU, most area goes to arithmetic units. In a TPU, nearly all of it goes to the grid of MACs and the memory that feeds it.
 
@@ -107,7 +114,7 @@ A **systolic array** is a grid of MAC cells. Each cell holds one weight, and dat
 
 Let the weights be **W = [[1, 2], [3, 4]]**, loaded once, one per cell. The input is **x = [5, 6]**. We want **y = W·x**.
 
-**Figure 2.2.** A 2 × 2 weight-stationary systolic array. Each cell holds one weight; inputs enter from the top and partial sums move to the right.
+**Figure 2.3.** A 2 × 2 weight-stationary systolic array. Each cell holds one weight; inputs enter from the top and partial sums move to the right. *Source: author's own diagram.*
 
 ```text
                  x1=5        x2=6
@@ -126,7 +133,7 @@ Let the weights be **W = [[1, 2], [3, 4]]**, loaded once, one per cell. The inpu
 | **1** | x1 = 5 enters column 1. The two cells compute 1 × 5 and 3 × 5 and pass the partial sums to the right. | 5 and 15 |
 | **2** | x2 = 6 reaches column 2 (a real array staggers inputs by one cycle). The cells compute 2 × 6 + 5 and 4 × 6 + 15. | 17 and 39 |
 
-**Table 2.2.** Cycle-by-cycle behaviour of the 2 × 2 systolic array in Figure 2.2.
+**Table 2.2.** Cycle-by-cycle behaviour of the 2 × 2 systolic array in Figure 2.3.
 
 **Result:** `y = [17, 39]`, using 4 MACs. Check: 1×5 + 2×6 = 17 and 3×5 + 4×6 = 39.
 
@@ -172,6 +179,16 @@ The 2017 paper by Jouppi et al. is the best-documented comparison available, bec
 - The authors attribute part of this to deterministic execution: caches, out-of-order execution, multithreading and prefetching improve average throughput, but not the 99th-percentile response time that user-facing services need.
 - Four of the six benchmark applications were **memory-bandwidth limited** on the TPU. Using the GPU's faster GDDR5 memory in a revised design would have tripled achieved TOPS.
 
+**Figure 2.4.** What the first TPU paper measured. The TPU beat contemporary CPUs and GPUs on speed and energy efficiency, but on four of six benchmarks it was limited by memory bandwidth rather than by arithmetic. *Source: author's own diagram, based on data in Jouppi et al. (2017).*
+
+```mermaid
+flowchart LR
+    TPU["First TPU<br/>65,536 MACs<br/>92 TOPS peak"] --> S["~15–30x faster than<br/>Haswell CPU and K80 GPU"]
+    TPU --> E["~30–80x more<br/>TOPS per watt"]
+    TPU --> M["4 of 6 benchmarks<br/>memory-bandwidth limited"]
+    M --> F["Faster memory (GDDR5)<br/>would have tripled TOPS"]
+```
+
 > [!WARNING]
 > **Read this with care.** The comparison is from 2015–2017 hardware. It is a good illustration of the design philosophy, not a ranking of today's chips. Current GPUs have added dedicated matrix units of their own (NVIDIA calls them Tensor Cores), and the gap between "GPU" and "TPU" designs has narrowed.
 
@@ -193,6 +210,21 @@ A phone cannot carry a 300-watt accelerator. An NPU applies the same ideas as a 
 
 **Table 2.3.** Vendor names for NPUs in consumer devices. Names differ, but the principle is the same.
 
+**Figure 2.5.** An NPU inside a system-on-a-chip. The CPU, GPU and NPU share the same silicon and memory, which is what makes a few-watt AI accelerator practical on a phone. *Source: author's own diagram, based on Apple Inc. (2024) and Qualcomm (2024).*
+
+```mermaid
+flowchart TB
+    subgraph SoC["System-on-a-chip"]
+        CPU["CPU"]
+        GPU["GPU"]
+        NPU["NPU<br/>(e.g. Neural Engine)"]
+        MEM[("Shared memory")]
+    end
+    CPU --- MEM
+    GPU --- MEM
+    NPU --- MEM
+```
+
 Section 5 studies the Apple version.
 
 ---
@@ -211,6 +243,16 @@ Hardware is useless if programmers cannot easily use it. This is a major reason 
 **Table 2.4.** How programmers typically reach each chip family.
 
 A programmer usually does not write instructions for the MAC units directly. They write a model in a framework, and a compiler/runtime maps it onto the hardware. This is why "unsupported operations falling back to the CPU" can silently make a model slow (see the case-study questions in Section 5).
+
+**Figure 2.6.** The software stack between a model and the hardware. Each layer hides detail from the one above, but also adds a place where unsupported operations can fall back to the CPU. *Source: author's own diagram, based on NVIDIA (n.d.) and Apple Inc. (2024).*
+
+```mermaid
+flowchart TB
+    MODEL["Model (PyTorch / TensorFlow)"] --> COMP["Compiler / runtime<br/>(XLA, CUDA, Core ML)"]
+    COMP --> HW["Hardware<br/>(CPU, GPU, TPU, NPU)"]
+    COMP -.->|"unsupported op"| FB["Fallback to CPU"]
+    FB -.->|"slow"| HW
+```
 
 > [!TIP]
 > **Going further.** The combination of hardware and its software ecosystem is sometimes called a **platform**. Switching from one platform to another can be costly even if the new chip is faster on paper, which partly explains why one vendor can dominate a market.
@@ -279,9 +321,11 @@ Any two of: the workload may use operations the TPU does not support well (falli
 
 ## References
 
+- Apple Inc. (2024). *Apple Platform Security guide*.
 - Hennessy, J. L., & Patterson, D. A. (2019). A new golden age for computer architecture. *Communications of the ACM*, 62(2), 48–60.
 - Jouppi, N. P., et al. (2017). In-datacenter performance analysis of a Tensor Processing Unit. *Proceedings of ISCA 2017*.
 - NVIDIA. (n.d.). *GPU and Tensor Core documentation*.
+- Qualcomm. (2024). *Hexagon NPU documentation*.
 - Sze, V., et al. (2017). Efficient processing of deep neural networks: A tutorial and survey. *Proceedings of the IEEE*.
 
 [← Previous: Section 1](Draft-01.2.md) · [Back to module overview](Draft-02.1.md) · [Next: Section 3 →](Draft-03.2.md)
