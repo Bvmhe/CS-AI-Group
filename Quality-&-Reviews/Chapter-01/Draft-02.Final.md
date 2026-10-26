@@ -10,10 +10,11 @@
 By the end of this section you should be able to:
 
 1. Describe in one sentence each what a CPU, a GPU, a TPU and an NPU is designed to do.
-2. Compare the four chip families on core count, control logic, flexibility, energy efficiency for AI, and typical AI role.
-3. Explain how a systolic array reduces memory traffic, and work through a 2 × 2 weight-stationary example by hand.
+2. Compare the four chip families on design goal, core count, control logic, flexibility, energy efficiency for AI, typical AI role, weakness for AI and programming route.
+3. Explain what a systolic array is and work through a 2 × 2 weight-stationary example by hand and in code.
 4. Summarise what the first TPU paper (Jouppi et al., 2017) measured, and state two caveats when reading it.
 5. Explain why software tooling determines how useful a chip is in practice.
+6. Choose an appropriate chip for a given scenario and justify the choice.
 
 ## Table of contents
 
@@ -38,7 +39,7 @@ By the end of this section you should be able to:
 - **GPU (Graphics Processing Unit):** thousands of simpler cores that do the same operation on many data items at once. Originally built to draw graphics, it turned out to be ideal for neural networks, because drawing millions of pixels and multiplying large matrices are both "same operation, lots of data" problems.
 - **TPU (Tensor Processing Unit):** a chip designed by Google specifically for tensor (multi-dimensional array) arithmetic, built around a grid of multiply-accumulate units.
 
-A related term is **NPU** (Neural Processing Unit): a general name for a small, low-power AI accelerator inside a phone or laptop chip (Section 2.6).
+A related term you will meet in Section 5 is **NPU** (Neural Processing Unit): a general name for a small, low-power AI accelerator inside a phone or laptop chip.
 
 > [!NOTE]
 > **An everyday analogy.**
@@ -61,9 +62,9 @@ A related term is **NPU** (Neural Processing Unit): a general name for a small, 
 | **Weakness for AI** | Too few parallel units | Higher power than a custom ASIC; memory bandwidth can limit | Less flexible; tied to a software stack |
 | **Programming** | Any language | CUDA, OpenCL, or frameworks such as PyTorch | Through frameworks such as TensorFlow/JAX and the XLA compiler |
 
-*Sources for the design descriptions: Jouppi et al. (2017); Sze et al. (2017); Hennessy & Patterson (2019); NVIDIA (n.d.).*
+**Table 2.1.** Comparison of CPU, GPU and TPU across design goal, core count, control logic, flexibility, energy efficiency, typical AI role, weakness for AI and programming route.
 
-**Table 2.1.** Comparison of CPU, GPU and TPU across design goal, core count, control logic, flexibility, energy efficiency, typical AI role, weakness for AI, and programming route.
+*Sources for the design descriptions: Jouppi et al. (2017); Sze et al. (2017); Hennessy & Patterson (2019); NVIDIA (n.d.).*
 
 ### Terms used in the table
 
@@ -93,6 +94,8 @@ A related term is **NPU** (Neural Processing Unit): a general name for a small, 
 ```
 
 *Source: author's own sketch, based on the design descriptions in Jouppi et al. (2017) and Hennessy & Patterson (2019).*
+
+In a CPU much of the area is "overhead" (caches, prediction logic) that makes a single thread fast. In a GPU, most area goes to arithmetic units. In a TPU, nearly all of it goes to the grid of MACs and the memory that feeds it.
 
 ---
 
@@ -190,6 +193,8 @@ A phone cannot carry a 300-watt accelerator. An NPU applies the same ideas as a 
 
 **Table 2.3.** Vendor names for NPUs in consumer devices. Names differ, but the principle is the same.
 
+Section 5 studies the Apple version.
+
 ---
 
 ## 2.7 Software: why a chip is only as useful as its tools
@@ -205,7 +210,7 @@ Hardware is useless if programmers cannot easily use it. This is a major reason 
 
 **Table 2.4.** How programmers typically reach each chip family.
 
-A programmer usually does not write instructions for the MAC units directly. They write a model in a framework, and a compiler/runtime maps it onto the hardware. This is why "unsupported operations falling back to the CPU" can silently make a model slow.
+A programmer usually does not write instructions for the MAC units directly. They write a model in a framework, and a compiler/runtime maps it onto the hardware. This is why "unsupported operations falling back to the CPU" can silently make a model slow (see the case-study questions in Section 5).
 
 > [!TIP]
 > **Going further.** The combination of hardware and its software ecosystem is sometimes called a **platform**. Switching from one platform to another can be costly even if the new chip is faster on paper, which partly explains why one vendor can dominate a market.
@@ -224,11 +229,11 @@ A programmer usually does not write instructions for the MAC units directly. The
 
 ## 2.9 Summary
 
-- CPUs prioritise flexibility and low latency; GPUs prioritise parallel throughput; TPUs prioritise matrix throughput per watt at the cost of flexibility.
+- CPUs prioritise flexibility and low latency; GPUs prioritise parallel throughput; TPUs prioritise matrix throughput per watt at the cost of flexibility; NPUs scale the TPU idea down to a few watts inside a phone or laptop SoC.
 - Systolic arrays reduce memory traffic by holding weights in place and passing inputs and partial sums from neighbour to neighbour; in the 2 × 2 example this cut memory reads from 8 to 6.
 - The first TPU (Jouppi et al., 2017) was about 15–30× faster and 30–80× more TOPS per watt than contemporary CPUs and GPUs, but four of six benchmarks were memory-bandwidth limited, and the comparison is historical.
-- NPUs scale the TPU idea down to a few watts inside a phone or laptop SoC.
 - A chip is only as useful as its software ecosystem; unsupported operations that fall back to the CPU can silently erase the hardware advantage.
+- Choosing a chip means matching its design goal to the workload: mixed latency-sensitive tasks favour a CPU, large-model training favours a GPU, fixed high-volume inference favours a TPU or NPU.
 
 ---
 
