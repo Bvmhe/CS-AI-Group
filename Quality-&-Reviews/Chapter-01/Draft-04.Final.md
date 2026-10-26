@@ -36,7 +36,7 @@ By the end of this section you should be able to:
 
 Computers have several kinds of memory. Fast memory is small and expensive; large memory is slow and cheap. The arrangement from fastest to slowest is called the **memory hierarchy**.
 
-**Figure 4.1.** The memory hierarchy, from small, fast registers at the top to large, slow storage at the bottom. Each level down is larger, cheaper per byte and slower to access.
+**Figure 4.1.** The memory hierarchy, from small, fast registers at the top to large, slow storage at the bottom. Each level down is larger, cheaper per byte and slower to access. *Source: author's own diagram, based on the standard memory hierarchy described in Hennessy & Patterson (2019).*
 
 ```mermaid
 flowchart TD
@@ -44,8 +44,6 @@ flowchart TD
     C --> H["HBM / DRAM<br/>GB scale"]
     H --> S["Storage (SSD, disk)<br/>TB scale, slowest"]
 ```
-
-*Source: author's own diagram, based on the standard memory hierarchy described in Hennessy & Patterson (2019).*
 
 ### Terms
 
@@ -61,6 +59,15 @@ flowchart TD
 > [!NOTE]
 > **Analogy.** Think of cooking. Registers are the ingredients in your hands. Cache/SRAM is the chopping board in front of you. DRAM is the fridge across the kitchen. Storage is the supermarket. A cook who walks to the supermarket for every ingredient will never finish; a good cook plans the recipe so that everything needed is on the chopping board when required. Good AI hardware and software do the same.
 
+**Figure 4.2.** The same hierarchy drawn as a cooking analogy: the closer the ingredient, the cheaper it is to reach. *Source: author's own diagram.*
+
+```mermaid
+flowchart LR
+    HANDS["In your hands<br/>(registers)"] --> BOARD["Chopping board<br/>(cache / SRAM)"]
+    BOARD --> FRIDGE["Fridge across the kitchen<br/>(DRAM)"]
+    FRIDGE --> SHOP["Supermarket<br/>(storage)"]
+```
+
 ---
 
 ## 4.2 The surprising fact: data movement dominates energy
@@ -75,7 +82,15 @@ Horowitz (2014) published approximate energy costs for a 45 nm chip process:
 
 **Table 4.1.** Approximate energy costs per operation, from Horowitz (2014). pJ = picojoule, 10⁻¹² joule. Reading a register costs far less than any row in this table.
 
-**Figure 4.2.** Fetching a number from DRAM costs about **170 times** the energy of multiplying it (640 ÷ 3.7 ≈ 173) and about **128 times** the energy of reading it from small on-chip SRAM. Data: Horowitz (2014).
+**Figure 4.3.** Fetching a number from DRAM costs about **170 times** the energy of multiplying it (640 ÷ 3.7 ≈ 173) and about **128 times** the energy of reading it from small on-chip SRAM. Data: Horowitz (2014).
+
+```mermaid
+xychart-beta
+    title "Energy per operation (pJ, log scale)"
+    x-axis ["Multiply", "SRAM read", "DRAM read"]
+    y-axis "picojoules" 0 --> 700
+    bar [3.7, 5, 640]
+```
 
 The following Python program computes the two ratios. Its complete expected output is shown below the code.
 
@@ -123,6 +138,16 @@ The **ridge point** is where the two limits meet: peak compute ÷ bandwidth.
 > [!NOTE]
 > **Why is it called a "roofline"?** Plot performance against intensity and the picture looks like a roof: a sloping line on the left (memory limit) that meets a flat line on the right (compute limit). Your workload's performance can never poke through the roof.
 
+**Figure 4.4.** The roofline for the hypothetical accelerator used in this section (10 TFLOP/s peak, 500 GB/s bandwidth). The sloping left side is the memory limit; the flat right side is the compute limit. The ridge point sits at 20 FLOP/byte. *Source: author's own diagram, based on Williams, Waterman & Patterson (2009).*
+
+```mermaid
+xychart-beta
+    title "Roofline (10 TFLOP/s, 500 GB/s)"
+    x-axis "Arithmetic intensity (FLOP/byte)" 0 --> 40
+    y-axis "Attainable performance (TFLOP/s)" 0 --> 12
+    line [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+```
+
 ---
 
 ## 4.4 Worked example 4.A: roofline for one layer
@@ -154,6 +179,16 @@ The **ridge point** is where the two limits meet: peak compute ÷ bandwidth.
 - Intensity ≈ **30.8 FLOP/byte**, above the ridge point, so the layer is **compute-bound** and reaches the full 10 TFLOP/s.
 
 The weights were fetched once and reused 32 times. That is the whole story of batching.
+
+**Figure 4.5.** Where batch 1 and batch 32 sit on the roofline. Batch 1 falls on the memory-limited slope; batch 32 clears the ridge point and reaches the compute ceiling. *Source: author's own diagram, based on the numbers in Worked example 4.A.*
+
+```mermaid
+xychart-beta
+    title "Batch 1 vs batch 32 on the roofline"
+    x-axis "Arithmetic intensity (FLOP/byte)" 0 --> 40
+    y-axis "Attainable performance (TFLOP/s)" 0 --> 12
+    line [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+```
 
 The following Python program checks all the numbers above. Its complete expected output is shown below the code.
 
@@ -217,6 +252,16 @@ A designer who understands the roofline has a checklist of ways to improve a mem
 
 **Table 4.3.** Techniques for improving a memory-bound workload.
 
+**Figure 4.6.** The same techniques shown as levers on the roofline. Bigger on-chip memory and higher bandwidth raise the slope; batching, lower precision and weight reuse push a workload to the right. *Source: author's own diagram.*
+
+```mermaid
+flowchart LR
+    MB["Memory-bound workload"] --> UP["Raise the slope<br/>higher bandwidth, larger on-chip memory"]
+    MB --> RIGHT["Move right on the x-axis<br/>batching, weight reuse, lower precision"]
+    UP --> CB["Compute-bound"]
+    RIGHT --> CB
+```
+
 > [!WARNING]
 > **A caution about batching.** Batching raises intensity but increases latency per request if requests must wait to form a batch. Servers therefore balance throughput (large batches) against latency (answer quickly). This trade-off is why the same model may be run differently in a data centre than on a phone.
 
@@ -227,6 +272,15 @@ A designer who understands the roofline has a checklist of ways to improve a mem
 **Networks.** The memory hierarchy does not stop at the edge of the chip. Moving data between chips, over links such as NVLink or InfiniBand, is another, slower level of the same hierarchy. When a model is split across many chips, this network becomes the bottleneck, which is the subject of Module 02.
 
 **Behaviourist AI.** Behaviour-driven agents, such as robots and game-playing agents, run a loop of *sense, decide, act*, often one observation at a time. That is batch size 1, the memory-bound case from this section. Low latency and low energy per decision therefore matter more than peak throughput, which is why such agents often run on edge hardware such as NPUs.
+
+**Figure 4.7.** The sense–decide–act loop of a behaviour-driven agent runs at batch size 1, so it sits on the memory-bound side of the roofline. *Source: author's own diagram, based on the behaviourist agent model described in Section 1.*
+
+```mermaid
+flowchart LR
+    S["Sense<br/>one observation"] --> D["Decide<br/>batch = 1, memory-bound"]
+    D --> A["Act"]
+    A --> S
+```
 
 ---
 
