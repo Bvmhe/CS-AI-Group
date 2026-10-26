@@ -78,6 +78,7 @@ We used AI to turn our technical notes into consistent, easy-to-read learning ma
 - Workflow diagrams showing how the parts of a system connect
 - A mind map linking our three areas: Hardware, Networks, and Behaviourist AI
 - Modular Markdown outlines, so each member can work on a section and merge it into our shared repository without conflicts
+
 **Evidence**
 
 <img src="assets/AI-03.png" alt="AI-03" width="400">
