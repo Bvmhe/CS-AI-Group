@@ -1300,6 +1300,8 @@ flowchart LR
 
 ## 5.3 Connection between training and inference
 
+![Alt text describing the image](assets/CS-02.png)
+
 Training and inference are two important stages of AI processing (Section 1.5).
 
 **Figure 5.3.** Training happens in the data centre on GPUs or accelerators; the trained weights are then shipped to the iPhone, where inference runs on the Neural Engine. *Source: author's own diagram.*
@@ -1320,6 +1322,8 @@ This shows how specialised AI hardware supports the practical use of trained AI 
 ---
 
 ## 5.4 Real-life application: Face ID
+
+![Alt text describing the image](assets/CS-03.png)
 
 **Figure 5.4.** An iPhone using the TrueDepth camera for Face ID. *Source: Apple Inc. (2024), Face ID and privacy documentation; photograph reproduced by the author for teaching purposes only.*
 
