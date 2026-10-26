@@ -1210,15 +1210,17 @@ flowchart LR
 
 # Section 5: Case Study — Apple Neural Engine (On-Device AI)
 
+![Alt text describing the image](assets/CS-01.png)
+
 > [!IMPORTANT]
 > **Big idea.** The Apple Neural Engine is the module's ideas in one real device: parallel MACs, low-precision numbers, and on-chip, shared memory, all working inside a few watts.
 
 ## Learning objectives
 
-By the end of this section you should be able to:
+By the end of this section, you should be able to:
 
 1. Describe what the Apple Neural Engine (ANE) is, where it sits in an Apple SoC, and what kinds of tasks it accelerates.
-2. Explain how the CPU, GPU, Neural Engine and unified memory work together, and how Core ML decides where each part of a model runs.
+2. Explain how the CPU, GPU, Neural Engine, and unified memory work together, and how Core ML decides where each part of a model runs.
 3. Distinguish training from inference, and explain why training happens in the data centre while inference happens on the device.
 4. Analyse Face ID as a sense–decide–act loop, and judge using the roofline model whether it is memory-bound or compute-bound.
 5. Evaluate the advantages and limitations of on-device AI, including memory footprint, hardware compatibility, privacy and cloud dependency.
