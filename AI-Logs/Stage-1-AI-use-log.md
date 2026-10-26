@@ -107,7 +107,3 @@ The content of every log and reflection reflects our own work and experience. AI
 **Evidence**
  
 <img src="assets/AI-04.png" alt="AI-04" width="400">
- 
-## 6. Responsible Use Statement
- 
-AI supported our learning, organization, and formatting. All final content, decisions, and conclusions were reviewed and approved by team members, and sources suggested by AI were [verified] before use.
