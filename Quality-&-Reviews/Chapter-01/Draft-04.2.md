@@ -234,5 +234,5 @@ A designer who understands the roofline has a checklist of ways to improve a mem
 - Williams, S., Waterman, A., & Patterson, D. (2009). Roofline: an insightful visual performance model for multicore architectures. *Communications of the ACM*, 52(4), 65–76.
 - Jouppi, N. P., et al. (2017). In-datacenter performance analysis of a Tensor Processing Unit. *Proceedings of ISCA 2017*.
 
-[← Previous: Section 3](03-parallel-processing-and-ai-acceleration.md) · [Back to module overview](README.md) · [Next: Section 5 →](05-case-study-apple-neural-engine.md)
+[← Previous: Section 3](Draft-03.2.md) · [Back to module overview](Draft-03.2.md) · [Next: Section 5 →](Draft-05.2.md)
 
