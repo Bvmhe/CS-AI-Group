@@ -204,5 +204,5 @@ A programmer usually does not write instructions for the MAC units directly. The
 - Sze, V., et al. (2017). Efficient processing of deep neural networks: A tutorial and survey. *Proceedings of the IEEE*.
 - NVIDIA. (n.d.). *GPU and Tensor Core documentation*.
 
-[← Previous: Section 1](01-definition-and-fundamental-concepts.md) · [Back to module overview](README.md) · [Next: Section 3 →](03-parallel-processing-and-ai-acceleration.md)
+[← Previous: Section 1](Draft-01.2.md) · [Back to module overview](Draft-01.1.md) · [Next: Section 3 →](Draft-03.02.md)
 
