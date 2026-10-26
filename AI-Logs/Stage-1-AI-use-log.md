@@ -68,9 +68,7 @@ We structured a case study on how Apple's Neural Engine supports on-device facia
  
 **Evidence**
  
-![Researching materials](images/researching-materials.png)
-*Researching materials*
- 
+![Researching materials](images/researching-materials.png) 
 ---
  
 ## 4. Content Structuring & Learning Materials
