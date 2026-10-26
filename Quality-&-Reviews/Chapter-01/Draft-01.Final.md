@@ -2,21 +2,21 @@
 
 ## Module 01 · Section 1: Definition and Fundamental Concepts
 
-> [!IMPORTANT]
-> **Big idea.** AI hardware is not magic: it is ordinary computing hardware that has been arranged so that the one kind of arithmetic that AI does all day is cheap in time, energy, and money.
-
 > [!NOTE]
 > **Where this module is going.** Section 1 defines AI hardware and the arithmetic it exists to speed up. Section 2 compares CPUs, GPUs, TPUs and NPUs. Section 3 shows how parallelism speeds up MACs, and where it stops helping. Section 4 explains why memory, not arithmetic, is often the real limit. Section 5 applies everything to a real device, the Apple Neural Engine.
+
+> [!IMPORTANT]
+> **Big idea.** AI hardware is not magic: it is ordinary computing hardware that has been arranged so that the one kind of arithmetic that AI does all day is cheap in time, energy, and money.
 
 ## Learning objectives
 
 By the end of this section you should be able to:
 
-1. Define AI hardware and name the five categories of hardware it covers.
+1. Define AI hardware and classify it into general-purpose processors, massively parallel processors, domain-specific accelerators, memory systems and interconnects.
 2. Explain what a neural network actually computes, and define a MAC.
 3. Compute the output of a single neuron by hand, and count the MACs in a layer.
 4. Use the key vocabulary of the module (FLOP, TOPS, throughput, latency, precision, bandwidth) correctly.
-5. Explain why faster CPUs alone do not solve AI workloads, and why parallelism and memory efficiency do.
+5. Explain why faster CPUs alone no longer solve AI workloads, and why parallelism and memory efficiency do.
 6. Distinguish training from inference and state how their hardware requirements differ.
 7. Choose between chips using the six comparison metrics.
 
@@ -28,9 +28,9 @@ By the end of this section you should be able to:
 - [1.4 Why not just use a faster CPU?](#14-why-not-just-use-a-faster-cpu)
 - [1.5 Training versus inference](#15-training-versus-inference)
 - [1.6 Choosing hardware: metrics to compare](#16-choosing-hardware-metrics-to-compare)
-- [1.7 Summary](#17-summary)
-- [1.8 Glossary](#18-glossary)
-- [1.9 Activities for Section 1](#19-activities-for-section-1)
+- [1.7 Activities for Section 1](#17-activities-for-section-1)
+- [1.8 Summary](#18-summary)
+- [1.9 Glossary](#19-glossary)
 - [1.10 Answer key](#110-answer-key)
 - [References](#references)
 
@@ -58,6 +58,28 @@ AI hardware therefore includes:
 
 **Table 1.1.** Five categories of AI hardware.
 
+**Figure 1.1.** The five categories of AI hardware, shown as a layered system: processors compute, memory systems feed them, and interconnects link chips and machines. *Source: author's own diagram, based on Hennessy & Patterson (2019).*
+
+```mermaid
+flowchart TB
+    subgraph P["Processors"]
+        CPU["CPU<br/>general-purpose"]
+        GPU["GPU<br/>massively parallel"]
+        ACC["TPU / NPU<br/>domain-specific"]
+    end
+    subgraph M["Memory systems"]
+        SRAM["On-chip SRAM"]
+        HBM["HBM / DRAM"]
+    end
+    subgraph I["Interconnects"]
+        LINK["NVLink / InfiniBand / Ethernet"]
+    end
+    CPU --> M
+    GPU --> M
+    ACC --> M
+    M --> I
+```
+
 > [!TIP]
 > **Going further.** A chip designed for one domain is often called an **ASIC** (application-specific integrated circuit). A TPU is an ASIC for neural-network arithmetic. The opposite extreme is the CPU, a general-purpose processor.
 
@@ -76,6 +98,19 @@ Output = (w1 × x1) + (w2 × x2) + (w3 × x3) + ... + (wn × xn)
 ```
 
 Each "multiply, then add to a running total" step is called a **MAC** (multiply-accumulate).
+
+**Figure 1.2.** A single neuron: each input is multiplied by its weight, and the products are summed into one output. *Source: author's own diagram.*
+
+```mermaid
+flowchart LR
+    X1["x1"] --> M1(("× w1"))
+    X2["x2"] --> M2(("× w2"))
+    X3["x3"] --> M3(("× w3"))
+    M1 --> S["Σ (sum)"]
+    M2 --> S
+    M3 --> S
+    S --> Y["output"]
+```
 
 ### Worked example 1.A: a single neuron by hand
 
@@ -156,11 +191,13 @@ Expected output:
 [1. 5. 5.]
 ```
 
+**Check by hand:** row 1 gives 0.5×4 + (−1.0)×3 + 2.0×1 = 1.0; row 2 gives 1.0×4 + 0.0×3 + 1.0×1 = 5.0; row 3 gives 0.0×4 + 2.0×3 + (−1.0)×1 = 5.0.
+
 ---
 
 ## 1.3 Key terms
 
-These terms are used throughout the module. A complete glossary is in Section 1.8. Some terms (bandwidth, utilisation) are only fully explained later, in Sections 3 and 4, so treat this table as a first look.
+These terms are used throughout the module. A complete glossary is in Section 1.9. Some terms (bandwidth, utilisation) are only fully explained later, in Sections 3 and 4, so treat this table as a first look.
 
 | Term | Definition |
 |---|---|
@@ -179,6 +216,15 @@ These terms are used throughout the module. A complete glossary is in Section 1.
 
 > [!WARNING]
 > **Caution: bits and bytes.** 1 byte = 8 bits. An FP32 number takes 4 bytes, an FP16 number 2 bytes, and an INT8 number 1 byte. Many mistakes in hardware calculations come from forgetting this conversion.
+
+**Figure 1.3.** The same model stored at three precisions. Lower precision uses less memory but keeps less information about each weight. *Source: author's own diagram.*
+
+```mermaid
+flowchart LR
+    FP32["FP32<br/>4 bytes<br/>32 bits"] --> FP16["FP16<br/>2 bytes<br/>16 bits"]
+    FP16 --> INT8["INT8<br/>1 byte<br/>8 bits"]
+    FP32 -.->|"less memory, less energy,<br/>some accuracy loss"| INT8
+```
 
 ### Prefixes you will meet
 
@@ -210,6 +256,16 @@ Gains now come from two directions, which this module keeps returning to:
 1. doing more things at once (**parallelism**), and
 2. moving less data (**memory efficiency**).
 
+**Figure 1.4.** CPU clock speed over time, in schematic form. Clock speeds rose steeply until the mid-2000s, then flattened as power and heat limits were reached. *Source: author's own sketch, based on the trends described in Hennessy & Patterson (2019).*
+
+```mermaid
+xychart-beta
+    title "CPU clock speed (schematic)"
+    x-axis ["1990", "1995", "2000", "2005", "2010", "2015", "2020"]
+    y-axis "GHz" 0 --> 5
+    line [0.03, 0.1, 1.0, 2.5, 3.0, 3.2, 3.3]
+```
+
 ---
 
 ## 1.5 Training versus inference
@@ -227,6 +283,18 @@ The same neural network is used in two very different ways, and the hardware req
 | **Batch size** | Large (hundreds or more) | Often 1 (one user at a time) |
 
 **Table 1.5.** Training versus inference.
+
+**Figure 1.5.** Where training and inference sit on the hardware landscape. Training happens in the data centre on large batches; inference happens both in the data centre and on edge devices, often at batch size 1. *Source: author's own diagram.*
+
+```mermaid
+flowchart LR
+    D["Large data set"] --> T["Training<br/>data centre, GPU/TPU clusters<br/>large batch, higher precision"]
+    T --> W["Trained weights"]
+    W --> I1["Inference<br/>data centre<br/>high volume"]
+    W --> I2["Inference<br/>edge device (phone, car)<br/>batch 1, low precision"]
+    I1 --> R["Answers to users"]
+    I2 --> R
+```
 
 This distinction explains much of the hardware landscape. The first Google TPU was built for inference only (Jouppi et al., 2017); later generations added training, and Google's newest announced generation, Ironwood (announced 2025), is again aimed at inference at scale (Google, 2025).
 
@@ -250,12 +318,32 @@ Section 1.3 defined the vocabulary. This table shows how those ideas are used to
 
 **Table 1.6.** Six metrics for comparing AI hardware.
 
+**Figure 1.6.** Peak versus achieved utilisation. The gap between the two bars is the idle silicon you paid for. *Source: author's own diagram, based on the concept of utilisation introduced here and formalised in Section 3.*
+
+```mermaid
+xychart-beta
+    title "Peak vs achieved utilisation"
+    x-axis ["Peak (quoted)", "Achieved (real workload)"]
+    y-axis "Percent of peak" 0 --> 100
+    bar [100, 30]
+```
+
 > [!WARNING]
 > **Caution: peak is not typical.** A chip's quoted "peak" number is what it could do if every arithmetic unit were busy every cycle. Real programs are usually far below that. Sections 3 and 4 explain why.
 
 ---
 
-## 1.7 Summary
+## 1.7 Activities for Section 1
+
+- **Activity 1.A.** A neuron has weights w = [2, -1, 0.5] and inputs x = [1, 4, 6]. Compute the output by hand, stating each MAC step.
+- **Activity 1.B.** A layer has 512 inputs and 2,048 outputs. How many MACs does one input vector require? How many FLOPs is that?
+- **Activity 1.C.** A chip is quoted as 100 TOPS but achieves only 30% utilisation on your workload. What throughput do you actually observe?
+- **Activity 1.D.** For each case, say whether it is training or inference, and give one reason: (a) a phone unlocking with Face ID, (b) a team fine-tuning a language model on 100 GPUs for three weeks, (c) a chatbot answering 10,000 user requests per second.
+- **Activity 1.E.** A model has 7 billion parameters stored in FP16. How much memory do the weights need? How much in INT8?
+
+---
+
+## 1.8 Summary
 
 - AI hardware is any processor, memory system or interconnect designed or well suited to run machine-learning workloads efficiently; it covers five categories (general-purpose CPUs, GPUs, domain-specific accelerators, memory systems, interconnects).
 - Neural networks are dominated by MACs (multiply-accumulate): one output is the sum of weight × input products, and a layer with 1,024 inputs and 4,096 outputs contains 4,194,304 MACs.
@@ -267,7 +355,7 @@ Section 1.3 defined the vocabulary. This table shows how those ideas are used to
 
 ---
 
-## 1.8 Glossary
+## 1.9 Glossary
 
 | Term | Meaning |
 |---|---|
@@ -292,16 +380,6 @@ Section 1.3 defined the vocabulary. This table shows how those ideas are used to
 | **Utilisation** | The fraction of a chip's peak capacity that is actually doing useful work. |
 | **Vector** | A one-dimensional list of numbers. |
 | **Weight** | A number learned during training and used during inference. |
-
----
-
-## 1.9 Activities for Section 1
-
-- **Activity 1.A.** A neuron has weights w = [2, -1, 0.5] and inputs x = [1, 4, 6]. Compute the output by hand, stating each MAC step.
-- **Activity 1.B.** A layer has 512 inputs and 2,048 outputs. How many MACs does one input vector require? How many FLOPs is that?
-- **Activity 1.C.** A chip is quoted as 100 TOPS but achieves only 30% utilisation on your workload. What throughput do you actually observe?
-- **Activity 1.D.** For each case, say whether it is training or inference, and give one reason: (a) a phone unlocking with Face ID, (b) a team fine-tuning a language model on 100 GPUs for three weeks, (c) a chatbot answering 10,000 user requests per second.
-- **Activity 1.E.** A model has 7 billion parameters stored in FP16. How much memory do the weights need? How much in INT8?
 
 ---
 
