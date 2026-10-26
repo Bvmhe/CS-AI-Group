@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="./banner.svg" width="100%" alt="Fengwei Fried Rice">
+</p>
 
 # Team Project Plan — Introduction to Artificial Intelligence
 
