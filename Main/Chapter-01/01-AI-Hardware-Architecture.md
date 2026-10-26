@@ -391,7 +391,7 @@ print("max error:", np.abs(w - w_back).max().round(4))
  
 Computers have several kinds of memory. Fast memory is small and expensive; large memory is slow and cheap. The arrangement from fastest to slowest is called the **memory hierarchy**.
  
-![Alt text describing the image](../images/Memory%20Hierarchy.png) 
+![Alt text describing the image](assets/Memory%20Hierarchy.png)
 #### Terms
  
 - **Cache:** a small, fast memory that keeps copies of recently used data close to the processor. Managed automatically by hardware.
