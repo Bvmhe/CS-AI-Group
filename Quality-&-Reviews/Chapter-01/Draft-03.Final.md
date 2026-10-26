@@ -42,6 +42,15 @@ By the end of this section you should be able to:
 
 **Table 3.1.** Four levels of parallelism in AI hardware.
 
+**Figure 3.1.** The four levels of parallelism, from a single instruction inside one core to a whole model split across many chips. Each level adds more units but also more coordination overhead. *Source: author's own diagram, based on Hennessy & Patterson (2019).*
+
+```mermaid
+flowchart LR
+    I["Instruction-level<br/>one core, overlapping instructions"] --> D["Data-level<br/>SIMD / SIMT"]
+    D --> M["Matrix-level<br/>systolic array"]
+    M --> C["Across chips<br/>data, pipeline, model splitting"]
+```
+
 ### Terms
 
 - **SIMD (Single Instruction, Multiple Data):** the same instruction is applied to a block of values in lock-step. On GPUs the equivalent idea is often called **SIMT** (Single Instruction, Multiple Threads): groups of threads (a *warp* on NVIDIA GPUs) execute together.
@@ -83,6 +92,16 @@ FLOPs = 2 × 4,194,304 = 8,388,608   (about 8.4 million)
 
 **Step 4: Interpret.** The idealised parallel accelerator is about 1,365× faster (roughly 1,400×) on this layer, even though its clock is slower, because it does 4,096 MACs per cycle instead of 1.
 
+**Figure 3.2.** The same 4,194,304 MACs on a single CPU core (one MAC per cycle) versus a 4,096-unit accelerator. The accelerator's slower clock is more than compensated by doing many MACs per cycle. *Source: author's own diagram, based on the illustrative assumptions in Table 3.2.*
+
+```mermaid
+xychart-beta
+    title "Time for one pass (log scale)"
+    x-axis ["CPU core (3 GHz)", "Accelerator (1 GHz, 4096 units)"]
+    y-axis "Time (microseconds)" 0 --> 2000
+    bar [1400, 1.0]
+```
+
 The following Python program reproduces the numbers. Its complete expected output is shown below the code.
 
 ```python
@@ -114,6 +133,20 @@ Expected output:
 
 Adding more units does not give unlimited speed-up. Four things get in the way.
 
+**Figure 3.3.** The four limits on parallel speed-up. Each can dominate on a real workload, and Amdahl's law sets a hard ceiling regardless of how many units you add. *Source: author's own diagram, based on Amdahl (1967) and the design discussion in Sections 3–4.*
+
+```mermaid
+flowchart TB
+    S["Ideal speed-up<br/>N units → N×"] --> L1["1. Amdahl's law<br/>serial fraction caps it"]
+    S --> L2["2. Idle units<br/>not enough independent MACs"]
+    S --> L3["3. Feeding the units<br/>memory cannot keep up"]
+    S --> L4["4. Communication<br/>chips exchanging results"]
+    L1 --> R["Real speed-up"]
+    L2 --> R
+    L3 --> R
+    L4 --> R
+```
+
 ### 1. Amdahl's law
 
 If a fraction *p* of a job can be parallelised, the best possible speed-up on *N* units is
@@ -123,6 +156,16 @@ speed-up = 1 ÷ ( (1 − p) + p ÷ N )
 ```
 
 *Worked example.* With p = 0.9 and N = 100: speed-up = 1 ÷ (0.1 + 0.009) ≈ **9.2×**. Even with unlimited units it can never exceed 1 ÷ 0.1 = **10×**, because the 10% serial part remains. In an AI pipeline the serial part might be loading data, pre-processing, or a step that cannot be spread out.
+
+**Figure 3.4.** Amdahl's law for p = 0.9. The speed-up rises with the number of units but flattens towards the ceiling of 10×, set by the 10% serial fraction. *Source: author's own diagram, based on Amdahl (1967).*
+
+```mermaid
+xychart-beta
+    title "Amdahl's law (p = 0.9)"
+    x-axis ["1", "2", "4", "8", "16", "32", "64", "128"]
+    y-axis "Speed-up" 0 --> 10
+    line [1, 1.8, 3.1, 4.7, 6.4, 7.8, 8.8, 9.4]
+```
 
 The following Python program computes the worked example and the ceiling. Its complete expected output is shown below the code.
 
@@ -167,6 +210,18 @@ Parallel MAC units are only one trick. Designers combine several. The three most
 
 **Table 3.3.** Three acceleration techniques and why they help.
 
+**Figure 3.5.** Three ways to speed up AI beyond adding more MAC units: quantisation (smaller numbers), specialised units (matrix operations in one hardware step) and batching (reuse weights across inputs). *Source: author's own diagram, based on Jouppi et al. (2017) and NVIDIA (n.d.).*
+
+```mermaid
+flowchart LR
+    W["Workload"] --> Q["Quantisation<br/>FP32 → INT8"]
+    W --> S["Specialised units<br/>Tensor Cores / ANE"]
+    W --> B["Batching<br/>reuse weights"]
+    Q --> F["Faster, cheaper inference"]
+    S --> F
+    B --> F
+```
+
 > [!TIP]
 > **Going further.** Three more techniques you may meet:
 > - **Sparsity:** skip multiplications by zero, so there is no work for values that cannot change the answer.
@@ -186,6 +241,17 @@ Quantisation converts a model's numbers from a high-precision format (such as FP
 | INT4 and below | 4 | 0.5 | Aggressively compressed models |
 
 **Table 3.4.** Common number formats in AI hardware.
+
+**Figure 3.6.** Quantising four sample weights to INT8 and back. The reconstructed values are close to the originals, with a maximum error of 0.0039. *Source: author's own diagram, based on the numbers in the code below.*
+
+```mermaid
+xychart-beta
+    title "Original vs dequantised weights"
+    x-axis ["w1", "w2", "w3", "w4"]
+    y-axis "Value" -1 --> 1
+    bar [0.5, -0.31, 0.02, 0.97]
+    line [0.5039, -0.3071, 0.0236, 0.9685]
+```
 
 The following Python program quantises four weights to INT8 and back, and reports the maximum error. Its complete expected output is shown below the code.
 
@@ -277,6 +343,8 @@ INT8: 7 × 10⁹ × 1 byte = **7 GB**.
 ## References
 
 - Amdahl, G. M. (1967). Validity of the single processor approach to achieving large scale computing capabilities. *AFIPS Conference Proceedings*.
+- Hennessy, J. L., & Patterson, D. A. (2019). A new golden age for computer architecture. *Communications of the ACM*, 62(2), 48–60.
 - Jouppi, N. P., et al. (2017). In-datacenter performance analysis of a Tensor Processing Unit. *Proceedings of ISCA 2017*.
+- NVIDIA. (n.d.). *GPU and Tensor Core documentation*.
 
 [← Previous: Section 2](Draft-02.2.md) · [Back to module overview](Draft-03.1.md) · [Next: Section 4 →](Draft-04.2.md)
