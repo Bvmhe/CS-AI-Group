@@ -125,229 +125,115 @@ A **systolic array** is a grid of processing elements that perform calculations 
 
 In this example, each processing element holds one weight. The example is simplified to illustrate the arithmetic and data reuse; it is not a cycle-accurate simulation of every commercial systolic array.
 
-#### Step 1: Define the weights and input
+
+### Step 1: Define the Weights and Input
 
 Let the weight matrix be
 
-\[
+$$
 W =
 \begin{bmatrix}
-1 & 2\\
+1 & 2 \\
 3 & 4
 \end{bmatrix}
-\]
+$$
 
 and let the input vector be
 
-\[
+$$
 x =
 \begin{bmatrix}
-5\\
+5 \\
 6
-\end{bmatrix}.
-\]
+\end{bmatrix}
+$$
 
 We want to calculate
 
-\[
-y = Wx.
-\]
+$$
+y = Wx
+$$
 
 The matrix has two rows and two columns, while the input vector has two elements. Therefore, the result contains two elements.
 
-#### Step 2: Calculate the first output
+### Step 2: Calculate the First Output
 
 The first output uses the first row of the matrix:
 
-\[
-y_1 = (1 \times 5) + (2 \times 6).
-\]
+$$
+y_1 = (1 \times 5) + (2 \times 6)
+$$
 
 Calculate each multiplication:
 
-\[
+$$
 1 \times 5 = 5
-\]
+$$
 
-\[
-2 \times 6 = 12.
-\]
+$$
+2 \times 6 = 12
+$$
 
 Add the two products:
 
-\[
-y_1 = 5 + 12 = 17.
-\]
+$$
+y_1 = 5 + 12 = 17
+$$
 
 Therefore,
 
-\[
+$$
 \boxed{y_1 = 17}
-\]
+$$
 
-#### Step 3: Calculate the second output
+### Step 3: Calculate the Second Output
 
-The second output uses the second row:
+The second output uses the second row of the matrix:
 
-\[
-y_2 = (3 \times 5) + (4 \times 6).
-\]
+$$
+y_2 = (3 \times 5) + (4 \times 6)
+$$
 
 Calculate each multiplication:
 
-\[
+$$
 3 \times 5 = 15
-\]
+$$
 
-\[
-4 \times 6 = 24.
-\]
+$$
+4 \times 6 = 24
+$$
 
 Add the two products:
 
-\[
-y_2 = 15 + 24 = 39.
-\]
+$$
+y_2 = 15 + 24 = 39
+$$
 
 Therefore,
 
-\[
+$$
 \boxed{y_2 = 39}
-\]
+$$
 
-#### Step 4: Write the complete result
+### Step 4: Write the Complete Result
 
 Combine both outputs:
 
-\[
+$$
 y =
 \begin{bmatrix}
-17\\
+17 \\
 39
-\end{bmatrix}.
-\]
+\end{bmatrix}
+$$
 
-In list notation, the result is:
+Therefore, the final result is:
 
-```text
-y = [17, 39]
-```
+$$
+\boxed{y = [17, 39]}
+$$
 
-The calculation uses four multiplications and four products accumulated into the two outputs. In hardware terms, this is commonly described as four MAC operations for this matrix-vector multiplication.
-
-#### Step 5: Understand the data movement
-
-**Figure 2.2. Conceptual dataflow for a 2 × 2 weight-stationary systolic array.**
-
-```text
-             Input values
-              x1 = 5
-              x2 = 6
-
-          +---------+    +---------+
-          | Weight 1| -> | Weight 2| -> Output y1
-          | MAC cell|    | MAC cell|
-          +---------+    +---------+
-
-          +---------+    +---------+
-          | Weight 3| -> | Weight 4| -> Output y2
-          | MAC cell|    | MAC cell|
-          +---------+    +---------+
-
-   Weights remain in their cells during the calculation.
-   Data and partial sums move through the array.
-```
-
-**Alt text:** A conceptual two-row, two-column systolic array. Each processing cell holds one weight. Input values are supplied to the cells, multiplication results are accumulated, and the two output values are 17 and 39.
-
-**Source:** Original teaching illustration based on the systolic-array concept described in Jouppi et al. (2017). The diagram simplifies the timing and routing of a real implementation.
-
-In a design that reuses data as illustrated:
-
-- Each of the four weights can be loaded once and reused in its processing cell.
-- Each of the two input values can be read once from the external source and then distributed to the processing elements that need it.
-- Data reuse reduces repeated memory accesses, although the exact number of transfers in a real chip depends on its memory hierarchy and dataflow design.
-
-#### Step 6: Count the simplified memory reads
-
-For this comparison, count one read for each weight and one read for each input. Ignore partial sums, cache effects, and other hardware transfers.
-
-**Without reuse:** Each of the four multiply operations fetches one weight and one input.
-
-\[
-4 \times 2 = 8 \text{ reads}
-\]
-
-**With reuse:** Read the four weights once and the two inputs once.
-
-\[
-4 + 2 = 6 \text{ reads}
-\]
-
-The reduction is
-
-\[
-8 - 6 = 2 \text{ reads}.
-\]
-
-The percentage reduction relative to the original eight reads is
-
-\[
-\frac{8-6}{8}\times 100\% = 25\%.
-\]
-
-Therefore, the simplified example reduces the counted reads from eight to six, a **25% reduction**.
-
-This is a teaching model, not a guarantee that every real systolic array will achieve exactly this reduction.
-
-#### Step 7: Verify the calculation with Python
-
-```python
-W = [[1, 2],
-     [3, 4]]
-
-x = [5, 6]
-
-# Calculate y = W * x
-y = [0, 0]
-
-for i in range(2):
-    for j in range(2):
-        y[i] += W[i][j] * x[j]
-
-# Simplified memory-read comparison
-reads_no_reuse = 0
-
-for i in range(2):
-    for j in range(2):
-        reads_no_reuse += 2  # one weight + one input
-
-reads_with_reuse = 4 + 2  # four weights + two inputs
-
-print("Output:", y)
-print("Reads without reuse:", reads_no_reuse)
-print("Reads with reuse:", reads_with_reuse)
-
-reduction = (
-    (reads_no_reuse - reads_with_reuse)
-    / reads_no_reuse
-) * 100
-
-print("Read reduction:", reduction, "%")
-```
-
-**Expected output:**
-
-```text
-Output: [17, 39]
-Reads without reuse: 8
-Reads with reuse: 6
-Read reduction: 25.0 %
-```
-
-The code verifies the arithmetic and the simplified read-count model. It does not simulate the physical timing of a systolic array.
-
----
 
 ## 2.4 What the First TPU Paper Measured
 
