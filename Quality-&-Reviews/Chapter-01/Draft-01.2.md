@@ -218,5 +218,5 @@ Section 1.3 defined the vocabulary. This table shows how those ideas are used to
 - Hennessy, J. L., & Patterson, D. A. (2019). A new golden age for computer architecture. *Communications of the ACM*, 62(2), 48–60.
 - Jouppi, N. P., et al. (2017). In-datacenter performance analysis of a Tensor Processing Unit. *Proceedings of ISCA 2017*.
 
-[← Back to module overview](README.md) · [Next: Section 2 →](02-cpu-vs-gpu-vs-tpu.md)
+[← Back to module overview](Draft-01.1.md) · [Next: Section 2 →](Draft-02.2.md)
 
