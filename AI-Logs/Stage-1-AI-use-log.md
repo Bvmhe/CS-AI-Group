@@ -51,7 +51,6 @@ It gave plain-language explanations and analogies. We asked follow-up questions 
 **Evidence**
  
 <img src="assets/AI-01.png" alt="AI-01" width="400"> 
----
  
 ## 3. Research & Case Study Development
  
@@ -66,8 +65,7 @@ We structured a case study on how Apple's Neural Engine supports on-device facia
  
 **Evidence**
  
-![Researching materials](images/researching-materials.png) 
----
+<img src="assets/AI-01.png" alt="AI-02" width="400">
  
 ## 4. Content Structuring & Learning Materials
  
@@ -81,17 +79,8 @@ We used AI to turn our technical notes into consistent, easy-to-read learning ma
 - A mind map linking our three areas: Hardware, Networks, and Behaviourist AI
 - Modular Markdown outlines, so each member can work on a section and merge it into our shared repository without conflicts
 **Evidence**
- 
-![Training vs. inference explainer](images/training-vs-inference.png)
-*Training vs. inference explainer*
- 
-![Mind map of Hardware, Networks and Behaviourist AI](images/mind-map.png)
-*Mind map of our three areas*
- 
-![Using AI to learn the materials: Cloud vs. Edge notes](images/cloud-vs-edge.png)
-*Using AI to learn the materials (Cloud vs. Edge notes)*
- 
----
+
+<img src="assets/AI-01.png" alt="AI-03" width="400">
  
 ## 5. Team Documentation & Role Alignment
  
@@ -117,10 +106,7 @@ The content of every log and reflection reflects our own work and experience. AI
  
 **Evidence**
  
-![Using AI to format work logs](images/work-logs.png)
-*Using AI to format work logs*
- 
----
+<img src="assets/AI-01.png" alt="AI-04" width="400">
  
 ## 6. Responsible Use Statement
  
