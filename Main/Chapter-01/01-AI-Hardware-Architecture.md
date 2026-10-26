@@ -491,8 +491,8 @@ Batching raises intensity but increases latency per request if requests must wai
 # Case Study: Apple Neural Engine – On-Device AI
  
 ## 1. Introduction
- 
-![Alt text describing the image](../images/CS-01.png)
+
+![Alt text describing the image](assets/CS-01.png)
 Source: tomshardware.com
  
 The Apple Neural Engine (ANE) is a specialized processor built into Apple's chips to improve the speed and efficiency of artificial intelligence (AI) tasks.
@@ -526,7 +526,7 @@ This makes AI applications faster and more energy-efficient.
  
 Training and inference are two important stages of AI processing.
  
-![Alt text describing the image](../images/CS-02.png) 
+![Alt text describing the image](assets/CS-02.png) 
 **Training:** AI models are trained using large amounts of data, usually on powerful computers equipped with GPUs or other AI accelerators.
  
 **Inference:** Once trained, the model can be used on an iPhone. The Neural Engine helps process new information quickly without needing to retrain the entire model.
@@ -535,7 +535,7 @@ This shows how specialized AI hardware supports the practical use of trained AI 
  
 ## 4. Real-Life Application: Face ID
  
-![Alt text describing the image](../images/CS-03.png)
+![Alt text describing the image](assets/CS-03.png)
  
 Source: techtime.news
  
