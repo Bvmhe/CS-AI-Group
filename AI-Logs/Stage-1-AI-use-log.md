@@ -65,7 +65,7 @@ We structured a case study on how Apple's Neural Engine supports on-device facia
  
 **Evidence**
  
-<img src="assets/AI-01.png" alt="AI-02" width="400">
+<img src="assets/AI-02.png" alt="AI-02" width="400">
  
 ## 4. Content Structuring & Learning Materials
  
@@ -80,7 +80,7 @@ We used AI to turn our technical notes into consistent, easy-to-read learning ma
 - Modular Markdown outlines, so each member can work on a section and merge it into our shared repository without conflicts
 **Evidence**
 
-<img src="assets/AI-01.png" alt="AI-03" width="400">
+<img src="assets/AI-03.png" alt="AI-03" width="400">
  
 ## 5. Team Documentation & Role Alignment
  
@@ -106,7 +106,7 @@ The content of every log and reflection reflects our own work and experience. AI
  
 **Evidence**
  
-<img src="assets/AI-01.png" alt="AI-04" width="400">
+<img src="assets/AI-04.png" alt="AI-04" width="400">
  
 ## 6. Responsible Use Statement
  
