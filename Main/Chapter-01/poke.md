@@ -39,23 +39,6 @@ Throughout the module we return to one small, concrete task so that every idea h
  
 Every hardware idea in this module (parallel units, low precision, on-chip memory) exists because of pressures like these.
 
-## Section 1: Definition and Fundamental Concepts
-
-> [!IMPORTANT]
-> **Big idea.** AI hardware is not magic: it is ordinary computing hardware that has been arranged so that the one kind of arithmetic that AI does all day is cheap in time, energy, and money.
-
-## Learning objectives
-
-By the end of this section you should be able to:
-
-1. Define AI hardware and classify it into general-purpose processors, massively parallel processors, domain-specific accelerators, memory systems and interconnects.
-2. Explain what a neural network actually computes, and define a MAC.
-3. Compute the output of a single neuron by hand, and count the MACs in a layer.
-4. Use the key vocabulary of the module (FLOP, TOPS, throughput, latency, precision, bandwidth) correctly.
-5. Explain why faster CPUs alone no longer solve AI workloads, and why parallelism and memory efficiency do.
-6. Distinguish training from inference and state how their hardware requirements differ.
-7. Choose between chips using the six comparison metrics.
-
 ## Table of contents
 
 - [1.1 What is AI hardware?](#11-what-is-ai-hardware)
@@ -69,8 +52,55 @@ By the end of this section you should be able to:
 - [1.9 Glossary](#19-glossary)
 - [1.10 Answer key](#110-answer-key)
 - [References](#references)
+- [2.1 The three chips in one sentence each](#21-the-three-chips-in-one-sentence-each)
+- [2.2 Comparison table](#22-comparison-table)
+- [2.3 Visual: where the chip area goes](#23-visual-where-the-chip-area-goes)
+- [2.4 Systolic arrays and a worked 2 × 2 example](#24-systolic-arrays-and-a-worked-2--2-example)
+- [2.5 What the first TPU paper measured](#25-what-the-first-tpu-paper-measured)
+- [2.6 The NPU: AI on small devices](#26-the-npu-ai-on-small-devices)
+- [2.7 Software: why a chip is only as useful as its tools](#27-software-why-a-chip-is-only-as-useful-as-its-tools)
+- [2.8 Activities for Section 2](#28-activities-for-section-2)
+- [2.9 Summary](#29-summary)
+- [2.10 Glossary](#210-glossary)
+- [2.11 Answer key](#211-answer-key)
+- [References](#references)
+- [3.1 Kinds of parallelism](#31-kinds-of-parallelism)
+- [3.2 Worked example 3.A: how many MACs, and how long?](#32-worked-example-3a-how-many-macs-and-how-long)
+- [3.3 Why parallel hardware has limits](#33-why-parallel-hardware-has-limits)
+- [3.4 Other acceleration techniques](#34-other-acceleration-techniques)
+- [3.5 Activities for Section 3](#35-activities-for-section-3)
+- [3.6 Summary](#36-summary)
+- [3.7 Glossary](#37-glossary)
+- [3.8 Answer key](#38-answer-key)
+- [References](#references)
+- [4.1 The memory hierarchy](#41-the-memory-hierarchy)
+- [4.2 The surprising fact: data movement dominates energy](#42-the-surprising-fact-data-movement-dominates-energy)
+- [4.3 Arithmetic intensity and the roofline model](#43-arithmetic-intensity-and-the-roofline-model)
+- [4.4 Worked example 4.A: roofline for one layer](#44-worked-example-4a-roofline-for-one-layer)
+- [4.5 Learner activity: roofline for a different layer](#45-learner-activity-roofline-for-a-different-layer)
+- [4.6 Further efficiency ideas](#46-further-efficiency-ideas)
+- [4.7 Bridges to the rest of the course](#47-bridges-to-the-rest-of-the-course)
+- [4.8 Activities for Section 4](#48-activities-for-section-4)
+- [4.9 Summary](#49-summary)
+- [4.10 Glossary](#410-glossary)
+- [4.11 Answer key](#411-answer-key)
+- [References](#references)
+- [5.1 Introduction](#51-introduction)
+- [5.2 How the Apple Neural Engine works](#52-how-the-apple-neural-engine-works)
+- [5.3 Connection between training and inference](#53-connection-between-training-and-inference)
+- [5.4 Real-life application: Face ID](#54-real-life-application-face-id)
+- [5.5 Advantages of the Apple Neural Engine](#55-advantages-of-the-apple-neural-engine)
+- [5.6 Limitations](#56-limitations)
+- [5.7 Case-study questions](#57-case-study-questions)
+- [5.8 Conclusion](#58-conclusion)
+- [5.9 Summary](#59-summary)
+- [5.10 Glossary](#510-glossary)
+- [5.11 Answer key](#511-answer-key)
+- [References](#references)
 
 ---
+
+## Section 1: Definition and Fundamental Concepts
 
 ## 1.1 What is AI hardware?
 
