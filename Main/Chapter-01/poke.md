@@ -16,6 +16,9 @@ When people talk about artificial intelligence, they usually talk about software
 - how quickly it can answer one request (milliseconds or seconds),
 - and whether it can run on a phone at all, or only in a data centre.
 This module explains why AI needs specialised hardware and how it's designed. It ends with a case study of the hardware inside a phone you may be holding right now: the Apple Neural Engine.
+
+> [!NOTE]
+> **Where this module is going.** Section 1 defines AI hardware and the arithmetic it exists to speed up. Section 2 compares CPUs, GPUs, TPUs and NPUs. Section 3 shows how parallelism speeds up MACs, and where it stops helping. Section 4 explains why memory, not arithmetic, is often the real limit. Section 5 applies everything to a real device, the Apple Neural Engine.
  
 ## Learning objectives
  
@@ -36,10 +39,7 @@ Throughout the module we return to one small, concrete task so that every idea h
  
 Every hardware idea in this module (parallel units, low precision, on-chip memory) exists because of pressures like these.
 
-## Module 01 · Section 1: Definition and Fundamental Concepts
-
-> [!NOTE]
-> **Where this module is going.** Section 1 defines AI hardware and the arithmetic it exists to speed up. Section 2 compares CPUs, GPUs, TPUs and NPUs. Section 3 shows how parallelism speeds up MACs, and where it stops helping. Section 4 explains why memory, not arithmetic, is often the real limit. Section 5 applies everything to a real device, the Apple Neural Engine.
+## Section 1: Definition and Fundamental Concepts
 
 > [!IMPORTANT]
 > **Big idea.** AI hardware is not magic: it is ordinary computing hardware that has been arranged so that the one kind of arithmetic that AI does all day is cheap in time, energy, and money.
