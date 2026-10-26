@@ -34,9 +34,24 @@ By the end of this section you should be able to:
 
 ## 5.1 Introduction
 
-The Apple Neural Engine (ANE) is a specialised processor built into Apple's chips to improve the speed and efficiency of artificial intelligence (AI) tasks. It is the NPU described in Section 2.6.
-
 **Figure 5.1.** The Neural Engine sits inside an Apple system-on-a-chip alongside the CPU, GPU and shared memory. *Source: Apple Inc. (2024), Apple Platform Security guide; diagram adapted by the author.*
+
+```mermaid
+flowchart TB
+    subgraph SoC["Apple system-on-a-chip"]
+        CPU["CPU"]
+        GPU["GPU"]
+        ANE["Neural Engine"]
+        MEM[("Unified memory")]
+        SEC["Secure Enclave"]
+    end
+    CPU --- MEM
+    GPU --- MEM
+    ANE --- MEM
+    ANE --- SEC
+```
+
+The Apple Neural Engine (ANE) is a specialised processor built into Apple's chips to improve the speed and efficiency of artificial intelligence (AI) tasks. It is the NPU described in Section 2.6.
 
 It was first introduced in 2017 with the A11 Bionic chip in the iPhone X. Apple described that first version as capable of 600 billion operations per second (Apple Inc., 2017); later generations are quoted in TOPS on Apple's specification pages for each chip.
 
@@ -125,6 +140,16 @@ Face ID is a real-world example of how Apple's AI hardware performs facial recog
 
 This process happens quickly because the iPhone uses specialised hardware to accelerate AI calculations.
 
+**Figure 5.5.** The five steps of Face ID, from scanning to unlocking. *Source: author's own diagram, based on Apple Inc. (2024), Face ID documentation.*
+
+```mermaid
+flowchart LR
+    S["1. Scan<br/>TrueDepth camera"] --> P["2. Process<br/>mathematical representation"]
+    P --> A["3. AI inference<br/>Neural Engine"]
+    A --> C["4. Compare<br/>with registered face"]
+    C --> U["5. Unlock<br/>if match"]
+```
+
 Face ID also protects privacy because facial authentication data is processed and protected on the device rather than stored in the cloud. Apple's public security documentation describes this data as being kept in the **Secure Enclave** (Apple Inc., 2024).
 
 > [!NOTE]
@@ -146,6 +171,17 @@ Face ID also protects privacy because facial authentication data is processed an
 | **Offline capability** | Many supported AI functions work without an internet connection. |
 
 **Table 5.2.** Advantages of the Apple Neural Engine.
+
+**Figure 5.6.** The five advantages of on-device AI with the Neural Engine. *Source: author's own diagram, based on Apple Inc. (2024).*
+
+```mermaid
+flowchart LR
+    ANE["Apple Neural Engine"] --> F["Faster processing"]
+    ANE --> E["Energy efficiency"]
+    ANE --> P["Better privacy"]
+    ANE --> R["Real-time performance"]
+    ANE --> O["Offline capability"]
+```
 
 ---
 
