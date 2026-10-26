@@ -1,1 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="300" viewBox="0 0 900 300">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#16213e"/>
+    </linearGradient>
+    <linearGradient id="wokGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a4a4a"/>
+      <stop offset="100%" style="stop-color:#1a1a1a"/>
+    </linearGradient>
+    <radialGradient id="fireGrad">
+      <stop offset="0%" style="stop-color:#ffdd00;stop-opacity:1"/>
+      <stop offset="50%" style="stop-color:#ff6600;stop-opacity:0.8"/>
+      <stop offset="100%" style="stop-color:#ff0000;stop-opacity:0"/>
+    </radialGradient>
+  </defs>
 
+  <!-- Background -->
+  <rect width="900" height="300" fill="url(#bgGrad)"/>
+
+  <!-- Steam animation -->
+  <g opacity="0.6">
+    <circle cx="450" cy="80" r="4" fill="#fff">
+      <animate attributeName="cy" values="100;40" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8;0" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="430" cy="80" r="3" fill="#fff">
+      <animate attributeName="cy" values="110;50" dur="2.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.6;0" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="470" cy="80" r="3" fill="#fff">
+      <animate attributeName="cy" values="105;45" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.7;0" dur="3s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Fire glow under wok -->
+  <ellipse cx="450" cy="230" rx="140" ry="40" fill="url(#fireGrad)">
+    <animate attributeName="rx" values="140;150;140" dur="0.3s" repeatCount="indefinite"/>
+  </ellipse>
+
+  <!-- Wok (frying pan) -->
+  <g>
+    <animateTransform attributeName="transform" type="translate"
+      values="0,0; -3,0; 3,0; 0,0" dur="0.4s" repeatCount="indefinite"/>
+    <path d="M 300 170 Q 450 280 600 170 Z" fill="url(#wokGrad)" stroke="#666" stroke-width="2"/>
+    <ellipse cx="450" cy="170" rx="150" ry="25" fill="#2a2a2a" stroke="#666" stroke-width="2"/>
+    <!-- Handle -->
+    <rect x="595" y="160" width="120" height="14" rx="7" fill="#8B4513"/>
+    <rect x="595" y="160" width="120" height="14" rx="7" fill="none" stroke="#5a2d0c" stroke-width="2"/>
+  </g>
+
+  <!-- Fried rice inside wok -->
+  <g>
+    <animateTransform attributeName="transform" type="translate"
+      values="0,0; 2,-3; -2,2; 0,0" dur="0.35s" repeatCount="indefinite"/>
+    <!-- Rice grains -->
+    <ellipse cx="400" cy="165" rx="4" ry="2" fill="#f5f5dc"/>
+    <ellipse cx="420" cy="170" rx="4" ry="2" fill="#ffd700"/>
+    <ellipse cx="440" cy="163" rx="4" ry="2" fill="#f5f5dc"/>
+    <ellipse cx="460" cy="168" rx="4" ry="2" fill="#ffd700"/>
+    <ellipse cx="480" cy="165" rx="4" ry="2" fill="#f5f5dc"/>
+    <ellipse cx="500" cy="170" rx="4" ry="2" fill="#ffd700"/>
+    <ellipse cx="410" cy="172" rx="3" ry="2" fill="#90EE90"/>
+    <ellipse cx="450" cy="175" rx="3" ry="2" fill="#ff6347"/>
+    <ellipse cx="490" cy="173" rx="3" ry="2" fill="#90EE90"/>
+  </g>
+
+  <!-- Flying rice animation -->
+  <g>
+    <circle cx="430" cy="150" r="3" fill="#ffd700">
+      <animate attributeName="cy" values="160;120;160" dur="0.6s" repeatCount="indefinite"/>
+      <animate attributeName="cx" values="430;440;430" dur="0.6s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="460" cy="145" r="3" fill="#f5f5dc">
+      <animate attributeName="cy" values="165;115;165" dur="0.7s" repeatCount="indefinite"/>
+      <animate attributeName="cx" values="460;450;460" dur="0.7s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="445" cy="148" r="2" fill="#90EE90">
+      <animate attributeName="cy" values="160;125;160" dur="0.55s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Spatula (sudip) -->
+  <g>
+    <animateTransform attributeName="transform" type="rotate"
+      values="-10 550 160; 15 550 160; -10 550 160" dur="0.5s" repeatCount="indefinite"/>
+    <rect x="545" y="100" width="8" height="60" fill="#c0c0c0" rx="3"/>
+    <rect x="535" y="150" width="28" height="18" fill="#a0a0a0" rx="4"/>
+  </g>
+
+  <!-- Title -->
+  <text x="450" y="50" text-anchor="middle" font-family="Arial Black, sans-serif" font-size="42" font-weight="bold" fill="#ffd700">
+    🍚 Fengwei Fried Rice 🍚
+  </text>
+  <text x="450" y="75" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#aaa">
+    ~ Fresh from the Wok ~
+  </text>
+</svg>
