@@ -209,5 +209,5 @@ The case study also shows the relationship between training and inference: AI mo
 - Jouppi, N. P., et al. (2017). In-datacenter performance analysis of a Tensor Processing Unit. *Proceedings of ISCA 2017*.
 - Horowitz, M. (2014). Computing's energy problem (and what we can do about it). *IEEE ISSCC*.
 
-[← Previous: Section 4](Draft-04.2.md) · [Back to module overview](project-plan.md)
+[← Previous: Section 4](Draft-04.2.md) · [Back to module overview](Draft-05.2.md)
 
