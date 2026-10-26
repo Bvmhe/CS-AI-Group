@@ -186,5 +186,5 @@ print("max error:", np.abs(w - w_back).max().round(4))
 - Jouppi, N. P., et al. (2017). In-datacenter performance analysis of a Tensor Processing Unit. *Proceedings of ISCA 2017*.
 - Amdahl, G. M. (1967). Validity of the single processor approach to achieving large scale computing capabilities. *AFIPS Conference Proceedings*.
 
-[← Previous: Section 2](02-cpu-vs-gpu-vs-tpu.md) · [Back to module overview](README.md) · [Next: Section 4 →](04-memory-hierarchy-and-computational-efficiency.md)
+[← Previous: Section 2](Draft-02.2.md) · [Back to module overview](Draft-03.1.md) · [Next: Section 4 →](Draft-04.2.md)
 
