@@ -1,4 +1,4 @@
-# E. Master Task List
+# Master Task List
 
 ## Stage 1 - Planning and Content Foundation
 
