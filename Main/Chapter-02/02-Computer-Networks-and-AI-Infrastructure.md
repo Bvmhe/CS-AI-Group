@@ -63,8 +63,6 @@ Every networking idea here (protocol layers, round trips, bandwidth, edge server
 
 # Section 1: Network Architecture and Communication Protocols
 
-![A layered view of a network: application data wrapped by transport, network and link headers as it moves down the stack](assets/M02-01.png)
-
 > [!IMPORTANT]
 > **Big idea.** A network is a set of machines connected by links that follow shared rules (protocols). Layering those rules lets each part do one job, so a phone, a router and a GPU server can cooperate even though they are built by different companies.
 
@@ -534,8 +532,6 @@ Expected output:
 ---
 
 # Section 3: Cloud Computing vs Edge Computing
-
-![Three tiers of computing: on-device, edge server near the user, and a distant cloud data centre](assets/M02-02.png)
 
 > [!IMPORTANT]
 > **Big idea.** Where a model runs is a design choice with trade-offs. The cloud offers almost unlimited compute and large models; the edge and the device offer shorter paths, less data leaving the user, and independence from the network. Most real systems combine all three.
@@ -1023,8 +1019,6 @@ xychart-beta
 ---
 
 # Section 5: Case Study — Cloud-Based AI Service (5G and AI-Powered Network Optimization)
-
-![A mobile device connecting through a 5G base station and core network to an edge server and a cloud data centre](assets/M02-03.png)
 
 > [!IMPORTANT]
 > **Big idea.** A cloud-based AI service is only as good as the network between the user and the model. 5G improves that network and brings computing closer through edge servers; at the same time, AI is used to run the 5G network itself. Each helps the other.
