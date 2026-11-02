@@ -207,6 +207,7 @@ Expected output:
 50 m: 16.6 pixels
 150 m: 5.5 pixels
 ```
+
 ## 1.3 LiDAR
 
 **LiDAR** (Light Detection and Ranging) is an active sensor. It fires very short laser pulses and measures how long each pulse takes to bounce back. Because light travels at a known speed (c ≈ 3 × 10⁸ m/s), the delay gives the distance directly. This is called **time of flight (ToF)**:
