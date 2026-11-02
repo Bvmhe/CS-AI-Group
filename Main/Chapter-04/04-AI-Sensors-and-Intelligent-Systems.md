@@ -126,13 +126,28 @@ Every idea here exists because of pressures like these: dim light, wet surfaces,
 
 A **sensor** is a device that converts a physical quantity (light, sound, distance, acceleration) into an electrical signal that a computer can read. In Module 01 we described Face ID as a small *sense–decide–act* loop. The same loop, at larger scale, is the structure of every intelligent system:
 
-```
-Figure 1.1  The sense-decide-act loop
+```mermaid
+flowchart LR
+  WORLD(["<b>World</b><br/>light, echoes"])
+  SENS["<b>Sensors</b><br/>camera<br/>LiDAR<br/>ultrasonic"]
+  ACQ["<b>Acquisition</b><br/>digitise<br/>timestamp"]
+  PERC["<b>Perception</b><br/>detect<br/>track, fuse"]
+  PLAN["<b>Planning</b><br/>predict<br/>decide"]
+  CTRL["<b>Control</b><br/>steering<br/>braking"]
+  ACT["<b>Actuators</b><br/>motors<br/>brakes"]
 
- WORLD --> SENSORS --> ACQUISITION --> PERCEPTION --> PLANNING --> CONTROL --> ACTUATORS --> WORLD
- (light,   camera       digitise,       detect,         predict,     steering,    motors,       (the loop
-  echoes)  LiDAR        timestamp       track, fuse     decide       braking      brakes        closes)
-           ultrasonic
+  WORLD --> SENS --> ACQ --> PERC --> PLAN --> CTRL --> ACT
+  ACT -. "the loop closes" .-> WORLD
+
+  classDef world fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a,stroke-width:1.5px
+  classDef hw fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1px
+  classDef sw fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px
+
+  class WORLD world
+  class SENS,ACQ,ACT hw
+  class PERC,PLAN,CTRL sw
+
+  linkStyle 6 stroke:#5f5e5a,stroke-width:1.5px,stroke-dasharray:5 4
 ```
 
 Two useful ways to classify sensors:
