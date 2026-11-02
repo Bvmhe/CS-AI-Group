@@ -456,20 +456,77 @@ A system can have high throughput and still be dangerously slow to react if the 
 
 A car drives at 100 km/h (27.78 m/s) and can brake with a deceleration of 6 m/s². Braking distance = v² ÷ (2a) = 771.6 ÷ 12 ≈ 64.3 m.
 
-```python
-v = 100 / 3.6
-a = 6.0
-brake = v ** 2 / (2 * a)
-for lat in (0.1, 0.3):
-    blind = v * lat
-    print(lat, round(blind, 2), round(brake, 1), round(blind + brake, 1))
+```mermaid
+flowchart LR
+  V["<b>Speed v</b><br/>100 ÷ 3.6<br/>= 27.78 m/s"]
+  A["<b>Deceleration a</b><br/>6.0 m/s²"]
+  BRAKE["<b>Braking distance</b><br/>v² ÷ (2a)<br/>≈ 64.3 m"]
+
+  subgraph L1["Latency 0.1 s"]
+    direction TB
+    B1["<b>Blind distance</b><br/>v × 0.1<br/>≈ 2.78 m"]
+    T1["<b>Total</b><br/>≈ 67.1 m"]
+    B1 --> T1
+  end
+
+  subgraph L2["Latency 0.3 s"]
+    direction TB
+    B2["<b>Blind distance</b><br/>v × 0.3<br/>≈ 8.33 m"]
+    T2["<b>Total</b><br/>≈ 72.6 m"]
+    B2 --> T2
+  end
+
+  V --> BRAKE
+  A --> BRAKE
+  V --> B1
+  V --> B2
+  BRAKE --> T1
+  BRAKE --> T2
+
+  classDef input fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f,stroke-width:1px
+  classDef calc fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px
+  classDef result fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1.5px
+
+  class V,A input
+  class BRAKE,B1,B2 calc
+  class T1,T2 result
+
+  style L1 fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a
+  style L2 fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a
 ```
 
-Expected output (latency in s, blind distance, braking distance, total):
+```mermaid
+flowchart TB
+  subgraph R1["Latency 0.1 s"]
+    direction LR
+    A1["<b>0.1</b><br/>latency (s)"]
+    B1["<b>2.78</b><br/>blind distance (m)"]
+    C1["<b>64.3</b><br/>braking distance (m)"]
+    D1["<b>67.1</b><br/>total (m)"]
+    A1 --> B1 --> C1 --> D1
+  end
 
-```
-0.1 2.78 64.3 67.1
-0.3 8.33 64.3 72.6
+  subgraph R2["Latency 0.3 s"]
+    direction LR
+    A2["<b>0.3</b><br/>latency (s)"]
+    B2["<b>8.33</b><br/>blind distance (m)"]
+    C2["<b>64.3</b><br/>braking distance (m)"]
+    D2["<b>72.6</b><br/>total (m)"]
+    A2 --> B2 --> C2 --> D2
+  end
+
+  R1 ~~~ R2
+
+  classDef lat fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f,stroke-width:1px
+  classDef calc fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px
+  classDef total fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1.5px
+
+  class A1,A2 lat
+  class B1,C1,B2,C2 calc
+  class D1,D2 total
+
+  style R1 fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a
+  style R2 fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a
 ```
 
 An extra 200 ms of latency adds 5.6 m to the total stopping distance, which can be the difference between a near miss and a collision.
