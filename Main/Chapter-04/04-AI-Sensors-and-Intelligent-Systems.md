@@ -714,7 +714,6 @@ flowchart TB
   class IF,PF,RF,FUSED feat
   class OUT,PLAN end
 ```
-
 A **bird's-eye view (BEV)** is a top-down map around the vehicle. Putting every sensor's features into the same BEV grid makes it natural to combine them (Philion & Fidler, 2020; Li et al., 2022; Liu et al., 2023).
 
 ## 3.3 The simplest fusion: weigh by confidence
