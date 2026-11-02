@@ -1004,18 +1004,37 @@ A detector makes 100 detections, of which 90 are correct and 10 are false alarms
 
 ## 4.1 The autonomy stack
 
-```
-Figure 4.1  A modular autonomy stack with safety monitoring
+```mermaid
+flowchart LR
+  SENS(["<b>Sensors</b>"])
+  ACQ["<b>Acquire</b>"]
+  PERC["<b>Perception</b><br/>detect, track, fuse"]
+  LOC["<b>Localisation</b><br/>where am I?"]
+  PRED["<b>Prediction</b><br/>where will others go?"]
+  PLAN["<b>Planning</b><br/>route, behaviour,<br/>trajectory"]
+  CTRL["<b>Control</b><br/>steering, throttle<br/>commands"]
+  ACT(["<b>Actuators</b><br/>steer, brake,<br/>accelerate"])
+  SAFE["<b>Safety monitor</b><br/>runs beside the stack<br/>checks plausibility, deadlines,<br/>sensor health"]
 
- sensors -> ACQUIRE -> PERCEPTION ---> LOCALISATION -> PREDICTION -> PLANNING -> CONTROL -> actuators
-                       (detect, track,  (where am I?)    (where will    (route,      (steering,   (steer, brake,
-                        fuse)                             others go?)    behaviour,   throttle     accelerate)
-                                                                         trajectory)  commands)
-                                  ^                                                      |
-                                  |_________ feedback: the vehicle's own motion _________|
+  SENS --> ACQ
+  ACQ --> PERC
+  PERC --> LOC
+  LOC --> PRED
+  PRED --> PLAN
+  PLAN --> CTRL
+  CTRL --> ACT
 
-            SAFETY MONITOR (runs beside the stack): checks plausibility, deadlines,
-            sensor health, and can trigger a minimal-risk manoeuvre (safe stop)
+  ACT -. "feedback: the vehicle's own motion" .-> LOC
+  SAFE -. "watches" .- PERC
+  SAFE -. "can trigger a safe stop" .-> ACT
+
+  classDef hw fill:#e1f5ee,stroke:#0f6e56,color:#04342c
+  classDef sw fill:#eeedfe,stroke:#534ab7,color:#26215c
+  classDef safety fill:#faece7,stroke:#993c1d,color:#4a1b0c
+
+  class SENS,ACQ,ACT hw
+  class PERC,LOC,PRED,PLAN,CTRL sw
+  class SAFE safety
 ```
 
 - **Perception** (Section 3) outputs tracked objects with uncertainty.
@@ -1066,25 +1085,32 @@ The earlier running example becomes a calculation. The car drives at 50 km/h (13
 - If detection happens at 25 m, the car stops with about 9 m to spare.
 - If detection happens at only 15 m, the car cannot stop. After the 2.08 m latency it has 12.92 m left; its speed when it reaches the obstacle is √(13.89² − 2 × 7 × 12.92) ≈ 3.5 m/s (about 12.5 km/h).
 
-```python
-v = 50 / 3.6
-a = 7.0
-lat = 0.15
+```mermaid
+flowchart LR
+  IN["<b>Inputs</b><br/>v = 50 / 3.6 = 13.89 m/s<br/>a = 7.0 m/s²<br/>lat = 0.15 s"]
+  BLIND["<b>Blind distance</b><br/>v × lat<br/>= 2.08 m"]
 
-def impact(d):
-    rem = d - v * lat
-    v2 = v ** 2 - 2 * a * rem
-    return 0.0 if v2 <= 0 else v2 ** 0.5
+  D25["<b>d = 25 m</b><br/>rem = 25 - 2.08 = 22.92 m<br/>v² = 192.90 - 2 × 7.0 × 22.92<br/>= -127.93 (below 0)"]
+  D15["<b>d = 15 m</b><br/>rem = 15 - 2.08 = 12.92 m<br/>v² = 192.90 - 2 × 7.0 × 12.92<br/>= 12.07"]
 
-for d in (25, 15):
-    print(d, round(impact(d), 1))
-```
+  O25(["<b>25 0.0</b><br/>stops in time"])
+  O15(["<b>15 3.5</b><br/>impact at 3.5 m/s"])
 
-Expected output (detection distance in m, impact speed in m/s):
+  IN --> BLIND
+  BLIND --> D25
+  BLIND --> D15
+  D25 --> O25
+  D15 --> O15
 
-```
-25 0.0
-15 3.5
+  classDef input fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f
+  classDef calc fill:#eeedfe,stroke:#534ab7,color:#26215c
+  classDef safe fill:#e1f5ee,stroke:#0f6e56,color:#04342c
+  classDef hit fill:#faece7,stroke:#993c1d,color:#4a1b0c
+
+  class IN input
+  class BLIND,D25,D15 calc
+  class O25 safe
+  class O15 hit
 ```
 
 This ties the whole module together: detection range (Section 1: pixels on target, LiDAR range), latency (Section 2), and the quality of the fused estimate (Section 3) decide whether the decision can be carried out at all. Even a 3.5 m/s impact is a serious injury risk for a child, so early, reliable detection beats any amount of late braking.
@@ -1101,15 +1127,27 @@ Let the cost of an unnecessary hard brake (a false alarm) be 1 unit, and the cos
 - Expected cost of not braking = p × 1,000.
 - Brake when (1 − p) \< 1,000p, that is when p \> 1 ÷ 1,001 ≈ **0.1%**.
 
-```python
-cost_fp, cost_fn = 1, 1000
-print(round(cost_fp / (cost_fp + cost_fn), 6))
-```
+```mermaid
+flowchart LR
+  FP["<b>cost_fp</b><br/>false-positive cost<br/>= 1"]
+  FN["<b>cost_fn</b><br/>false-negative cost<br/>= 1000"]
+  SUM["<b>Add the costs</b><br/>cost_fp + cost_fn<br/>= 1001"]
+  DIV["<b>Divide</b><br/>cost_fp ÷ 1001<br/>= 0.000999000..."]
+  OUT(["<b>Prints</b><br/>0.000999<br/>rounded to 6 places"])
 
-Expected output:
+  FP --> SUM
+  FN --> SUM
+  FP --> DIV
+  SUM --> DIV
+  DIV --> OUT
 
-```
-0.000999
+  classDef input fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f
+  classDef calc fill:#eeedfe,stroke:#534ab7,color:#26215c
+  classDef result fill:#e1f5ee,stroke:#0f6e56,color:#04342c
+
+  class FP,FN input
+  class SUM,DIV calc
+  class OUT result
 ```
 
 The threshold is tiny because the two errors are so unequal. But if the car brakes at 0.1% confidence, it will brake often for harmless things (shadows, plastic bags): the *phantom braking* problem, which is irritating and can itself cause rear-end collisions. The real cost ratio is not 1,000:1 at every speed and in every traffic situation, so the thresholds are tuned with data, simulation and road testing. The lesson is that **precision and recall (Section 3.7) are not abstract scores; they set a safety-versus-comfort trade-off.**
