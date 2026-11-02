@@ -564,19 +564,50 @@ This is where Module 01 and Module 04 meet.
 
 Suppose one frame needs a 100 GFLOP network (illustrative). With 8 cameras at 36 fps:
 
-```python
-flops_per_frame = 100e9
-cams, fps = 8, 36
-need = flops_per_frame * cams * fps
-print(round(need / 1e12, 1), 'TFLOP/s')
-print(round(need / 1e12 / 0.4, 1), 'TFLOP/s peak at 40% utilisation')
+```mermaid
+flowchart LR
+  subgraph IN["Inputs"]
+    direction TB
+    F["<b>flops_per_frame</b><br/>100 GFLOP"]
+    C["<b>cams</b><br/>8 cameras"]
+    P["<b>fps</b><br/>36 frames per second"]
+  end
+
+  NEED["<b>Compute needed</b><br/>flops_per_frame × cams × fps<br/>= 28.8 TFLOP/s"]
+  PEAK["<b>Peak at 40% utilisation</b><br/>need ÷ 0.4<br/>= 72.0 TFLOP/s"]
+
+  F --> NEED
+  C --> NEED
+  P --> NEED
+  NEED --> PEAK
+
+  classDef input fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f,stroke-width:1px
+  classDef calc fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px
+  classDef result fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1.5px
+
+  class F,C,P input
+  class NEED calc
+  class PEAK result
+
+  style IN fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a
 ```
 
-Expected output:
+```mermaid
+flowchart LR
+  subgraph OUT["Expected output"]
+    direction LR
+    A["<b>28.8 TFLOP/s</b><br/>compute needed"]
+    B["<b>72.0 TFLOP/s</b><br/>peak at 40% utilisation"]
+    A --> B
+  end
 
-```
-28.8 TFLOP/s
-72.0 TFLOP/s peak at 40% utilisation
+  classDef need fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px
+  classDef peak fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1.5px
+
+  class A need
+  class B peak
+
+  style OUT fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a
 ```
 
 The hypothetical accelerator in Module 01 (10 TFLOP/s peak) is far too small. And because the cameras are processed continuously, the realistic requirement is the *peak* figure that gives the needed performance after losses: here about 72 TFLOP/s. This is why self-driving computers carry hundreds of TOPS, and why Module 01's lessons (utilisation, memory-bound versus compute-bound, batch size) decide whether a system works. Note the contrast with a phone unlocking by Face ID: that was one image, one inference, batch 1. A car makes hundreds of inferences per second, continuously, and cannot skip one.
@@ -642,23 +673,46 @@ In the running example (a ball at dusk after rain), the camera sees the ball's c
 
 Table 3.2. Three levels of sensor fusion. After Hall & Llinas (1997) and Liu et al. (2023).
 
-```
-Figure 3.1  The sensor-fusion flow (feature-level fusion in bird's-eye view)
+```mermaid
+flowchart TB
+  CAM(["<b>Cameras</b>"])
+  LID(["<b>LiDAR</b>"])
+  RAD(["<b>Radar</b>"])
+  IMU(["<b>IMU + wheel speed</b>"])
 
-  CAMERAS ----> [image network] ----> image features --+
-                                                        |
-  LiDAR   ----> [point network] ----> point features ---+--> [FUSION in common
-                                                        |     BEV frame]  --> fused features
-  RADAR   ----> [radar network] ----> radar features ---+                          |
-                                                                                   v
-  IMU + wheel speed --> [ego-motion estimate] --------------> [time alignment]  [detect, segment,
-                                                                                 occupancy heads]
-                                                                                   |
-                                                                                   v
-                                            [data association + tracker (Kalman filter)]
-                                                                                   |
-                                                                                   v
-                                  tracked objects with position, velocity, uncertainty -> PLANNING
+  CNN["<b>Image network</b>"]
+  PNN["<b>Point network</b>"]
+  RNN["<b>Radar network</b>"]
+  EGO["<b>Ego-motion estimate</b>"]
+
+  IF["Image features"]
+  PF["Point features"]
+  RF["Radar features"]
+
+  FUSE["<b>Fusion in common BEV frame</b><br/>bird's-eye view"]
+  FUSED["Fused features"]
+  TIME["<b>Time alignment</b>"]
+  HEADS["<b>Detect, segment,<br/>occupancy heads</b>"]
+  TRACK["<b>Data association + tracker</b><br/>Kalman filter"]
+  OUT(["<b>Tracked objects</b><br/>position, velocity, uncertainty"])
+  PLAN(["<b>Planning</b>"])
+
+  CAM --> CNN --> IF --> FUSE
+  LID --> PNN --> PF --> FUSE
+  RAD --> RNN --> RF --> FUSE
+  IMU --> EGO --> TIME
+
+  FUSE --> FUSED --> TIME --> HEADS --> TRACK --> OUT --> PLAN
+
+  classDef sensor fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1px
+  classDef net fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px
+  classDef feat fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f,stroke-width:1px
+  classDef end fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a,stroke-width:1.5px
+
+  class CAM,LID,RAD,IMU sensor
+  class CNN,PNN,RNN,EGO,FUSE,TIME,HEADS,TRACK net
+  class IF,PF,RF,FUSED feat
+  class OUT,PLAN end
 ```
 
 A **bird's-eye view (BEV)** is a top-down map around the vehicle. Putting every sensor's features into the same BEV grid makes it natural to combine them (Philion & Fidler, 2020; Li et al., 2022; Liu et al., 2023).
@@ -675,19 +729,61 @@ A radar measures the range to the car ahead as 50.0 m with σ = 0.5 m. A camera 
 - Fused estimate = (4 × 50.0 + 0.25 × 52.0) ÷ (4 + 0.25) = 213 ÷ 4.25 ≈ **50.12 m**.
 - Fused variance = 1 ÷ 4.25 ≈ 0.235, so σ ≈ **0.49 m**, slightly better than the best sensor alone.
 
-```python
-z = [50.0, 52.0]
-s = [0.5, 2.0]
-w = [1 / x ** 2 for x in s]
-fused = sum(wi * zi for wi, zi in zip(w, z)) / sum(w)
-sigma = (1 / sum(w)) ** 0.5
-print(round(fused, 1), round(sigma, 2))
-```
+```mermaid
+flowchart LR
+  subgraph S1["Sensor 1"]
+    direction TB
+    Z1["<b>z₁ = 50.0</b><br/>measurement"]
+    S1V["<b>s₁ = 0.5</b><br/>uncertainty"]
+    W1["<b>w₁ = 1 ÷ s₁²</b><br/>= 4.00"]
+    S1V --> W1
+  end
 
-Expected output:
+  subgraph S2["Sensor 2"]
+    direction TB
+    Z2["<b>z₂ = 52.0</b><br/>measurement"]
+    S2V["<b>s₂ = 2.0</b><br/>uncertainty"]
+    W2["<b>w₂ = 1 ÷ s₂²</b><br/>= 0.25"]
+    S2V --> W2
+  end
 
+  FUSED["<b>Fused estimate</b><br/>Σ(wᵢ × zᵢ) ÷ Σ(wᵢ)<br/>= 213 ÷ 4.25<br/>≈ 50.1"]
+  SIGMA["<b>Fused uncertainty</b><br/>(1 ÷ Σ(wᵢ))^0.5<br/>= (1 ÷ 4.25)^0.5<br/>≈ 0.49"]
+
+  Z1 --> FUSED
+  Z2 --> FUSED
+  W1 --> FUSED
+  W2 --> FUSED
+  W1 --> SIGMA
+  W2 --> SIGMA
+
+  classDef input fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f,stroke-width:1px
+  classDef calc fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px
+  classDef result fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1.5px
+
+  class Z1,Z2,S1V,S2V input
+  class W1,W2 calc
+  class FUSED,SIGMA result
+
+  style S1 fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a
+  style S2 fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a
 ```
-50.1 0.49
+```mermaid
+flowchart LR
+  subgraph OUT["Expected output"]
+    direction LR
+    A["<b>50.1</b><br/>fused estimate"]
+    B["<b>0.49</b><br/>fused uncertainty"]
+    A --> B
+  end
+
+  classDef est fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1.5px
+  classDef unc fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px
+
+  class A est
+  class B unc
+
+  style OUT fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a
 ```
 
 > [!WARNING]
@@ -708,26 +804,54 @@ Distance to the lead car: prior estimate x = 50.0 m with variance P = 4.0. Proce
 - **Update 1 (radar):** z = 52.0, R = 1.0. K = 5 ÷ 6 = 0.833. x = 50 + 0.833 × 2 = 51.67. P = (1 − 0.833) × 5 = 0.83.
 - **Update 2 (camera):** z = 50.5, R = 4.0. K = 0.833 ÷ 4.833 = 0.172. x = 51.67 + 0.172 × (50.5 − 51.67) = 51.47. P = (1 − 0.172) × 0.833 = 0.69.
 
-```python
-x, P = 50.0, 4.0
-Q = 1.0
-P = P + Q
+```mermaid
+flowchart LR
+  START["<b>Start</b><br/>x = 50.0<br/>P = 4.0"]
+  PRED["<b>Predict</b><br/>P = P + Q<br/>Q = 1.0<br/>P = 5.0"]
+  U1["<b>Update 1</b><br/>z = 52.0, R = 1.0<br/>K = 5.0 ÷ 6.0 = 0.83<br/>x = 51.67<br/>P = 0.83"]
+  U2["<b>Update 2</b><br/>z = 50.5, R = 4.0<br/>K = 0.83 ÷ 4.83 = 0.17<br/>x = 51.47<br/>P = 0.69"]
+  O1(["<b>Prints</b><br/>51.67 0.83"])
+  O2(["<b>Prints</b><br/>51.47 0.69"])
 
-def update(x, P, z, R):
-    K = P / (P + R)
-    return x + K * (z - x), (1 - K) * P
+  START --> PRED --> U1 --> U2
+  U1 --> O1
+  U2 --> O2
 
-x, P = update(x, P, 52.0, 1.0)
-print(round(x, 2), round(P, 2))
-x, P = update(x, P, 50.5, 4.0)
-print(round(x, 2), round(P, 2))
+  classDef input fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f,stroke-width:1px
+  classDef calc fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px
+  classDef result fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1.5px
+
+  class START input
+  class PRED,U1,U2 calc
+  class O1,O2 result
 ```
 
-Expected output:
+```mermaid
+flowchart TB
+  subgraph R1["After update 1 (z = 52.0)"]
+    direction LR
+    A1["<b>51.67</b><br/>estimate x"]
+    B1["<b>0.83</b><br/>uncertainty P"]
+    A1 --> B1
+  end
 
-```
-51.67 0.83
-51.47 0.69
+  subgraph R2["After update 2 (z = 50.5)"]
+    direction LR
+    A2["<b>51.47</b><br/>estimate x"]
+    B2["<b>0.69</b><br/>uncertainty P"]
+    A2 --> B2
+  end
+
+  R1 --> R2
+
+  classDef est fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1.5px
+  classDef unc fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px
+
+  class A1,A2 est
+  class B1,B2 unc
+
+  style R1 fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a
+  style R2 fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a
 ```
 
 Notice three things. The precise radar pulled the estimate strongly; the noisier camera pulled it only a little; and the uncertainty P *fell* with each update. Real trackers use a state with position and velocity (a constant-velocity model), so they also estimate speed, but the idea is identical. Thrun, Burgard & Fox (2005) give a full treatment.
@@ -744,26 +868,79 @@ Before fusing, the system must decide which detection belongs to which object. T
 
 A single camera does not measure depth. With **two cameras** a known distance B apart (the baseline), a point appears shifted between the two images by a **disparity** d (in pixels), and depth is
 
-```
-Z = (f × B) / d
+```mermaid
+flowchart LR
+  subgraph IN["Inputs"]
+    direction TB
+    F["<b>f</b><br/>focal length (pixels)"]
+    B["<b>B</b><br/>baseline (m)"]
+    D["<b>d</b><br/>disparity (pixels)"]
+  end
+
+  NUM["<b>Multiply</b><br/>f × B"]
+  Z(["<b>Z = (f × B) ÷ d</b><br/>depth (m)"])
+
+  F --> NUM
+  B --> NUM
+  NUM --> Z
+  D -- "divide by" --> Z
+
+  classDef input fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f,stroke-width:1px
+  classDef calc fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px
+  classDef result fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1.5px
+
+  class F,B,D input
+  class NUM calc
+  class Z result
+
+  style IN fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a
 ```
 
 ### Worked example 3.C: stereo depth and its sensitivity
 
 Let f = 1,000 pixels and B = 0.30 m.
 
-```python
-f, B = 1000, 0.3
-for d in (5, 6, 7):
-    print(d, round(f * B / d, 1))
-```
+```mermaid
+flowchart LR
+  subgraph IN["Inputs"]
+    direction TB
+    F["<b>f</b><br/>1000"]
+    B["<b>B</b><br/>0.3"]
+  end
 
-Expected output:
+  NUM["<b>f × B</b><br/>1000 × 0.3<br/>= 300"]
 
-```
-5 60.0
-6 50.0
-7 42.9
+  subgraph LOOP["Loop over d"]
+    direction TB
+    D5["<b>d = 5</b><br/>300 ÷ 5"]
+    D6["<b>d = 6</b><br/>300 ÷ 6"]
+    D7["<b>d = 7</b><br/>300 ÷ 7"]
+  end
+
+  subgraph OUT["Expected output"]
+    direction TB
+    O5["<b>5 60.0</b>"]
+    O6["<b>6 50.0</b>"]
+    O7["<b>7 42.9</b>"]
+  end
+
+  F --> NUM
+  B --> NUM
+  NUM --> D5 --> O5
+  NUM --> D6 --> O6
+  NUM --> D7 --> O7
+
+  classDef input fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f,stroke-width:1px
+  classDef calc fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px
+  classDef result fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1.5px
+
+  class F,B input
+  class NUM,D5,D6,D7 calc
+  class O5,O6,O7 result
+
+  style IN fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a
+  style LOOP fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a
+  style OUT fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a
 ```
 
 A one-pixel error in disparity moves the answer from 50 m to 42.9 m or 60 m. The depth error per pixel of disparity error is approximately Z² ÷ (f × B): at 50 m, 2,500 ÷ 300 ≈ 8.3 m. Because of the *square*, camera depth error rises quickly with range, whereas a LiDAR's error stays at a few centimetres. Modern systems also learn depth from a single image or video using neural networks, and some convert it into a pseudo-LiDAR point cloud (Wang et al., 2019); this works well on average but is still an estimate, not a measurement.
