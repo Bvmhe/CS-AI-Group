@@ -353,12 +353,23 @@ Table 1.2. Comparison of automotive sensors. Ranges and costs are typical orders
 
 ## 2.1 The acquisition chain
 
-```
-Figure 2.1  From photons to a perception network
+```mermaid
+flowchart LR
+  A["<b>Sensing element</b><br/>photons in"]
+  B["<b>ADC</b><br/>analog to digital"]
+  C["<b>Pre-processing</b><br/>camera: ISP<br/>LiDAR: filter"]
+  D["<b>Timestamp</b><br/>and sync"]
+  E["<b>Transfer</b><br/>bus, link"]
+  F["<b>Memory</b><br/>DRAM / SRAM"]
+  G["<b>Neural network</b><br/>on CPU / GPU / NPU"]
 
- sensing   ->  ADC      ->  pre-processing  ->  timestamp  ->  transfer   ->  memory   ->  neural network
- element       (analog      (camera: ISP;       and sync       (bus, link)    (DRAM /      on CPU/GPU/NPU
-               to digital)   LiDAR: filter)                                   SRAM)
+  A --> B --> C --> D --> E --> F --> G
+
+  classDef hw fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1px
+  classDef sw fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px
+
+  class A,B,E,F hw
+  class C,D,G sw
 ```
 
 - **Sensing element:** photodiodes in a camera, a laser receiver in a LiDAR, a microphone-like transducer in an ultrasonic sensor.
