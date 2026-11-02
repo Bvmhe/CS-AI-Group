@@ -674,45 +674,41 @@ In the running example (a ball at dusk after rain), the camera sees the ball's c
 Table 3.2. Three levels of sensor fusion. After Hall & Llinas (1997) and Liu et al. (2023).
 
 ```mermaid
-flowchart TB
-  CAM(["<b>Cameras</b>"])
-  LID(["<b>LiDAR</b>"])
-  RAD(["<b>Radar</b>"])
-  IMU(["<b>IMU + wheel speed</b>"])
+flowchart LR
+  START["<b>Start</b><br/>x = 50.0<br/>P = 4.0"]
+  PRED["<b>Predict</b><br/>Q = 1.0<br/>P = P + Q = 5.0"]
+  U1["<b>Update 1</b><br/>z = 52.0, R = 1.0<br/>K = 0.83<br/>x = 51.67, P = 0.83"]
+  U2["<b>Update 2</b><br/>z = 50.5, R = 4.0<br/>K = 0.17<br/>x = 51.47, P = 0.69"]
+  O1(["<b>Prints</b><br/>51.67 0.83"])
+  O2(["<b>Prints</b><br/>51.47 0.69"])
 
-  CNN["<b>Image network</b>"]
-  PNN["<b>Point network</b>"]
-  RNN["<b>Radar network</b>"]
-  EGO["<b>Ego-motion estimate</b>"]
+  START --> PRED
+  PRED --> U1
+  U1 --> U2
+  U1 --> O1
+  U2 --> O2
 
-  IF["Image features"]
-  PF["Point features"]
-  RF["Radar features"]
+  classDef input fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f
+  classDef calc fill:#eeedfe,stroke:#534ab7,color:#26215c
+  classDef result fill:#e1f5ee,stroke:#0f6e56,color:#04342c
 
-  FUSE["<b>Fusion in common BEV frame</b><br/>bird's-eye view"]
-  FUSED["Fused features"]
-  TIME["<b>Time alignment</b>"]
-  HEADS["<b>Detect, segment,<br/>occupancy heads</b>"]
-  TRACK["<b>Data association + tracker</b><br/>Kalman filter"]
-  OUT(["<b>Tracked objects</b><br/>position, velocity, uncertainty"])
-  PLAN(["<b>Planning</b>"])
+  class START input
+  class PRED,U1,U2 calc
+  class O1,O2 result
+```
 
-  CAM --> CNN --> IF --> FUSE
-  LID --> PNN --> PF --> FUSE
-  RAD --> RNN --> RF --> FUSE
-  IMU --> EGO --> TIME
+```mermaid
+flowchart LR
+  R1["<b>After update 1</b><br/>x = 51.67<br/>P = 0.83"]
+  R2["<b>After update 2</b><br/>x = 51.47<br/>P = 0.69"]
 
-  FUSE --> FUSED --> TIME --> HEADS --> TRACK --> OUT --> PLAN
+  R1 --> R2
 
-  classDef sensor fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1px
-  classDef net fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px
-  classDef feat fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f,stroke-width:1px
-  classDef end fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a,stroke-width:1.5px
+  classDef first fill:#eeedfe,stroke:#534ab7,color:#26215c
+  classDef second fill:#e1f5ee,stroke:#0f6e56,color:#04342c
 
-  class CAM,LID,RAD,IMU sensor
-  class CNN,PNN,RNN,EGO,FUSE,TIME,HEADS,TRACK net
-  class IF,PF,RF,FUSED feat
-  class OUT,PLAN end
+  class R1 first
+  class R2 second
 ```
 A **bird's-eye view (BEV)** is a top-down map around the vehicle. Putting every sensor's features into the same BEV grid makes it natural to combine them (Philion & Fidler, 2020; Li et al., 2022; Liu et al., 2023).
 
