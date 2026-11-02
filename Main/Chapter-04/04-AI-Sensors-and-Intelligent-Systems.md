@@ -39,7 +39,7 @@ This module follows that chain from the physical sensor to the decision:
 > **Note** Where this module is going. Section 1 introduces the sensors and a comparison table. Section 2 follows the data from sensor to processor and shows why latency and data rate matter. Section 3 shows how fusion works, with a hand-calculated Kalman filter. Section 4 connects perception to decision-making and safety. Section 5 applies everything to Tesla, and discusses what can and cannot be concluded from public evidence.
 
 ```mermaid
-flowchart LR
+flowchart TB
   subgraph S1["S1 Sense"]
     direction TB
     cam[Camera]
@@ -89,6 +89,8 @@ flowchart LR
   style S2 fill:#e1f5ee,stroke:#0f6e56,color:#04342c
   style S3 fill:#eeedfe,stroke:#534ab7,color:#26215c
   style S4 fill:#eeedfe,stroke:#534ab7,color:#26215c
+```
+
 ## Learning objectives
 
 By the end of this module, you will be able to:
