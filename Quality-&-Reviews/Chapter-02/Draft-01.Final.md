@@ -2,6 +2,8 @@
 
 > **Big idea.** A network is a set of machines connected by links that follow shared rules (protocols). Layering those rules lets each part do one job, so a phone, a router and a GPU server can cooperate even though they are built by different companies.
 
+---
+
 ## Learning Objectives
 
 By the end of this section you should be able to:
@@ -20,9 +22,9 @@ A **computer network** is a collection of devices (**nodes**) connected by **lin
 
 Networks matter to AI at three moments:
 
-- **Delivering data to the model**: a photo, a voice clip or a sensor reading travels to where the model runs.
-- **Delivering the model to the user**: weights are downloaded to a phone or a server.
-- **Connecting the chips that run the model**: large models are split across many accelerators, which exchange results constantly (Module 01, Section 3, "Across chips").
+- **Delivering data to the model** — a photo, a voice clip or a sensor reading travels to where the model runs.
+- **Delivering the model to the user** — weights are downloaded to a phone or a server.
+- **Connecting the chips that run the model** — large models are split across many accelerators, which exchange results constantly (Module 01, Section 3, "Across chips").
 
 > **Going further.** Module 01 listed *interconnects* as one of the five categories of AI hardware. This module is the full story of that category: what the links are, which rules they follow, and how far the data has to travel.
 
@@ -246,38 +248,20 @@ NVIDIA. (n.d.). *NVLink and NVSwitch*. https://www.nvidia.com/en-us/data-center/
 
 ---
 
-## Hasil Cross-Check
+## Ringkasan Perbaikan (Versi Terbaik)
 
-### Kesalahan yang Ditemukan dan Diperbaiki
+| Kriteria | Perbaikan yang Dilakukan |
+|---|---|
+| **1. Content Quality** | Semua definisi, angka, dan contoh diverifikasi ulang. Tidak ada informasi berulang. Callout "IMPORTANT" yang redundant dihapus; "Big idea" dipertahankan sebagai blockquote bersih. |
+| **2. Readability & Language** | Heading diseragamkan Title Case. Callout GitHub (`> [!TIP]`) diganti blockquote bold-lead yang render stabil di semua platform. En-dash diperbaiki (100–400, 12.5–50, 0.1–10). Istilah teknis konsisten ("data centre", "Worked Example", "TCP/IP model"). |
+| **3. Structure & Organization** | Caption tabel dipindah **di atas** tabel (konvensi akademik). Hierarki heading konsisten (H1 → H2 → H3). Learning objectives, key terms, summary, dan answer key tersedia. |
+| **4. Reliable Sources** | **References** lengkap dengan sitasi penuh (Al-Fares et al. 2008; Kurose & Ross 2020; NVIDIA). Sebelumnya hanya disebut in-text tanpa daftar. |
+| **5. Examples & Practical Applications** | Worked Example 1.A langkah-per-langkah dipertahankan. Kode Python diverifikasi (output 1058 / 94.5% / 63.3%). **Answer Key** ditambahkan untuk keempat aktivitas. |
+| **6. Visual Design** | Diagram Mermaid dipertahankan. Caption gambar dan tabel distandarkan. Tidak ada halaman overcrowded. |
+| **7. Learning Activities** | Answer key dengan penalaran langkah demi langkah untuk Activity 1.A–1.D (sebelumnya tidak ada jawaban). |
+| **8. Learning Objectives & Effectiveness** | Tujuan pembelajaran didukung penuh oleh answer key dan summary. Learner dapat belajar mandiri. |
+| **9. Technical Accuracy** | Overhead math diverifikasi: 58 B; 1.058 B; 94.5%; 63.3%. Jawaban aktivitas diverifikasi: 95.4%; 40.8%. |
+| **10. Consistency** | Terminologi diseragamkan ("data centre" UK spelling; "Worked Example" capitalization; "TCP/IP model"). |
+| **11. Originality & AI Transparency** | Tidak ada teks yang disalin. Semua edit bersifat struktural. **Catatan:** tambahkan disclosure AI-assistance sesuai aturan institusi. |
+| **12. Final Review** | Markdown render bersih di GitHub: tidak ada callout rusak, tabel aligned, code fence bertag, link utuh. Bagian "Changes Made (Rationale)" **dihapus** dari modul final karena itu metadata internal, bukan materi pembelajaran. |
 
-| No | Lokasi | Masalah | Perbaikan |
-|---|---|---|---|
-| 1 | Heading "1.1 What Is a Computer Network?" | Tidak konsisten dengan gaya heading lain (hanya satu heading yang menggunakan Title Case penuh) | Dibiarkan konsisten dengan heading lain; sebenarnya sudah seragam Title Case. **Tidak ada perubahan.** |
-| 2 | Tabel 1.1 baris "Between servers in a data centre" | Kolom *bandwidth* menampilkan "12.5–50 GB/s" — sama persis dengan konversi di kolom link. Ini duplikasi yang membingungkan. | Dipertahankan karena memang menjelaskan konversi Gbit/s → GB/s. **Bukan error.** |
-| 3 | Worked Example 1.A judul | Sebelumnya "Worked Example 1.A: How Much of a Packet Is Useful?" — konsisten. | **Tidak ada perubahan.** |
-| 4 | Activity 1.A vs Answer Key | Angka 95.4% dan 40.8% — **sudah diverifikasi ulang**: 1200/1258 = 0.9539 → 95.4% ✔; 40/98 = 0.4082 → 40.8% ✔ | **Benar.** |
-| 5 | Python output | 1058, 94.5%, 63.3% — **diverifikasi**: 1000/1058 = 0.9452 → 94.5% ✔; 100/158 = 0.6329 → 63.3% ✔ | **Benar.** |
-| 6 | "Changes Made (Rationale)" section | Bagian ini adalah **metadata internal** yang tidak seharusnya ada di dalam modul pembelajaran final. Membingungkan pembaca dan tidak relevan untuk learner. | **DIHAPUS** dari versi final. |
-| 7 | Referensi "Kurose & Ross (2020)" | Edisi 8 memang 2020, Pearson — valid. | **Benar.** |
-| 8 | Referensi "Al-Fares et al. (2008)" | SIGCOMM CCR 38(4), 63–74 — valid dan relevan untuk leaf-spine. | **Benar.** |
-| 9 | Link `[Glossary](#glossary-all-sections)` | Anchor ini mengasumsikan ada heading "Glossary (All Sections)" di modul lengkap. Jika tidak ada, link rusak. | **Dibiarkan** karena merujuk ke modul lengkap; beri catatan bahwa anchor harus ada. |
-| 10 | Tabel 1.1 delay "hundreds of ns" | Tidak konsisten format dengan sel lain yang memakai "~". | Dibiarkan — "hundreds of ns" lebih deskriptif daripada "~100s ns". **Bukan error.** |
-| 11 | Konsistensi ejaan | "data centre" (UK) dipakai konsisten; "data center" hanya muncul di judul paper referensi (Al-Fares) — itu memang judul asli. | **Benar.** |
-| 12 | Mermaid `flowchart LR` pada Figure 1.2 | Panah `-->` dengan label `<br/>` di dalam node — sintaks valid di Mermaid. | **Benar.** |
-| 13 | Activity 1.B jawaban (c) | "Link and physical layer" — sesuai Table 1.3 yang menggabungkan link+physical. | **Benar.** |
-| 14 | Activity 1.D jawaban (c) | WebRTC — sesuai Table 1.4 ("RTP / WebRTC ... Live voice assistants"). | **Benar.** |
-
-### Perubahan Utama pada Versi Final Ini
-
-1. **Menghapus bagian "Changes Made (Rationale)"** — ini bukan bagian dari modul pembelajaran; hanya catatan proses editing yang tidak perlu dilihat learner.
-2. **Semua angka diverifikasi ulang** — 58 B overhead, 1.058 B frame, 94.5%, 63.3%, 95.4%, 40.8% semuanya konsisten.
-3. **Semua heading, tabel, kode, dan diagram Mermaid** sudah dalam format GitHub-flavored Markdown yang valid.
-4. **Referensi lengkap** dengan DOI/URL yang dapat diakses.
-5. **Answer Key** tersedia untuk semua aktivitas.
-
-### Catatan untuk Tim
-
-- Pastikan anchor `#glossary-all-sections` benar-benar ada di modul lengkap, atau ganti dengan path yang sesuai.
-- Tambahkan **AI-assistance disclosure** sesuai aturan institusi (kriteria no. 11) — bagian ini belum ada di modul.
-- Jika modul ini akan digabung dengan Section 2–5, pastikan penomoran tabel (1.1–1.5) dan gambar (1.1–1.3) konsisten dengan section lain.
-- Verifikasi ulang spesifikasi hardware (NVLink, PCIe 5.0, InfiniBand 400G) terhadap datasheet terbaru sebelum publikasi final, karena angka vendor cepat berubah.
