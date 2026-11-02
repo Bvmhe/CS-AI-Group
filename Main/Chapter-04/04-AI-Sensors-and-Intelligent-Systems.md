@@ -39,18 +39,57 @@ This module follows that chain from the physical sensor to the decision:
 > **Note** Where this module is going. Section 1 introduces the sensors and a comparison table. Section 2 follows the data from sensor to processor and shows why latency and data rate matter. Section 3 shows how fusion works, with a hand-calculated Kalman filter. Section 4 connects perception to decision-making and safety. Section 5 applies everything to Tesla, and discusses what can and cannot be concluded from public evidence.
 
 ```
-Figure 0.1  The module as one flowchart (each box is a Section)
+mermaid
+flowchart LR
+  subgraph S1["S1 Sense"]
+    direction TB
+    cam[Camera]
+    lidar[LiDAR]
+    ultra[Ultrasonic]
+    radar[Radar]
+  end
 
-  [S1 SENSE]  ->  [S2 ACQUIRE]  ->  [S3 FUSE & PERCEIVE]  ->  [S4 DECIDE & ACT]
-  camera           ADC, ISP,          detect, track,              predict, plan,
-  LiDAR            timestamps,        combine sensors,            control, safety
-  ultrasonic       real-time          estimate uncertainty        monitors
-  (radar)          deadlines
-                                  |
-                                  v
-                      [S5 CASE STUDY: Tesla vs sensor-rich designs]
-```
+  subgraph S2["S2 Acquire"]
+    direction TB
+    adc[ADC]
+    isp[ISP]
+    ts[Timestamps]
+    rt[Real-time deadlines]
+  end
 
+  subgraph S3["S3 Fuse & perceive"]
+    direction TB
+    det[Detect]
+    trk[Track]
+    fuse[Fuse sensors]
+    unc[Estimate uncertainty]
+  end
+
+  subgraph S4["S4 Decide & act"]
+    direction TB
+    pred[Predict]
+    plan[Plan]
+    ctrl[Control]
+    safe[Safety monitors]
+  end
+
+  S5["S5 Case study:<br/>Tesla vs sensor-rich designs"]
+
+  S1 --> S2 --> S3 --> S4
+  S3 --> S5
+
+  classDef item fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f,stroke-width:1px
+  classDef optional fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f,stroke-dasharray:4 3
+  classDef study fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a,stroke-width:1.5px
+
+  class cam,lidar,ultra,adc,isp,ts,rt,det,trk,fuse,unc,pred,plan,ctrl,safe item
+  class radar optional
+  class S5 study
+
+  style S1 fill:#e1f5ee,stroke:#0f6e56,color:#04342c
+  style S2 fill:#e1f5ee,stroke:#0f6e56,color:#04342c
+  style S3 fill:#eeedfe,stroke:#534ab7,color:#26215c
+  style S4 fill:#eeedfe,stroke:#534ab7,color:#26215c
 ## Learning objectives
 
 By the end of this module, you will be able to:
