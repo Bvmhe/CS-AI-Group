@@ -385,12 +385,36 @@ flowchart LR
 
 Illustrative array: 8 cameras, each 1,920 × 1,080 pixels, 12-bit raw output, 36 frames per second.
 
-```python
-w, h, bits, fps, n = 1920, 1080, 12, 36, 8
-frame = w * h * bits / 8
-print(frame)
-print(round(frame * fps / 1e6, 1), 'MB/s per camera')
-print(round(frame * fps * n / 1e9, 2), 'GB/s total')
+```mermaid
+flowchart LR
+  subgraph IN["Inputs"]
+    direction TB
+    W["<b>w × h</b><br/>1,920 × 1,080 pixels"]
+    BITS["<b>bits</b><br/>12-bit raw"]
+    FPS["<b>fps</b><br/>36 frames per second"]
+    N["<b>n</b><br/>8 cameras"]
+  end
+
+  FRAME["<b>Frame size</b><br/>w × h × bits ÷ 8<br/>= 3,110,400 bytes"]
+  CAM["<b>Per camera</b><br/>frame × fps ÷ 1e6<br/>≈ 112.0 MB/s"]
+  TOTAL["<b>Total</b><br/>frame × fps × n ÷ 1e9<br/>≈ 0.9 GB/s"]
+
+  W --> FRAME
+  BITS --> FRAME
+  FRAME --> CAM
+  FPS --> CAM
+  CAM --> TOTAL
+  N --> TOTAL
+
+  classDef input fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f,stroke-width:1px
+  classDef calc fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px
+  classDef result fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1.5px
+
+  class W,BITS,FPS,N input
+  class FRAME,CAM calc
+  class TOTAL result
+
+  style IN fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a
 ```
 
 Expected output:
