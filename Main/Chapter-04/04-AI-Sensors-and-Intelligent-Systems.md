@@ -417,12 +417,26 @@ flowchart LR
   style IN fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a
 ```
 
-Expected output:
+```mermaid
+flowchart LR
+  subgraph OUT["Expected output"]
+    direction LR
+    A["<b>3110400.0</b><br/>bytes per frame"]
+    B["<b>112.0 MB/s</b><br/>per camera"]
+    C["<b>0.9 GB/s</b><br/>total, 8 cameras"]
+  end
 
-```
-3110400.0
-112.0 MB/s per camera
-0.9 GB/s total
+  A --> B --> C
+
+  classDef frame fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f,stroke-width:1px
+  classDef cam fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px
+  classDef total fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1.5px
+
+  class A frame
+  class B cam
+  class C total
+
+  style OUT fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a
 ```
 
 One camera alone (112 MB/s) produces about three times the data of the 128-beam LiDAR in Worked example 1.C (37 MB/s). Cameras, not LiDARs, usually dominate the data volume. This data must pass through memory, and Module 01 taught us that moving data costs more energy than computing on it, so keeping raw images on the chip, or compressing them early, matters.
