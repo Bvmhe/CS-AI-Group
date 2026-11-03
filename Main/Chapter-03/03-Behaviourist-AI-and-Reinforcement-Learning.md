@@ -1,5 +1,3 @@
-[module-03-behaviourist-ai-reinforcement-learning.md](https://github.com/user-attachments/files/34270315/module-03-behaviourist-ai-reinforcement-learning.md)
-
 # Module 03: Behaviourist AI & Reinforcement Learning
 
 | | |
