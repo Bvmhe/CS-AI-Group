@@ -193,12 +193,19 @@ The width of the target in the image is (f × real width) ÷ distance:
 
 At 150 m the child is only about five pixels wide, which is hard for a network to classify reliably. This is why range and resolution are linked.
 
-```python
-import math
-W, hfov, size = 1920, 60, 0.5
-f = (W / 2) / math.tan(math.radians(hfov / 2))
-for d in (50, 150):
-    print(d, 'm:', round(f * size / d, 1), 'pixels')
+
+```mermaid
+flowchart TD
+    A([Start]) --> B["Import math"]
+    B --> C["Initialize variables:<br/>W = 1920<br/>hfov = 60<br/>size = 0.5"]
+    C --> D["Calculate focal length:<br/>f = (W / 2) / tan(radians(hfov / 2))"]
+    D --> E["Set distances: (50, 150)"]
+    E --> F{"More distances<br/>to process?"}
+    F -- Yes --> G["Get next distance d"]
+    G --> H["Calculate pixel width:<br/>round(f * size / d, 1)"]
+    H --> I[/"Print distance and pixel width"/]
+    I --> F
+    F -- No --> J([End])
 ```
 
 Expected output:
