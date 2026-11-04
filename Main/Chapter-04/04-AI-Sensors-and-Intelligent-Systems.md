@@ -182,8 +182,10 @@ A **camera** is a passive sensor. A lens focuses light onto an image sensor, a g
 
 Illustrative numbers. A camera has 1,920 pixels across and a horizontal field of view of 60°. The target is 0.5 m wide (a small child seen from the front). Under the pinhole model, the focal length expressed in pixels is
 
-```
-f = (W / 2) / tan(FOV / 2) = 960 / tan(30°) = 960 / 0.5774 ≈ 1,663 pixels
+```mermaid
+flowchart LR
+    A["W = 1,920 pixels<br/>FOV = 60°"] --> B["Half width ÷ tan(half FOV)<br/>960 ÷ tan(30°) = 960 ÷ 0.5774"]
+    B --> C["<b>f ≈ 1,663 pixels</b>"]
 ```
 
 The width of the target in the image is (f × real width) ÷ distance:
@@ -208,11 +210,12 @@ flowchart TD
     F -- No --> J([End])
 ```
 
-Expected output:
-
-```
-50 m: 16.6 pixels
-150 m: 5.5 pixels
+```mermaid
+flowchart LR
+    subgraph OUT["Expected output"]
+        direction LR
+        A["<b>50 m</b><br/>16.6 pixels"] --> B["<b>150 m</b><br/>5.5 pixels<br/>(hard to classify)"]
+    end
 ```
 
 ## 1.3 LiDAR
@@ -233,8 +236,10 @@ By sweeping the laser in many directions (a spinning head, a mirror, or a solid-
 
 A pulse returns after **400 ns** (4 × 10⁻⁷ s).
 
-```
-distance = (3 × 10⁸ × 4 × 10⁻⁷) / 2 = 120 / 2 = 60 m
+```mermaid
+flowchart LR
+    A["Pulse returns after<br/>400 ns = 4 × 10⁻⁷ s"] --> B["Out-and-back path<br/>3 × 10⁸ × 4 × 10⁻⁷<br/>= 120 m"]
+    B --> C["One way ÷ 2<br/><b>distance = 60 m</b>"]
 ```
 
 ### Worked example 1.C: how much data does a LiDAR produce?
