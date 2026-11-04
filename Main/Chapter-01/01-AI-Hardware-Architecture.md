@@ -155,25 +155,14 @@ flowchart LR
 
 **Result.** The output is **1.0**, computed with 3 MACs. (Real networks then pass this number through a simple function such as ReLU, which keeps positive numbers and turns negative ones into 0; that step is cheap compared with the MACs.)
 
-The following Python program checks the result. Its complete expected output is shown below the code.
+The flowchart below traces the same calculation.
 
-```python
-weights = [0.5, -1.0, 2.0]
-inputs = [4, 3, 1]
-
-total = 0
-for w, x in zip(weights, inputs):
-    total += w * x          # one MAC per loop
-
-print(total)                # 1.0
-print(max(0, total))        # ReLU -> 1.0
-```
-
-Expected output:
-
-```text
-1.0
-1.0
+```mermaid
+flowchart LR
+    S["Start<br/>total = 0"] --> M1["MAC 1<br/>0 + 0.5 × 4<br/>= 2.0"]
+    M1 --> M2["MAC 2<br/>2.0 + (−1.0 × 3)<br/>= −1.0"]
+    M2 --> M3["MAC 3<br/>−1.0 + 2.0 × 1<br/>= 1.0"]
+    M3 --> R["ReLU<br/>max(0, 1.0)<br/><b>output = 1.0</b>"]
 ```
 
 Now scale it up. One layer might have 4,096 neurons, each with 1,024 inputs. That is 1,024 × 4,096 = **4,194,304 MACs**, about 4.2 million, for one layer and one input. A modern large language model needs billions to trillions of MACs to produce a single answer.
@@ -185,35 +174,24 @@ Now scale it up. One layer might have 4,096 neurons, each with 1,024 inputs. Tha
 
 Writing out every MAC is tedious, so we group the weights into a table called a **matrix**, and the inputs into a list called a **vector**. "Multiply the weight matrix by the input vector" means "do all the neuron calculations at once". When we process several inputs at the same time, they form a second matrix, and we speak of matrix multiplication. Almost all of AI hardware is, at heart, hardware for multiplying matrices. A generalisation to higher dimensions is called a **tensor**, which is where the "T" in TPU comes from.
 
-```text
-Weight matrix W          Input vector x     Output vector y
-(rows = neurons)
-
-[ w11 w12 w13 ]          [ x1 ]             [ w11·x1 + w12·x2 + w13·x3 ]
-[ w21 w22 w23 ]    ×     [ x2 ]      =      [ w21·x1 + w22·x2 + w23·x3 ]
-[ w31 w32 w33 ]          [ x3 ]             [ w31·x1 + w32·x2 + w33·x3 ]
+```mermaid
+flowchart LR
+    W["<b>Weight matrix W</b><br/>(rows = neurons)<br/>w11 w12 w13<br/>w21 w22 w23<br/>w31 w32 w33"] --> X(("×"))
+    V["<b>Input vector x</b><br/>x1<br/>x2<br/>x3"] --> X
+    X --> Y1["y1 = w11·x1 + w12·x2 + w13·x3"]
+    X --> Y2["y2 = w21·x1 + w22·x2 + w23·x3"]
+    X --> Y3["y3 = w31·x1 + w32·x2 + w33·x3"]
 ```
 
 Each output value = 3 MACs. Whole layer = 3 × 3 = **9 MACs**.
 
-The same idea in NumPy. Its complete expected output is shown below the code.
+The same idea with numbers: one matrix-vector product does all 9 MACs at once.
 
-```python
-import numpy as np
-
-W = np.array([[0.5, -1.0, 2.0],
-              [1.0,  0.0, 1.0],
-              [0.0,  2.0, -1.0]])
-x = np.array([4, 3, 1])
-
-y = W @ x                   # all 9 MACs in one matrix-vector product
-print(y)                    # [ 1.  5.  5.]
-```
-
-Expected output:
-
-```text
-[1. 5. 5.]
+```mermaid
+flowchart LR
+    W["<b>W</b><br/>0.5, −1.0, 2.0<br/>1.0, 0.0, 1.0<br/>0.0, 2.0, −1.0"] --> P(("W × x<br/>9 MACs"))
+    X["<b>x</b><br/>4, 3, 1"] --> P
+    P --> Y["<b>y = [1, 5, 5]</b>"]
 ```
 
 **Check by hand:** row 1 gives 0.5×4 + (−1.0)×3 + 2.0×1 = 1.0; row 2 gives 1.0×4 + 0.0×3 + 1.0×1 = 5.0; row 3 gives 0.0×4 + 2.0×3 + (−1.0)×1 = 5.0.
@@ -456,15 +434,25 @@ flowchart LR
 
 **Figure 2.2.** A simplified, not-to-scale sketch of where each design spends its silicon. A CPU devotes much of its area to caches and control logic that make a single thread fast; a GPU devotes most area to arithmetic units; a TPU devotes nearly all of it to the grid of MACs and the memory that feeds it. The positions are a qualitative teaching sketch, not measurements. *Source: author's own sketch, based on the design descriptions in Jouppi et al. (2017) and Hennessy & Patterson (2019).*
 
-```text
-        CPU                       GPU                        TPU
-+------------------------+ +------------------------+ +------------------------+
-| [Core] [Core]  CACHE   | | c c c c c c c c c c c  | | Systolic array of      |
-| [Core] [Core]  CACHE   | | c c c c c c c c c c c  | | MAC units              |
-| big control logic      | | c c c c c c c c c c c  | | (data flows through)   |
-| large caches           | | small control, cache   | | + on-chip buffer       |
-+------------------------+ +------------------------+ +------------------------+
-   Few smart cores          Many simple cores          Matrix-multiply engine
+```mermaid
+flowchart LR
+    subgraph CPU["CPU: few smart cores"]
+        direction TB
+        C1["4 big cores"]
+        C2["Large caches"]
+        C3["Big control logic"]
+    end
+    subgraph GPU["GPU: many simple cores"]
+        direction TB
+        G1["Thousands of small cores"]
+        G2["Small control and cache"]
+    end
+    subgraph TPU["TPU: matrix-multiply engine"]
+        direction TB
+        T1["Systolic array of MAC units<br/>(data flows through)"]
+        T2["On-chip buffer"]
+    end
+    CPU ~~~ GPU ~~~ TPU
 ```
 
 In a CPU much of the area is "overhead" (caches, prediction logic) that makes a single thread fast. In a GPU, most area goes to arithmetic units. In a TPU, nearly all of it goes to the grid of MACs and the memory that feeds it.
@@ -481,16 +469,16 @@ Let the weights be **W = [[1, 2], [3, 4]]**, loaded once, one per cell. The inpu
 
 **Figure 2.3.** A 2 × 2 weight-stationary systolic array. Each cell holds one weight; inputs enter from the top and partial sums move to the right. *Source: author's own diagram.*
 
-```text
-                 x1=5        x2=6
-                  │           │
-               ┌──▼──┐     ┌──▼──┐
- row 1 (y1) →  │  1  │ ──► │  2  │ ──► y1
-               └──┬──┘     └──┬──┘
-               ┌──▼──┐     ┌──▼──┐
- row 2 (y2) →  │  3  │ ──► │  4  │ ──► y2
-               └─────┘     └─────┘
-        (each cell holds one weight; partial sums move right)
+```mermaid
+flowchart LR
+    X1(["x1 = 5"]) --> A["weight 1"]
+    X1 --> C["weight 3"]
+    X2(["x2 = 6"]) --> B["weight 2"]
+    X2 --> D["weight 4"]
+    A -->|"partial sum 5"| B
+    C -->|"partial sum 15"| D
+    B --> Y1(["y1 = 17"])
+    D --> Y2(["y2 = 39"])
 ```
 
 | Cycle | What happens | Result |
@@ -504,33 +492,12 @@ Let the weights be **W = [[1, 2], [3, 4]]**, loaded once, one per cell. The inpu
 
 **Memory reads.** Each of the 4 weights was read from memory **once**, and each of the 2 inputs was read **once**, then handed from cell to cell. Without neighbour-to-neighbour passing, each input would be read twice (once per output). That saving in memory traffic is the point of the systolic design, and it grows with array size.
 
-The following Python program counts the reads in both styles. Its complete expected output is shown below the code.
+The flowchart below compares the memory reads in both styles.
 
-```python
-W = [[1, 2],
-     [3, 4]]
-x = [5, 6]
-
-# Without reuse: every MAC fetches its own weight and its own input
-reads_no_reuse = 0
-y = [0, 0]
-for i in range(2):
-    for j in range(2):
-        y[i] += W[i][j] * x[j]
-        reads_no_reuse += 2          # one weight read + one input read
-
-# Systolic style: each weight read once, each input read once
-reads_systolic = 4 + 2
-
-print(y)                             # [17, 39]
-print(reads_no_reuse, reads_systolic)  # 8 6
-```
-
-Expected output:
-
-```text
-[17, 39]
-8 6
+```mermaid
+flowchart LR
+    I["W = [[1, 2], [3, 4]]<br/>x = [5, 6]<br/>4 MACs → y = [17, 39]"] --> N["Without reuse<br/>each MAC reads 1 weight + 1 input<br/>4 × 2 = <b>8 reads</b>"]
+    I --> S["Systolic style<br/>4 weights + 2 inputs, each once<br/>= <b>6 reads</b>"]
 ```
 
 ---
@@ -733,26 +700,14 @@ xychart-beta
     bar [1400, 1.0]
 ```
 
-The following Python program reproduces the numbers. Its complete expected output is shown below the code.
+The flowchart below puts the numbers together.
 
-```python
-macs = 1024 * 4096
-cpu_time = macs / 3e9            # 1 MAC per cycle at 3 GHz
-acc_time = macs / (4096 * 1e9)   # 4,096 MACs per cycle at 1 GHz
-
-print(macs)                      # 4194304
-print(round(cpu_time * 1e3, 2), "ms")   # ~1.40 ms
-print(round(acc_time * 1e6, 2), "us")   # ~1.02 us
-print(round(cpu_time / acc_time))       # ~1365
-```
-
-Expected output:
-
-```text
-4194304
-1.4 ms
-1.02 us
-1365
+```mermaid
+flowchart LR
+    M["Layer<br/>1,024 × 4,096<br/>= 4,194,304 MACs"] --> C["CPU<br/>1 MAC per cycle at 3 GHz<br/>4,194,304 ÷ 3e9<br/>≈ 1.4 ms"]
+    M --> A["Accelerator<br/>4,096 MACs per cycle at 1 GHz<br/>4,194,304 ÷ 4.096e12<br/>≈ 1.02 µs"]
+    C --> S["Speed-up<br/>1.4 ms ÷ 1.02 µs<br/>≈ 1,365×"]
+    A --> S
 ```
 
 > [!WARNING]
@@ -798,21 +753,12 @@ xychart-beta
     line [1, 1.8, 3.1, 4.7, 6.4, 7.8, 8.8, 9.4]
 ```
 
-The following Python program computes the worked example and the ceiling. Its complete expected output is shown below the code.
+The flowchart below shows the worked example and the ceiling.
 
-```python
-def amdahl(p, n):
-    return 1 / ((1 - p) + p / n)
-
-print(round(amdahl(0.9, 100), 1))     # 9.2
-print(round(amdahl(0.9, 10**9), 1))   # 10.0  (the ceiling)
-```
-
-Expected output:
-
-```text
-9.2
-10.0
+```mermaid
+flowchart LR
+    F["speed-up = 1 ÷ ((1 − p) + p ÷ N)<br/>p = 0.9 (90% parallel)"] --> A["N = 100 units<br/>1 ÷ (0.1 + 0.009)<br/>≈ 9.2×"]
+    F --> B["N → unlimited<br/>1 ÷ 0.1<br/>= 10.0× (the ceiling)"]
 ```
 
 ### 2. Idle units
@@ -884,27 +830,13 @@ xychart-beta
     line [0.5039, -0.3071, 0.0236, 0.9685]
 ```
 
-The following Python program quantises four weights to INT8 and back, and reports the maximum error. Its complete expected output is shown below the code.
+The flowchart below quantises four weights to INT8 and back, and shows the maximum error.
 
-```python
-import numpy as np
-
-w = np.array([0.5, -0.31, 0.02, 0.97], dtype=np.float32)
-scale = 1.0 / 127
-q = np.round(w / scale).astype(np.int8)    # quantise
-w_back = q.astype(np.float32) * scale      # dequantise
-
-print(q)                      # [ 64 -39   3 123]
-print(np.round(w_back, 4))    # [ 0.5039 -0.3071  0.0236  0.9685]
-print("max error:", np.abs(w - w_back).max().round(4))
-```
-
-Expected output:
-
-```text
-[ 64 -39   3 123]
-[ 0.5039 -0.3071  0.0236  0.9685]
-max error: 0.0039
+```mermaid
+flowchart LR
+    W["FP32 weights<br/>0.5, −0.31, 0.02, 0.97"] --> Q["Quantise<br/>round(w ÷ (1/127))<br/>INT8: 64, −39, 3, 123"]
+    Q --> D["Dequantise<br/>q × (1/127)<br/>0.5039, −0.3071, 0.0236, 0.9685"]
+    D --> E["<b>Max error = 0.0039</b>"]
 ```
 
 ---
@@ -997,19 +929,14 @@ xychart-beta
     bar [3.7, 5, 640]
 ```
 
-The following Python program computes the two ratios. Its complete expected output is shown below the code.
+The flowchart below computes the two ratios.
 
-```python
-mult, sram, dram = 3.7, 5, 640   # picojoules
-print(round(dram / mult))        # 173
-print(round(dram / sram))        # 128
-```
-
-Expected output:
-
-```text
-173
-128
+```mermaid
+flowchart LR
+    D["DRAM read<br/>640 pJ"] --> R1["DRAM ÷ multiply<br/>640 ÷ 3.7<br/>≈ <b>173×</b>"]
+    M["32-bit multiply<br/>3.7 pJ"] --> R1
+    D --> R2["DRAM ÷ SRAM<br/>640 ÷ 5<br/>= <b>128×</b>"]
+    S["SRAM read<br/>5 pJ"] --> R2
 ```
 
 Fetching a number from DRAM costs roughly two orders of magnitude (about 100× or more) more energy than multiplying it. Modern processes differ in the exact numbers, but the pattern remains. This is why AI chip designers focus on reusing data already on the chip.
@@ -1095,31 +1022,13 @@ xychart-beta
     line [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
 ```
 
-The following Python program checks all the numbers above. Its complete expected output is shown below the code.
+The flowchart below puts all the numbers together.
 
-```python
-PEAK = 10e12        # FLOP/s
-BW = 500e9          # bytes/s
-BYTES = 2           # FP16
-
-def roofline(n_in, n_out, batch):
-    flops = 2 * n_in * n_out * batch
-    weight_bytes = n_in * n_out * BYTES
-    io_bytes = batch * (n_in + n_out) * BYTES
-    intensity = flops / (weight_bytes + io_bytes)
-    attainable = min(PEAK, intensity * BW)
-    return intensity, attainable
-
-for b in (1, 32):
-    i, a = roofline(1024, 4096, b)
-    print(b, round(i, 1), round(a / 1e12, 2), "TFLOP/s", f"{a / PEAK:.0%}")
-```
-
-Expected output:
-
-```text
-1 1.0 0.5 TFLOP/s 5%
-32 30.8 10.0 TFLOP/s 100%
+```mermaid
+flowchart TD
+    I["Layer 1,024 → 4,096, FP16<br/>peak 10 TFLOP/s, bandwidth 500 GB/s"] --> F["intensity = FLOPs ÷ (weight bytes + input/output bytes)<br/>attainable = min(peak, intensity × bandwidth)"]
+    F --> B1["Batch 1<br/>intensity ≈ 1.0 FLOP/byte<br/>0.5 TFLOP/s = <b>5% of peak</b><br/>memory-bound"]
+    F --> B32["Batch 32<br/>intensity ≈ 30.8 FLOP/byte<br/>10.0 TFLOP/s = <b>100% of peak</b><br/>compute-bound"]
 ```
 
 ---
@@ -1403,18 +1312,12 @@ Despite its advantages, the Apple Neural Engine has some limitations.
 4. Give one benefit and one drawback of keeping AI processing on the device rather than in the cloud.
 5. Explain, using the Section 4 energy table, why unified memory saves energy as well as time.
 
-The following Python program checks the arithmetic for question 3. Its complete expected output is shown below the code.
+The flowchart below checks the arithmetic for question 3.
 
-```python
-params = 3e9
-bytes_per_weight = 0.5          # 4-bit = half a byte
-print(params * bytes_per_weight / 1e9, "GB")   # 1.5 GB
-```
-
-Expected output:
-
-```text
-1.5 GB
+```mermaid
+flowchart LR
+    P["3 billion parameters"] --> B["× 0.5 bytes each<br/>(4-bit = half a byte)"]
+    B --> R["<b>1.5 GB</b>"]
 ```
 
 ---
