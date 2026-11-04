@@ -188,25 +188,12 @@ flowchart LR
 
 **Result.** Large payloads waste little on headers; very small messages waste more than a third of the link. This is one reason many small messages are batched together, an idea that returns in Section 4.
 
-The following Python program checks the result. Its complete expected output is shown below the code.
+The flowchart below summarises the result.
 
-```python
-HEADERS = 20 + 20 + 14 + 4   # TCP + IP + Ethernet header + Ethernet FCS (bytes)
-
-def efficiency(payload):
-    return payload / (payload + HEADERS)
-
-print(1000 + HEADERS)                 # frame size for a 1,000-byte payload
-print(f"{efficiency(1000):.1%}")
-print(f"{efficiency(100):.1%}")
-```
-
-Expected output:
-
-```text
-1058
-94.5%
-63.3%
+```mermaid
+flowchart LR
+    H["Headers<br/>TCP 20 + IP 20 + Ethernet 14 + FCS 4<br/>= 58 bytes"] --> A["1,000-byte payload<br/>frame = 1,058 bytes<br/>efficiency 1,000 ÷ 1,058<br/>= <b>94.5%</b>"]
+    H --> B["100-byte payload<br/>frame = 158 bytes<br/>efficiency 100 ÷ 158<br/>= <b>63.3%</b>"]
 ```
 
 > [!WARNING]
@@ -391,22 +378,12 @@ QUIC runs in user space on top of UDP, combines connection setup with encryption
 
 **Table 2.2.** Time to first byte for a fresh connection. Connection reuse and session resumption can remove some of these round trips in practice.
 
-The following Python program checks the numbers. Its complete expected output is shown below the code.
+The flowchart below compares the two.
 
-```python
-def time_to_first_byte(rtt_ms, round_trips):
-    return rtt_ms * round_trips
-
-rtt = 40
-print("TCP + TLS 1.3:", time_to_first_byte(rtt, 3), "ms")
-print("QUIC:", time_to_first_byte(rtt, 2), "ms")
-```
-
-Expected output:
-
-```text
-TCP + TLS 1.3: 120 ms
-QUIC: 80 ms
+```mermaid
+flowchart LR
+    R["Round-trip time<br/>40 ms"] --> T["TCP + TLS 1.3<br/>3 round trips × 40 ms<br/>= <b>120 ms</b>"]
+    R --> Q["QUIC<br/>2 round trips × 40 ms<br/>= <b>80 ms</b>"]
 ```
 
 > [!IMPORTANT]
@@ -438,27 +415,13 @@ flowchart LR
     PIPE -->|"ACKs return after one RTT"| SND
 ```
 
-The following Python program checks the numbers. Its complete expected output is shown below the code.
+The flowchart below puts the numbers together.
 
-```python
-link = 1e9          # bit/s
-rtt = 0.040         # seconds
-window = 65535      # bytes
-
-bdp = link * rtt / 8                 # bytes
-limit = window * 8 / rtt             # bit/s
-
-print(bdp / 1e6, "MB")
-print(round(limit / 1e6, 1), "Mbit/s")
-print(f"{limit / link:.2%}")
-```
-
-Expected output:
-
-```text
-5.0 MB
-13.1 Mbit/s
-1.31%
+```mermaid
+flowchart LR
+    I["Link 1 Gbit/s<br/>RTT 40 ms<br/>window 65,535 bytes"] --> B["Bandwidth-delay product<br/>1e9 × 0.040 ÷ 8<br/>= <b>5.0 MB</b> needed in flight"]
+    I --> L["Window limit<br/>65,535 × 8 ÷ 0.040<br/>≈ <b>13.1 Mbit/s</b>"]
+    L --> U["Link used<br/>13.1 ÷ 1,000<br/>≈ <b>1.31%</b>"]
 ```
 
 ---
@@ -475,25 +438,13 @@ where **MSS** is the maximum segment size (about 1,460 bytes of payload on Ether
 
 **Problem.** For MSS = 1,460 bytes and RTT = 40 ms, find the throughput at loss rates p = 10⁻⁶, 10⁻⁴ and 10⁻².
 
-The following Python program computes the three values. Its complete expected output is shown below the code.
+The flowchart below shows the three values.
 
-```python
-import math
-
-MSS = 1460       # bytes
-RTT = 0.040      # seconds
-
-for p in (1e-6, 1e-4, 1e-2):
-    rate = 1.22 * MSS * 8 / (RTT * math.sqrt(p))
-    print(p, round(rate / 1e6, 1), "Mbit/s")
-```
-
-Expected output:
-
-```text
-1e-06 356.2 Mbit/s
-0.0001 35.6 Mbit/s
-0.01 3.6 Mbit/s
+```mermaid
+flowchart LR
+    F["throughput ≈ 1.22 × MSS ÷ (RTT × √p)<br/>MSS = 1,460 bytes, RTT = 40 ms"] --> A["Loss p = 0.0001%<br/>(1 in a million)<br/><b>356.2 Mbit/s</b>"]
+    F --> B["Loss p = 0.01%<br/>(1 in 10,000)<br/><b>35.6 Mbit/s</b>"]
+    F --> C["Loss p = 1%<br/>(1 in 100)<br/><b>3.6 Mbit/s</b>"]
 ```
 
 **Interpretation.** Because of the square root, a 100× increase in loss produces a 10× fall in throughput. A wireless last hop with noticeable loss, or a congested path, can therefore dominate the whole transfer, however fast the backbone is.
@@ -635,29 +586,13 @@ xychart-beta
     bar [150, 100, 15]
 ```
 
-The following Python program checks the numbers. Its complete expected output is shown below the code.
+The flowchart below puts the numbers together.
 
-```python
-def tx_ms(size_bytes, rate_bps):
-    return size_bytes * 8 / rate_bps * 1000
-
-upload = tx_ms(200_000, 20e6)
-cloud = upload + 60 + 10
-edge = upload + 10 + 10
-
-print("Upload:", round(upload), "ms")
-print("Cloud:", round(cloud), "ms")
-print("Edge:", round(edge), "ms")
-print("On-device:", 15, "ms")
-```
-
-Expected output:
-
-```text
-Upload: 80 ms
-Cloud: 150 ms
-Edge: 100 ms
-On-device: 15 ms
+```mermaid
+flowchart LR
+    U["Upload<br/>200,000 bytes × 8 ÷ 20 Mbit/s<br/>= 80 ms"] --> C["Cloud<br/>80 + 60 round trip + 10 inference<br/>= <b>150 ms</b>"]
+    U --> E["Edge<br/>80 + 10 round trip + 10 inference<br/>= <b>100 ms</b>"]
+    D["On-device<br/>no upload"] --> O["<b>15 ms</b>"]
 ```
 
 ---
@@ -670,24 +605,14 @@ On-device: 15 ms
 2. **Step 2: Sending only events.** 100 cameras × 200 bytes × 8 bits × 10 events/s = 1,600,000 bit/s = **1.6 Mbit/s**.
 3. **Step 3: Ratio.** 500 ÷ 1.6 = **312.5**, so about 300 times less traffic.
 
-The following Python program checks the numbers. Its complete expected output is shown below the code.
+The flowchart below compares the two.
 
-```python
-cameras = 100
-video = cameras * 5                          # Mbit/s
-events = cameras * 200 * 8 * 10 / 1e6        # Mbit/s (200-byte events, 10 per second)
-
-print(video, "Mbit/s")
-print(events, "Mbit/s")
-print(round(video / events, 1))
-```
-
-Expected output:
-
-```text
-500 Mbit/s
-1.6 Mbit/s
-312.5
+```mermaid
+flowchart LR
+    C["100 cameras"] --> V["Send raw video<br/>100 × 5 Mbit/s<br/>= <b>500 Mbit/s</b>"]
+    C --> E["Send events from the edge<br/>100 × 200 bytes × 8 × 10 per second<br/>= <b>1.6 Mbit/s</b>"]
+    V --> R["Reduction<br/>500 ÷ 1.6<br/>≈ <b>312.5×</b>"]
+    E --> R
 ```
 
 **Interpretation.** The edge converts a *bandwidth* problem into a *compute* problem: the shop must now run a model locally (Module 01), but the wide-area network carries three hundred times less data, and raw video never leaves the premises.
@@ -807,28 +732,21 @@ Light in optical fibre travels at about two-thirds of its speed in vacuum, rough
 
 **Problem (part 2).** How long does it take to download a 1.5 GB model (the 3-billion-parameter 4-bit model from Module 01) at 100 Mbit/s and at 1 Gbit/s?
 
-The following Python program computes both. Its complete expected output is shown below the code.
+The flowchart below shows both.
 
-```python
-V = 2e8   # m/s, light in fibre is roughly two-thirds of c
-
-for km in (1000, 3000, 10000):
-    one_way = km * 1000 / V * 1000          # milliseconds
-    print(km, "km:", round(one_way, 1), "ms one way,", round(2 * one_way, 1), "ms round trip")
-
-model_bits = 1.5e9 * 8
-print(round(model_bits / 100e6, 1), "s at 100 Mbit/s")
-print(round(model_bits / 1e9, 1), "s at 1 Gbit/s")
-```
-
-Expected output:
-
-```text
-1000 km: 5.0 ms one way, 10.0 ms round trip
-3000 km: 15.0 ms one way, 30.0 ms round trip
-10000 km: 50.0 ms one way, 100.0 ms round trip
-120.0 s at 100 Mbit/s
-12.0 s at 1 Gbit/s
+```mermaid
+flowchart LR
+    subgraph PROP["Propagation: light in fibre ≈ 2 × 10⁸ m/s"]
+        direction TB
+        P1["1,000 km<br/>5.0 ms one way, 10.0 ms round trip"]
+        P2["3,000 km<br/>15.0 ms one way, 30.0 ms round trip"]
+        P3["10,000 km<br/>50.0 ms one way, 100.0 ms round trip"]
+    end
+    subgraph TX["Transmission: 1.5 GB model = 12 × 10⁹ bits"]
+        direction TB
+        T1["At 100 Mbit/s<br/>120.0 s"]
+        T2["At 1 Gbit/s<br/>12.0 s"]
+    end
 ```
 
 **Interpretation.**
@@ -850,22 +768,13 @@ Suppose each server is slow (say, delayed by a garbage-collection pause or a bus
 P(at least one slow) = 1 − (1 − p)ⁿ
 ```
 
-The following Python program evaluates this for n = 1, 10 and 100 with p = 0.01. Its complete expected output is shown below the code.
+The flowchart below evaluates this for n = 1, 10 and 100 with p = 0.01.
 
-```python
-def p_slow(n, p):
-    return 1 - (1 - p) ** n
-
-for n in (1, 10, 100):
-    print(n, f"{p_slow(n, 0.01):.1%}")
-```
-
-Expected output:
-
-```text
-1 1.0%
-10 9.6%
-100 63.4%
+```mermaid
+flowchart LR
+    F["P(at least one slow) = 1 − (1 − p)ⁿ<br/>p = 1%"] --> A["1 server<br/><b>1.0%</b>"]
+    F --> B["10 servers<br/><b>9.6%</b>"]
+    F --> C["100 servers<br/><b>63.4%</b>"]
 ```
 
 **Result.** A rare 1% problem becomes a problem for nearly two out of three requests when the request touches 100 servers. This is why large services track the 99th-percentile latency and design to tolerate slow components (for example, by sending a backup request).
@@ -896,19 +805,11 @@ This is a textbook result (Kurose & Ross, 2020) and a simplification of real sys
 
 A model server takes 10 ms per request. What is the average response time at utilisation 0.5, 0.9 and 0.99?
 
-```python
-service = 10  # ms
-
-for rho in (0.5, 0.9, 0.99):
-    print(rho, round(service / (1 - rho)), "ms")
-```
-
-Expected output:
-
-```text
-0.5 20 ms
-0.9 100 ms
-0.99 1000 ms
+```mermaid
+flowchart LR
+    F["time ≈ service ÷ (1 − utilisation)<br/>service = 10 ms"] --> A["50% busy<br/>10 ÷ 0.5<br/>= <b>20 ms</b>"]
+    F --> B["90% busy<br/>10 ÷ 0.1<br/>= <b>100 ms</b>"]
+    F --> C["99% busy<br/>10 ÷ 0.01<br/>= <b>1,000 ms</b>"]
 ```
 
 **Figure 4.3.** Response time against utilisation for a 10 ms service time. Delay rises slowly until about 80% utilisation and then shoots upwards. *Source: author's own diagram, based on the formula above.*
@@ -958,27 +859,14 @@ data per GPU = 2 × (N − 1) ÷ N × gradient size
 2. **Step 2: Time to exchange.** At 50 GB/s: 70 ms. At 12.5 GB/s: 280 ms.
 3. **Step 3: Efficiency** = compute ÷ (compute + communication): 300 ÷ 370 = **81.1%** and 300 ÷ 580 = **51.7%**.
 
-The following Python program checks the numbers. Its complete expected output is shown below the code.
+The flowchart below puts the numbers together.
 
-```python
-def allreduce_gb(n_gpus, size_gb):
-    return 2 * (n_gpus - 1) / n_gpus * size_gb
-
-vol = allreduce_gb(8, 2)
-compute = 0.300   # seconds per step
-
-print(vol, "GB per GPU")
-for name, bw in (("50 GB/s link", 50), ("100 Gbit/s Ethernet", 12.5)):
-    comm = vol / bw
-    print(f"{name}: {comm * 1000:.0f} ms, efficiency {compute / (compute + comm):.1%}")
-```
-
-Expected output:
-
-```text
-3.5 GB per GPU
-50 GB/s link: 70 ms, efficiency 81.1%
-100 Gbit/s Ethernet: 280 ms, efficiency 51.7%
+```mermaid
+flowchart LR
+    V["Data per GPU<br/>2 × 7 ÷ 8 × 2 GB<br/>= 3.5 GB"] --> A["50 GB/s link<br/>3.5 ÷ 50 = 70 ms<br/>300 ÷ 370 = <b>81.1%</b>"]
+    V --> B["100 Gbit/s Ethernet (12.5 GB/s)<br/>3.5 ÷ 12.5 = 280 ms<br/>300 ÷ 580 = <b>51.7%</b>"]
+    C["Compute per step<br/>300 ms"] --> A
+    C --> B
 ```
 
 **Interpretation.** With the slower network, nearly half of the expensive GPUs' time is spent waiting for data. This is the "communication" limit that Module 01 (Section 3.3) named, now with numbers. It is also why training clusters use the fastest links available, and why practitioners overlap communication with computation so that the two happen at the same time.
@@ -1108,32 +996,14 @@ xychart-beta
     bar [140, 56, 36, 15]
 ```
 
-The following Python program checks the numbers. Its complete expected output is shown below the code.
+The flowchart below shows how each total is built (upload + round trip + inference).
 
-```python
-def tx_ms(size_bytes, rate_bps):
-    return size_bytes * 8 / rate_bps * 1000
-
-IMAGE = 200_000   # bytes
-INFER = 10        # ms on a server accelerator
-
-paths = {
-    "4G + cloud": (20e6, 50),
-    "5G + cloud": (100e6, 30),
-    "5G + MEC edge": (100e6, 10),
-}
-for name, (rate, rtt) in paths.items():
-    print(f"{name}: {tx_ms(IMAGE, rate) + rtt + INFER:.0f} ms")
-print("On-device NPU: 15 ms")
-```
-
-Expected output:
-
-```text
-4G + cloud: 140 ms
-5G + cloud: 56 ms
-5G + MEC edge: 36 ms
-On-device NPU: 15 ms
+```mermaid
+flowchart LR
+    I["200 KB photo<br/>inference 10 ms on a server"] --> A["4G + cloud<br/>80 + 50 + 10<br/>= <b>140 ms</b>"]
+    I --> B["5G + cloud<br/>16 + 30 + 10<br/>= <b>56 ms</b>"]
+    I --> C["5G + MEC edge<br/>16 + 10 + 10<br/>= <b>36 ms</b>"]
+    I --> D["On-device NPU<br/>no network<br/>= <b>15 ms</b>"]
 ```
 
 **Interpretation.** Moving from 4G to 5G cut the total by 84 ms (140 → 56), mostly from the faster upload (80 → 16 ms). Once the upload is fast, the largest remaining term in "5G + cloud" is the 30 ms round trip, so the MEC edge server (10 ms) gives the next big gain. The on-device model is fastest, but it is a smaller model; the network lets a phone reach a much larger one at the cost of some tens of milliseconds. That is the design trade-off of Section 3 in numbers.
@@ -1177,25 +1047,19 @@ forecast = 0.5 × newest measurement + 0.5 × previous forecast
 
 The rule: if the forecast falls below 20%, the operator may switch off spare capacity at this cell to save energy (real systems also check that neighbouring cells can take over).
 
-```python
-load = [40, 35, 30, 22, 15, 10, 8, 9]   # % of capacity every 15 min
-forecast = load[0]
-forecasts = []
-for x in load:
-    forecast = 0.5 * x + 0.5 * forecast
-    forecasts.append(round(forecast, 1))
-
-print(forecasts)
-sleep_at = next(i + 1 for i, v in enumerate(forecasts) if v < 20)
-print("sleep at step", sleep_at)
+```mermaid
+flowchart TD
+    A(["Start: forecast = first load (40%)"]) --> B["Take the next measurement"]
+    B --> C["forecast = 0.5 × measurement + 0.5 × previous forecast"]
+    C --> D{"Forecast<br/>below 20%?"}
+    D -- No --> B
+    D -- Yes --> E(["Switch off spare capacity<br/>at step 6 (forecast 15.7%)"])
 ```
 
-Expected output:
-
-```text
-[40.0, 37.5, 33.8, 27.9, 21.4, 15.7, 11.9, 10.4]
-sleep at step 6
-```
+| Step | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+|---|---|---|---|---|---|---|---|---|
+| Load (%) | 40 | 35 | 30 | 22 | 15 | 10 | 8 | 9 |
+| Forecast (%) | 40.0 | 37.5 | 33.8 | 27.9 | 21.4 | **15.7** | 11.9 | 10.4 |
 
 **Interpretation.** The smoothed forecast crosses 20% at step 6 (15.7%), even though the raw load first dipped below 20% at step 5 (15%): smoothing makes the decision less jumpy. Production systems use much richer models (for example, neural networks that use time of day, events and neighbouring cells), but the loop (measure, forecast, decide, act) is the same.
 
