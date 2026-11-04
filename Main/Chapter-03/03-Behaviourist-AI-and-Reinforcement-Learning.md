@@ -153,24 +153,14 @@ Here α (alpha, the **learning rate**) says how far to move; we use α = 0.5. Re
 
 **Result.** After three trials, sit has value 0.75, bark −0.5, roll 0. If the dog now picks the action with the highest value, it sits. Nobody told it to; the consequences did. This is the law of effect as arithmetic.
 
-The following Python program checks the result. Its complete expected output is shown below the code.
+The flowchart below traces the three trials and the values after each one.
 
-```python
-ALPHA = 0.5
-value = {"sit": 0.0, "bark": 0.0, "roll": 0.0}
-trials = [("sit", 1), ("bark", -1), ("sit", 1)]
-
-for action, reward in trials:
-    value[action] += ALPHA * (reward - value[action])
-    print(action, reward, value)
-```
-
-Expected output:
-
-```text
-sit 1 {'sit': 0.5, 'bark': 0.0, 'roll': 0.0}
-bark -1 {'sit': 0.5, 'bark': -0.5, 'roll': 0.0}
-sit 1 {'sit': 0.75, 'bark': -0.5, 'roll': 0.0}
+```mermaid
+flowchart LR
+    S["Start<br/>α = 0.5<br/>sit = 0, bark = 0, roll = 0"] --> T1["Trial 1: sit, reward +1<br/>sit = 0 + 0.5 × (1 − 0)<br/>= 0.5"]
+    T1 --> T2["Trial 2: bark, reward −1<br/>bark = 0 + 0.5 × (−1 − 0)<br/>= −0.5"]
+    T2 --> T3["Trial 3: sit, reward +1<br/>sit = 0.5 + 0.5 × (1 − 0.5)<br/>= 0.75"]
+    T3 --> R["Result<br/>sit 0.75, bark −0.5, roll 0<br/>best action: sit"]
 ```
 
 > [!IMPORTANT]
@@ -286,23 +276,13 @@ G = r₁ + γ·r₂ + γ²·r₃ + γ³·r₄ + ...
 
 **Result.** A smaller γ makes the agent care less about distant rewards, and a shorter route to the same reward is worth more.
 
-The following Python program checks the numbers. Its complete expected output is shown below the code.
+The flowchart below summarises the three cases.
 
-```python
-def discounted_return(rewards, gamma):
-    return sum(gamma ** k * r for k, r in enumerate(rewards))
-
-print(round(discounted_return([0, 0, 0, 10], 0.9), 3))
-print(round(discounted_return([0, 0, 0, 10], 0.5), 3))
-print(round(discounted_return([0, 0, 10], 0.9), 3))
-```
-
-Expected output:
-
-```text
-7.29
-1.25
-8.1
+```mermaid
+flowchart LR
+    F["G = sum of γ^k × r_k<br/>for each step k"] --> A["Rewards 0, 0, 0, 10<br/>γ = 0.9<br/>G = 0.729 × 10 = 7.29"]
+    F --> B["Rewards 0, 0, 0, 10<br/>γ = 0.5<br/>G = 0.125 × 10 = 1.25"]
+    F --> C["Rewards 0, 0, 10<br/>γ = 0.9<br/>G = 0.81 × 10 = 8.1"]
 ```
 
 ---
@@ -345,26 +325,15 @@ flowchart LR
     S3 -->|"reward +1"| G["Goal<br/>square 4"]
 ```
 
-The following Python program repeats the calculation until the values settle. Its complete expected output is shown below the code.
+Repeating the calculation until the values settle follows the loop below, and gives the final values V = 0.729, 0.81, 0.9, 1.0 for squares 0 to 3, and 0 for the goal.
 
-```python
-GAMMA = 0.9
-N = 5                          # squares 0..4; square 4 is the goal (terminal)
-V = [0.0] * N
-
-for _ in range(50):
-    for s in range(N - 1):     # policy: always move right
-        s2 = s + 1
-        r = 1.0 if s2 == N - 1 else 0.0
-        V[s] = r + GAMMA * V[s2]     # V of the goal stays 0
-
-print([round(v, 3) for v in V])
-```
-
-Expected output:
-
-```text
-[0.729, 0.81, 0.9, 1.0, 0.0]
+```mermaid
+flowchart TD
+    A(["Start: γ = 0.9, all V = 0"]) --> B["For each square s = 0 to 3<br/>move right to s + 1"]
+    B --> C["r = 1 if s + 1 is the goal, else 0<br/>V(s) = r + γ × V(s + 1)"]
+    C --> D{"Values<br/>settled?"}
+    D -- No --> B
+    D -- Yes --> E(["Result<br/>V = 0.729, 0.81, 0.9, 1.0, 0.0"])
 ```
 
 > [!IMPORTANT]
@@ -408,26 +377,14 @@ A robot dog's policy is usually a small neural network that runs on the robot it
 4. **Step 4: Intensity.** 47,360 FLOPs ÷ 47,360 bytes = **1 FLOP per byte**: the batch-1 memory-bound case from Module 01. It does not matter here, because all the weights sit in fast on-chip memory and the amount of computation is tiny.
 5. **Step 5: Time budget.** At 50 Hz, each control step lasts 1,000 ÷ 50 = **20 ms**.
 
-The following Python program checks the numbers. Its complete expected output is shown below the code.
+The flowchart below puts the steps together.
 
-```python
-def macs(layers):
-    return sum(a * b for a, b in zip(layers, layers[1:]))
-
-m = macs([45, 128, 128, 12])
-print(m, 2 * m)
-print(2 * m * 50 / 1e6, "MFLOP/s at 50 Hz")
-print(2 * m, "bytes in FP16,", round(2 * m / 1024, 2), "KiB")
-print(1000 / 50, "ms per control step")
-```
-
-Expected output:
-
-```text
-23680 47360
-2.368 MFLOP/s at 50 Hz
-47360 bytes in FP16, 46.25 KiB
-20.0 ms per control step
+```mermaid
+flowchart LR
+    L["Network<br/>45 → 128 → 128 → 12<br/>runs at 50 Hz"] --> M["MACs<br/>5,760 + 16,384 + 1,536<br/>= 23,680"]
+    M --> F["FLOPs<br/>2 × 23,680 = 47,360<br/>× 50 Hz = 2.368 MFLOP/s"]
+    M --> B["Memory (FP16)<br/>23,680 × 2 bytes<br/>= 47,360 bytes ≈ 46.25 KiB"]
+    L --> T["Time budget<br/>1,000 ÷ 50<br/>= 20 ms per step"]
 ```
 
 **Interpretation, using Module 02.** The decision must be made within 20 ms. In Module 02 (Worked example 5.A), even the best case of a 5G edge server (MEC) took about 36 ms end to end, and a cloud path 56 to 140 ms. So the policy **cannot** live in the cloud: it must run on the robot itself, which is easy because it is so small. Training, by contrast, is heavy and happens in a data centre, exactly as in Module 01's Face ID and Apple Neural Engine case study.
@@ -532,37 +489,16 @@ The estimate moved from 0.2 towards the target of 1.45 by a tenth of the gap.
 
 ### Worked example 3.B: Q-learning on the corridor
 
-We return to the corridor from Worked example 2.B: five squares, the goal at square 4, reward +1 for entering it, γ = 0.9, α = 0.5. This time the agent has two actions, **left** and **right** (moving left from square 0 leaves it in square 0), and learns Q for both. To keep the output predictable, the program updates every state-action pair in turn, 30 times, instead of choosing actions at random (Section 4 covers choosing actions).
+We return to the corridor from Worked example 2.B: five squares, the goal at square 4, reward +1 for entering it, γ = 0.9, α = 0.5. This time the agent has two actions, **left** and **right** (moving left from square 0 leaves it in square 0), and learns Q for both. To keep the result predictable, every state-action pair is updated in turn, 30 times, instead of choosing actions at random (Section 4 covers choosing actions).
 
-```python
-GAMMA, ALPHA = 0.9, 0.5
-N = 5                              # squares 0..4; square 4 is the goal (terminal)
-ACTIONS = (-1, +1)                 # left, right
-Q = [[0.0, 0.0] for _ in range(N)]
-
-def step(s, a):
-    s2 = min(max(s + a, 0), N - 1)
-    return s2, (1.0 if s2 == N - 1 else 0.0)
-
-for sweep in range(30):
-    for s in range(N - 1):
-        for i, a in enumerate(ACTIONS):
-            s2, r = step(s, a)
-            future = 0.0 if s2 == N - 1 else max(Q[s2])
-            Q[s][i] += ALPHA * (r + GAMMA * future - Q[s][i])
-
-for s in range(N - 1):
-    best = "right" if Q[s][1] > Q[s][0] else "left"
-    print(s, [round(q, 3) for q in Q[s]], "->", best)
-```
-
-Expected output:
-
-```text
-0 [0.656, 0.729] -> right
-1 [0.656, 0.81] -> right
-2 [0.729, 0.9] -> right
-3 [0.81, 1.0] -> right
+```mermaid
+flowchart TD
+    A(["Start: γ = 0.9, α = 0.5<br/>all Q = 0"]) --> B["For each square s = 0 to 3<br/>and each action: left, right"]
+    B --> C["Take the step → new square s′, reward r<br/>(r = 1 only when s′ is the goal)"]
+    C --> D["Q(s, a) ← Q(s, a) + α × (r + γ × max Q(s′) − Q(s, a))"]
+    D --> E{"30 sweeps<br/>done?"}
+    E -- No --> B
+    E -- Yes --> F["Learned Q-table [left, right]<br/>0: [0.656, 0.729] → right<br/>1: [0.656, 0.81] → right<br/>2: [0.729, 0.9] → right<br/>3: [0.81, 1.0] → right"]
 ```
 
 **Reading the table.** Each row is `[Q(left), Q(right)]`. The "right" values are exactly the V values from Worked example 2.B (0.729, 0.81, 0.9, 1.0). The "left" values are slightly lower because moving left costs one extra step: for example, from square 1, going left to square 0 then right gives 0.9 × 0.729 = 0.656. Choosing the larger Q in each row gives the best policy: always move right. The agent has learned the route from rewards alone.
@@ -707,43 +643,27 @@ flowchart LR
 
 ### Worked example 4.B: a bandit simulation
 
-The following program plays the three-arm bandit for 1,000 pulls, for four values of ε, and averages the result over 20 runs with different random seeds. A random-number generator with a fixed seed is used so that the output is the same every time. "Best arm chosen" is the share of pulls that used the 0.8 arm. Its complete expected output is shown below the code.
+The simulation plays the three-arm bandit for 1,000 pulls, for four values of ε, and averages the result over 20 runs with different (fixed) random seeds. "Best arm chosen" is the share of pulls that used the 0.8 arm. The flowchart shows one run; the table under it gives the results.
 
-```python
-import random
-
-def run(epsilon, steps=1000, seed=0):
-    rng = random.Random(seed)
-    means = [0.2, 0.5, 0.8]
-    q = [0.0, 0.0, 0.0]
-    n = [0, 0, 0]
-    total = 0.0
-    for _ in range(steps):
-        if rng.random() < epsilon:
-            a = rng.randrange(3)          # explore
-        else:
-            a = q.index(max(q))           # exploit (ties: first arm)
-        r = 1.0 if rng.random() < means[a] else 0.0
-        n[a] += 1
-        q[a] += (r - q[a]) / n[a]
-        total += r
-    return total / steps, n[2] / steps
-
-for eps in (0.0, 0.01, 0.1, 0.3):
-    results = [run(eps, seed=s) for s in range(20)]
-    avg = sum(r[0] for r in results) / 20
-    best = sum(r[1] for r in results) / 20
-    print(f"epsilon={eps}: average reward {avg:.3f}, best arm chosen {best:.1%}")
+```mermaid
+flowchart TD
+    A(["Start: arms pay 0.2, 0.5, 0.8<br/>all estimates Q = 0"]) --> B{"Random number<br/>below ε?"}
+    B -- "Yes: explore" --> C["Pick a random arm"]
+    B -- "No: exploit" --> D["Pick the arm with the highest Q"]
+    C --> E["Pull it: reward 1 or 0"]
+    D --> E
+    E --> F["n(arm) + 1<br/>Q(arm) ← Q(arm) + (reward − Q(arm)) ÷ n"]
+    F --> G{"1,000 pulls<br/>done?"}
+    G -- No --> B
+    G -- Yes --> H(["Record average reward<br/>and share of best arm"])
 ```
 
-Expected output:
-
-```text
-epsilon=0.0: average reward 0.197, best arm chosen 0.0%
-epsilon=0.01: average reward 0.618, best arm chosen 55.8%
-epsilon=0.1: average reward 0.757, best arm chosen 88.6%
-epsilon=0.3: average reward 0.705, best arm chosen 78.5%
-```
+| ε | Average reward | Best arm chosen |
+|---|---|---|
+| 0.0 | 0.197 | 0.0% |
+| 0.01 | 0.618 | 55.8% |
+| 0.1 | 0.757 | 88.6% |
+| 0.3 | 0.705 | 78.5% |
 
 **Reading the results.**
 
@@ -777,20 +697,13 @@ where *t* is the total number of pulls so far and *n* is the number of pulls of 
 
 **Problem.** After t = 100 pulls, arm A has Q = 0.6 from n = 60 pulls and arm B has Q = 0.5 from n = 10 pulls. Which does UCB choose?
 
-```python
-import math
-
-t = 100
-arms = {"A": (0.6, 60), "B": (0.5, 10)}
-for name, (mean, n) in arms.items():
-    print(name, round(mean + math.sqrt(2 * math.log(t) / n), 3))
-```
-
-Expected output:
-
-```text
-A 0.992
-B 1.46
+```mermaid
+flowchart LR
+    T["t = 100 pulls<br/>score = Q + √(2 × ln t ÷ n)"] --> A["Arm A<br/>Q = 0.6, n = 60<br/>score = 0.992"]
+    T --> B["Arm B<br/>Q = 0.5, n = 10<br/>score = 1.46"]
+    A --> C{"Highest<br/>score?"}
+    B --> C
+    C --> R["UCB picks B"]
 ```
 
 **Result.** UCB picks **B**, even though its average (0.5) is lower than A's (0.6), because B has been tried so little that it could still turn out to be much better. As B is tried more, its bonus shrinks and the estimates take over. This is "optimism in the face of uncertainty".
@@ -915,24 +828,11 @@ A typical walking reward is a **sum of weighted terms**, each pushing the robot 
 2. **Walking slowly:** speed 0.5 m/s, same effort. Tracking = exp(−0.25 ÷ 0.25) = exp(−1) ≈ 0.3679. Reward ≈ 0.3679 − 0.06 = **0.3079**.
 3. **Standing still, using no effort:** speed 0, no torque, no action change. Tracking = exp(−1 ÷ 0.25) = exp(−4) ≈ 0.0183. Reward ≈ **0.0183**.
 
-```python
-import math
-
-def reward(v_cmd, v, torque_sq, action_rate_sq):
-    track = math.exp(-(v_cmd - v) ** 2 / 0.25)
-    return track - 0.0001 * torque_sq - 0.01 * action_rate_sq
-
-print(round(reward(1.0, 0.8, 400, 2.0), 4))
-print(round(reward(1.0, 0.5, 400, 2.0), 4))
-print(round(reward(1.0, 0.0, 0, 0), 4))
-```
-
-Expected output:
-
-```text
-0.7921
-0.3079
-0.0183
+```mermaid
+flowchart LR
+    F["reward = exp(−(v_cmd − v)² ÷ 0.25)<br/>− 0.0001 × Σ torque²<br/>− 0.01 × Σ (Δaction)²<br/>v_cmd = 1.0 m/s"] --> A["Walking well<br/>v = 0.8, torque² 400, Δ² 2.0<br/>0.8521 − 0.04 − 0.02<br/>= 0.7921"]
+    F --> B["Walking slowly<br/>v = 0.5, same effort<br/>0.3679 − 0.06<br/>= 0.3079"]
+    F --> C["Standing still<br/>v = 0, no effort<br/>= 0.0183"]
 ```
 
 **Interpretation.** The reward ranks the behaviours in the order we want: walking well beats walking slowly, which beats standing still. The penalties stop the robot from reaching speed with violent, wasteful motion (a mild defence against the hacks in Table 3.2). The smooth, continuous shape of the tracking term is also a *dense* reward (Section 3.2): the robot gets a useful signal at every step, even when it is far from the target speed.
@@ -951,18 +851,10 @@ Learning to walk needs a huge number of steps. Suppose a policy needs about 100 
 1. **Step 1: One real robot at 50 steps per second**, running without breaks: 100,000,000 ÷ 50 = 2,000,000 s ≈ **23.1 days**. In practice it would also fall, need resetting and wear out.
 2. **Step 2: 4,096 simulated robots, each at 50 steps per second in simulated real time**, all running in parallel on one GPU: 4,096 × 50 = 204,800 steps per second, so 100,000,000 ÷ 204,800 ≈ 488 s ≈ **8.1 minutes**.
 
-```python
-real = 100e6 / 50 / 86400                 # days on one real robot
-sim = 100e6 / (4096 * 50) / 60            # minutes with 4,096 simulated robots
-print(round(real, 1), "days")
-print(round(sim, 1), "minutes")
-```
-
-Expected output:
-
-```text
-23.1 days
-8.1 minutes
+```mermaid
+flowchart LR
+    N["Needed<br/>100 million steps"] --> R["One real robot<br/>50 steps/s<br/>100e6 ÷ 50 ÷ 86,400<br/>= 23.1 days"]
+    N --> S["4,096 simulated robots<br/>4,096 × 50 = 204,800 steps/s<br/>100e6 ÷ 204,800 ÷ 60<br/>= 8.1 minutes"]
 ```
 
 **Interpretation.** This is exactly the parallelism of Module 01 (Section 3): the same simple computation (physics and a small network) is applied to thousands of independent robots, and a GPU does it at once. Research systems built on this idea report training walking policies in minutes on a single GPU (Rudin et al., 2022), using GPU-based simulators (Makoviychuk et al., 2021). Real systems fall short of the ideal division, because of Amdahl's law (Module 01, Section 3.3): part of every step (collecting results, updating the network) is not perfectly parallel, and communication between chips (Module 02, Section 4.6) adds overhead when training is spread across several GPUs.
