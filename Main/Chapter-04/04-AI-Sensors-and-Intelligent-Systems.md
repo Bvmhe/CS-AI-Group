@@ -241,22 +241,12 @@ distance = (3 × 10⁸ × 4 × 10⁻⁷) / 2 = 120 / 2 = 60 m
 
 Illustrative sensor: 128 beams (vertical channels), a horizontal step of 0.2° over 360° (so 360 ÷ 0.2 = 1,800 steps), spinning at 10 Hz. Each point is stored as four 32-bit numbers (x, y, z, intensity) = 16 bytes.
 
-```python
-beams, az, hz = 128, 1800, 10
-pts = beams * az
-print(pts)
-print(pts * hz)
-print(pts * 16 / 1e6, 'MB per frame')
-print(pts * 16 * hz / 1e6, 'MB/s')
-```
-
-Expected output:
-
-```
-230400
-2304000
-3.6864 MB per frame
-36.864 MB/s
+```mermaid
+flowchart LR
+    I["Inputs<br/>128 beams<br/>1,800 steps per turn<br/>10 Hz, 16 bytes per point"] --> P["Points per frame<br/>128 × 1,800<br/>= 230,400"]
+    P --> S["Points per second<br/>230,400 × 10<br/>= 2,304,000"]
+    P --> F["Data per frame<br/>230,400 × 16 ÷ 1e6<br/>= 3.6864 MB"]
+    F --> R["Data rate<br/>3.6864 × 10<br/>= 36.864 MB/s"]
 ```
 
 So this LiDAR produces about 2.3 million points per second and about 37 MB/s. Remember this number: in Section 2 we compare it with a camera.
@@ -281,18 +271,11 @@ The speed of sound depends on temperature: v ≈ 331.3 + 0.606 × T (T in °C).
 
 \(b\) An object is truly 1.00 m away on a freezing day (0 °C, where v = 331.3 m/s). The echo takes 2 ÷ 331.3 = 6.04 ms. If the sensor wrongly assumes 343 m/s, it reports 343 × 0.00604 ÷ 2 ≈ 1.035 m, an error of about 3.5%. Good sensors measure temperature and correct for it.
 
-```python
-v20, v0 = 343.0, 331.3
-t = 2 * 1.00 / v0
-print(round(t * 1e3, 2), 'ms')
-print(round(v20 * t / 2, 3), 'm')
-```
-
-Expected output:
-
-```
-6.04 ms
-1.035 m
+```mermaid
+flowchart LR
+    I["True distance 1.00 m<br/>real speed at 0 °C: 331.3 m/s<br/>assumed speed: 343 m/s"] --> T["Echo time<br/>2 × 1.00 ÷ 331.3<br/>= 6.04 ms"]
+    T --> D["Reported distance<br/>343 × 0.00604 ÷ 2<br/>= 1.035 m"]
+    D --> E["Error ≈ 3.5%"]
 ```
 
 ## 1.5 A fourth sensor: radar
@@ -1237,42 +1220,42 @@ Table 5.1. Timeline of Tesla's sensor and computing changes. Sources: Tesla Supp
 
 Current Tesla cars use **eight external cameras** giving 360° coverage, with no radar, no LiDAR and no ultrasonic sensors (in markets where Tesla Vision is fully deployed). In Tesla's earlier public descriptions of the layout, three cameras look forward with different lenses (wide, main, narrow; the narrow one for long range, with a maximum range quoted as about 250 m), two look forward and sideways from the B-pillars, two look backward and sideways from the front fenders, and one looks to the rear. Camera resolution is reported to have risen from about 1.2 megapixels (HW3) to about 5 megapixels (HW4).
 
-```
-Figure 5.1  Camera coverage (top view, schematic, not to scale)
+**Figure 5.1.** Camera coverage (top view, schematic, not to scale).
 
-                  narrow  main  wide
-                      \    |    /
-          fwd-side L  .---------.  fwd-side R
-                  \  /           \  /
-                   ||    CAR      ||
-                  /  \           /  \
-          rear-side L  '---------'  rear-side R
-                          |
-                         rear
+```mermaid
+flowchart TB
+    subgraph FRONT["Forward cameras"]
+        direction LR
+        N["Narrow<br/>long range, ~250 m"]
+        M["Main"]
+        W["Wide"]
+    end
+    FL["Forward-side left<br/>(B-pillar)"] --- CAR
+    FRONT --- CAR(["CAR<br/>8 cameras, 360°"])
+    FR["Forward-side right<br/>(B-pillar)"] --- CAR
+    CAR --- RL["Rear-side left<br/>(front fender)"]
+    CAR --- RR["Rear-side right<br/>(front fender)"]
+    CAR --- R["Rear camera"]
 ```
 
 There is no directly measured depth anywhere in this system. Every distance comes from a neural network's inference from images. That makes the system a direct test of the depth limits discussed in Section 3.6.
 
 ## 5.3 From pixels to a driving decision
 
-```
-Figure 5.2  Tesla's perception-to-control pipeline (simplified from public talks)
+**Figure 5.2.** Tesla's perception-to-control pipeline (simplified from public talks).
 
- 8 cameras -> ISP / calibration -> shared image backbone per camera
-                                          |
-                                          v
-                     multi-camera fusion into a 3-D / bird's-eye-view space
-                          (attention-based network; uses several past frames)
-                                          |
-              +---------------------------+---------------------------+
-              v                           v                           v
-     objects, lanes, signs      3-D OCCUPANCY (what is solid,      motion / velocity
-                                even for unknown objects)           per object
-              \___________________________|___________________________/
-                                          v
-                    end-to-end driving network (v12 and later)
-                                          v
-                       steering and acceleration commands
+```mermaid
+flowchart TD
+    A["8 cameras"] --> B["ISP / calibration"]
+    B --> C["Shared image backbone<br/>per camera"]
+    C --> D["Multi-camera fusion into a 3-D /<br/>bird's-eye-view space<br/>(attention-based; uses several past frames)"]
+    D --> E["Objects, lanes, signs"]
+    D --> F["3-D occupancy<br/>(what is solid, even for unknown objects)"]
+    D --> G["Motion / velocity<br/>per object"]
+    E --> H["End-to-end driving network<br/>(v12 and later)"]
+    F --> H
+    G --> H
+    H --> I["Steering and acceleration commands"]
 ```
 
 Three ideas from the public talks stand out:
@@ -1283,14 +1266,17 @@ Three ideas from the public talks stand out:
 
 The **data engine** is the second half of the system. It is a loop that turns driving mistakes into training data.
 
-```
-Figure 5.3  The data-engine loop (training in the data centre, inference in the car)
+**Figure 5.3.** The data-engine loop (training in the data centre, inference in the car).
 
-   fleet drives -> rare or difficult case detected -> clip uploaded -> labelled
-        ^                                                               |
-        |                                                               v
-   over-the-air update <- validated in simulation and tests <- network retrained
-   (inference runs in the car on the NPU)                  (data centre, GPUs)
+```mermaid
+flowchart LR
+    A["Fleet drives<br/>(inference in the car on the NPU)"] --> B["Rare or difficult<br/>case detected"]
+    B --> C["Clip uploaded"]
+    C --> D["Labelled"]
+    D --> E["Network retrained<br/>(data centre, GPUs)"]
+    E --> F["Validated in simulation<br/>and tests"]
+    F --> G["Over-the-air update"]
+    G --> A
 ```
 
 This is the training-versus-inference split from Module 01, Section 1.5, applied at a scale of millions of vehicles.
@@ -1303,21 +1289,11 @@ Tesla's FSD computer uses custom chips, each with two neural-network accelerator
 
 One MAC counts as 2 operations (Module 01, Section 1.3).
 
-```python
-macs = 96 * 96
-clock = 2e9
-tops_npu = macs * 2 * clock / 1e12
-print(round(tops_npu, 1))
-print(round(tops_npu * 4, 1))
-print(round(tops_npu * 4 * 0.4, 1))
-```
-
-Expected output:
-
-```
-36.9
-147.5
-59.0
+```mermaid
+flowchart LR
+    I["One accelerator<br/>96 × 96 = 9,216 MACs<br/>2 GHz clock"] --> A["Per accelerator<br/>9,216 × 2 × 2e9 ÷ 1e12<br/>= 36.9 TOPS"]
+    A --> B["Four accelerators<br/>36.9 × 4<br/>= 147.5 TOPS peak"]
+    B --> C["At 40% utilisation<br/>147.5 × 0.4<br/>= 59.0 TOPS usable"]
 ```
 
 Four accelerators (two chips of two each) give about 147 TOPS peak, close to Tesla's quoted 144 TOPS. At 40% utilisation (Module 01, Section 1.6), about 59 TOPS are usable, which exceeds the 28.8 TFLOP/s needed by the illustrative camera network of Worked example 2.C. So the arithmetic is plausible.
