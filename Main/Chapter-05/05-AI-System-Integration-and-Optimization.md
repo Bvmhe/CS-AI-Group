@@ -78,18 +78,13 @@ By the end of this section you should be able to:
 
 A programmer writes a model in a **framework** such as PyTorch, JAX or TensorFlow. Between that code and the transistors there are several layers. Each layer hides detail from the one above, and each is a place where performance can be won or lost.
 
-```
-  Application / model code      "y = relu(W @ x + b)"
-          |
-  Framework                     PyTorch, JAX, TensorFlow  (builds a graph of operations)
-          |
-  Compiler / graph optimiser    XLA, TensorRT, Core ML  (fuses, reorders, assigns to devices)
-          |
-  Runtime and libraries         CUDA libraries, TPU runtime  (launches work, manages memory)
-          |
-  Driver and firmware           talks to the chip
-          |
-  Hardware                      MAC units, on-chip memory, HBM, interconnect
+```mermaid
+flowchart TD
+    A["Application / model code<br/>y = relu(W @ x + b)"] --> B["Framework<br/>PyTorch, JAX, TensorFlow<br/>(builds a graph of operations)"]
+    B --> C["Compiler / graph optimiser<br/>XLA, TensorRT, Core ML<br/>(fuses, reorders, assigns to devices)"]
+    C --> D["Runtime and libraries<br/>CUDA libraries, TPU runtime<br/>(launches work, manages memory)"]
+    D --> E["Driver and firmware<br/>talks to the chip"]
+    E --> F["Hardware<br/>MAC units, on-chip memory, HBM, interconnect"]
 ```
 
 *Figure 1.1. The AI software stack. Each layer can hide detail, but each is also a place where work can be wasted. Source: author's own diagram, based on the stack described in Module 01, Section 2.7.*
@@ -123,21 +118,12 @@ A model is first turned into a **computation graph**: a diagram where each node 
 
 Fusion cuts memory traffic by a factor of 3. Because these operations do almost no arithmetic per byte, they are memory-bound (Module 01, Section 4.3), so a 3× cut in traffic gives close to a 3× cut in time.
 
-```python
-n = 1_000_000
-bytes_per_value = 2                      # FP16
-tensor_mb = n * bytes_per_value / 1e6    # 2.0 MB
-
-unfused = 3 * 2 * tensor_mb              # 3 ops, each reads + writes
-fused = 1 * 2 * tensor_mb                # one read + one write
-
-print(unfused, fused, unfused / fused)
-```
-
-Expected output:
-
-```
-12.0 4.0 3.0
+```mermaid
+flowchart LR
+    T["Tensor<br/>1,000,000 values × 2 bytes<br/>= 2 MB"] --> U["Unfused<br/>3 ops × (read + write) × 2 MB<br/>= 12 MB"]
+    T --> F["Fused<br/>1 read + 1 write × 2 MB<br/>= 4 MB"]
+    U --> R["Saving<br/>12 ÷ 4 = 3×"]
+    F --> R
 ```
 
 > [!TIP]
@@ -218,25 +204,12 @@ By the end of this section you should be able to:
 - 112 GB > 96 GB, so the training state alone does not fit on one chip, before counting any activations.
 - If the state is *sharded* (each chip holds only a slice) across 256 chips, each chip holds 112 ÷ 256 ≈ **0.44 GB** of state, leaving the rest of its memory for activations.
 
-```python
-import math
-
-params = 7e9
-bytes_per_param = 16
-state_gb = params * bytes_per_param / 1e9
-chip_gb = 96
-
-print(state_gb)                       # 112.0
-print(math.ceil(state_gb / chip_gb))  # 2  (minimum chips, state only)
-print(round(state_gb / 256, 2))       # 0.44 GB per chip when sharded 256 ways
-```
-
-Expected output:
-
-```
-112.0
-2
-0.44
+```mermaid
+flowchart LR
+    I["7 × 10⁹ parameters<br/>× 16 bytes each"] --> S["Training state<br/>= 112 GB"]
+    S --> C{"Fits on one<br/>96 GB chip?"}
+    C -- "No" --> M["Minimum chips<br/>112 ÷ 96, rounded up<br/>= 2"]
+    S --> H["Sharded 256 ways<br/>112 ÷ 256<br/>≈ 0.44 GB per chip"]
 ```
 
 **Reason 2: time.** Training our model needs about 6 × N × D FLOPs, where N is the parameter count and D is the number of training tokens (a standard estimate; see Section 4.2). For N = 7 × 10⁹ and D = 1.4 × 10¹², that is about 5.9 × 10²² FLOPs. One chip delivering 100 TFLOP/s effective would need about 5.9 × 10²² ÷ 10¹⁴ ≈ 5.9 × 10⁸ seconds, which is almost 19 years, if run alone. Parallel chips are not a luxury but a necessity.
@@ -253,13 +226,23 @@ Expected output:
 
 Real large-model training combines all three ("3D parallelism"): tensor parallelism inside a group of tightly linked chips, pipeline parallelism across groups, and data parallelism across replicas. The rule of thumb is to put the most communication-hungry strategy (tensor) on the fastest links.
 
-```
-Data parallel:     chip A [full model] <-- batch part 1
-                   chip B [full model] <-- batch part 2     then: sum gradients
-
-Tensor parallel:   chip A [left half of each layer]  <-> chip B [right half]
-
-Pipeline parallel: chip A [layers 1-10] --> chip B [layers 11-20] --> chip C [layers 21-30]
+```mermaid
+flowchart LR
+    subgraph DP["Data parallel"]
+        direction LR
+        B1["Batch part 1"] --> DA["Chip A<br/>full model"]
+        B2["Batch part 2"] --> DB["Chip B<br/>full model"]
+        DA --> SG["Sum gradients"]
+        DB --> SG
+    end
+    subgraph TP["Tensor parallel"]
+        direction LR
+        TA["Chip A<br/>left half of each layer"] <--> TB["Chip B<br/>right half"]
+    end
+    subgraph PP["Pipeline parallel"]
+        direction LR
+        PA["Chip A<br/>layers 1-10"] --> PB["Chip B<br/>layers 11-20"] --> PC["Chip C<br/>layers 21-30"]
+    end
 ```
 
 *Figure 2.1. The three strategies in schematic form. Source: author's own diagram.*
@@ -289,32 +272,13 @@ Notice that for large N this approaches 2 × S, almost independent of N. That pr
 - Compute per step: the batch is 4 × 10⁶ tokens, so FLOPs = 6 × 7 × 10⁹ × 4 × 10⁶ = 1.68 × 10¹⁷. The cluster delivers 256 × 200 TFLOP/s × 40% MFU = 2.048 × 10¹⁶ FLOP/s, so compute takes about **8.2 s**.
 - If communication is not overlapped with compute, one step takes 8.2 + 0.28 = 8.48 s, so **efficiency ≈ 96.7%**.
 
-```python
-grad_bytes = 14e9
-N = 256
-link_bw = 100e9                           # bytes/s per chip
-
-traffic = 2 * (N - 1) / N * grad_bytes
-comm = traffic / link_bw
-
-flops_step = 6 * 7e9 * 4e6
-cluster_rate = 256 * 200e12 * 0.40
-compute = flops_step / cluster_rate
-
-eff = compute / (compute + comm)
-print(round(traffic / 1e9, 2))   # 27.89
-print(round(comm, 2))            # 0.28
-print(round(compute, 1))         # 8.2
-print(f"{eff:.1%}")              # 96.7%
-```
-
-Expected output:
-
-```
-27.89
-0.28
-8.2
-96.7%
+```mermaid
+flowchart LR
+    G["Gradients 14 GB<br/>N = 256 chips<br/>100 GB/s per chip"] --> T["Traffic per chip<br/>2 × 255 ÷ 256 × 14 GB<br/>= 27.89 GB"]
+    T --> CM["Communication<br/>27.89 ÷ 100<br/>= 0.28 s"]
+    W["Step work<br/>6 × 7e9 × 4e6 FLOPs<br/>cluster: 256 × 200 TFLOP/s × 40%"] --> CP["Compute<br/>= 8.2 s"]
+    CM --> E["Efficiency<br/>8.2 ÷ (8.2 + 0.28)<br/>= 96.7%"]
+    CP --> E
 ```
 
 The overhead is small here because each step has a lot of compute (a large batch). With a smaller batch per chip, compute per step shrinks while the all-reduce stays the same size, and the overhead grows. Real systems also *overlap* communication with the backward pass, which hides part of it.
@@ -412,18 +376,10 @@ The backward pass costs about twice the forward pass, so a normal training step 
 
 Our 7B job had a step time of 8.2 s (Worked example 2.B). With full recomputation it would take about 8.2 × 4 ÷ 3 ≈ **10.9 s**. We pay this only if the saved memory lets us use a larger batch or avoid a more expensive sharding scheme.
 
-```python
-base = 8.2                     # seconds per step
-with_recompute = base * 4 / 3
-print(round(with_recompute, 1))
-print(f'{4/3 - 1:.0%} extra compute')
-```
-
-Expected output:
-
-```
-10.9
-33% extra compute
+```mermaid
+flowchart LR
+    B["Normal step<br/>3 parts = 8.2 s"] --> R["With recomputation<br/>4 parts: 8.2 × 4 ÷ 3<br/>= 10.9 s"]
+    R --> X["Extra compute<br/>4 ÷ 3 − 1<br/>= 33%"]
 ```
 
 ## 3.3 Optimisation for serving (inference)
@@ -438,22 +394,11 @@ When a language model writes an answer it generates one token at a time. For eac
 - Speed limit for one user = 1 ÷ 0.007 ≈ **143 tokens per second**, however many MAC units the chip has.
 - If 32 users are served in the same batch, the weights are read once for all of them. Total throughput rises to about 32 × 143 ≈ **4,571 tokens per second**, while each user still sees about 143 tokens per second.
 
-```python
-weight_bytes = 7e9
-bandwidth = 1e12
-t = weight_bytes / bandwidth
-tps = 1 / t
-print(round(t * 1e3, 1), 'ms')
-print(round(tps, 1))
-print(round(32 * tps, 1))
-```
-
-Expected output:
-
-```
-7.0 ms
-142.9
-4571.4
+```mermaid
+flowchart LR
+    I["Weights 7 GB (INT8)<br/>bandwidth 1 TB/s"] --> T["Time per token<br/>7 GB ÷ 1,000 GB/s<br/>= 7.0 ms"]
+    T --> U["One user<br/>1 ÷ 0.007<br/>≈ 142.9 tokens/s"]
+    U --> B["Batch of 32 users<br/>32 × 142.9<br/>≈ 4,571.4 tokens/s"]
 ```
 
 > [!WARNING]
@@ -484,19 +429,12 @@ A cluster of accelerators is shared by many teams and many kinds of job. A **sch
 
 A chip costs $2 per hour to own and run, whether it is busy or not. If the cluster's average utilisation is 35%, each *useful* chip-hour really costs 2 ÷ 0.35 ≈ **$5.71**. Better scheduling that lifts utilisation to 60% brings it down to 2 ÷ 0.60 ≈ **$3.33**, a saving of about **42%** without buying any hardware.
 
-```python
-cost_hr = 2.0
-for u in (0.35, 0.60):
-    print(round(cost_hr / u, 2))
-print(f'{1 - 0.35 / 0.60:.1%} saving')
-```
-
-Expected output:
-
-```
-5.71
-3.33
-41.7% saving
+```mermaid
+flowchart LR
+    C["Chip cost<br/>$2 per hour"] --> A["35% utilisation<br/>2 ÷ 0.35<br/>= $5.71 per useful hour"]
+    C --> B["60% utilisation<br/>2 ÷ 0.60<br/>= $3.33 per useful hour"]
+    A --> S["Saving<br/>1 − 0.35 ÷ 0.60<br/>= 41.7%"]
+    B --> S
 ```
 
 ## 3.5 Activities for Section 3
@@ -551,21 +489,13 @@ A computing load of 1 MW, running all year (8,760 hours):
 - PUE 1.6: 1 × 1.6 × 8,760 = **14,016 MWh**.
 - Difference: **4,380 MWh** per year, which at an illustrative $80 per MWh is **$350,400**, for the same computing.
 
-```python
-it_mw, hours = 1.0, 8760
-for pue in (1.1, 1.6):
-    print(round(it_mw * pue * hours, 1), 'MWh')
-print(round(it_mw * (1.6 - 1.1) * hours, 1), 'MWh')
-print(f'${round(4380 * 80)}')
-```
-
-Expected output:
-
-```
-9636.0 MWh
-14016.0 MWh
-4380.0 MWh
-$350400
+```mermaid
+flowchart LR
+    L["Computing load 1 MW<br/>8,760 hours per year"] --> A["PUE 1.1<br/>1 × 1.1 × 8,760<br/>= 9,636 MWh"]
+    L --> B["PUE 1.6<br/>1 × 1.6 × 8,760<br/>= 14,016 MWh"]
+    A --> D["Difference<br/>= 4,380 MWh"]
+    B --> D
+    D --> M["Cost at $80 per MWh<br/>= $350,400 per year"]
 ```
 
 **From energy to carbon.** Emissions = energy × carbon intensity of the electricity. Intensity varies enormously by place and time. For an illustrative 89.8 MWh job (Worked example 4.B): at 0.4 kg CO₂e per kWh the emissions are about 35.9 tonnes; on a grid at 0.05 kg per kWh they are about 4.5 tonnes. *Where and when* a job runs can matter as much as how efficiently it runs.
@@ -594,30 +524,12 @@ where N is the number of parameters and D the number of training tokens (see Kap
 - Chip-hours = 256 × 797.5 h ≈ **204,167**; cost ≈ **$408,333**.
 - Chip energy = 256 × 0.4 kW × 797.5 h ≈ 81.7 MWh; with PUE 1.1, **≈ 89.8 MWh**.
 
-```python
-flops = 6 * 7e9 * 1.4e12
-rate = 256 * 200e12 * 0.40
-secs = flops / rate
-hours = secs / 3600
-chip_hours = 256 * hours
-cost = chip_hours * 2
-energy_mwh = 256 * 0.4 * hours / 1000 * 1.1
-
-print(f'{flops:.2e}')
-print(round(secs / 86400, 1), 'days')
-print(round(chip_hours), 'chip-hours')
-print(f'${round(cost)}')
-print(round(energy_mwh, 1), 'MWh')
-```
-
-Expected output:
-
-```
-5.88e+22
-33.2 days
-204167 chip-hours
-$408333
-89.8 MWh
+```mermaid
+flowchart LR
+    F["FLOPs<br/>6 × 7e9 × 1.4e12<br/>= 5.88 × 10²²"] --> T["Time<br/>÷ (256 × 200 TFLOP/s × 40%)<br/>= 33.2 days (797.5 h)"]
+    T --> H["Chip-hours<br/>256 × 797.5<br/>≈ 204,167"]
+    H --> C["Cost<br/>× $2<br/>≈ $408,333"]
+    T --> E["Energy<br/>256 × 0.4 kW × 797.5 h × 1.1 PUE<br/>≈ 89.8 MWh"]
 ```
 
 Notice what the example shows: improving MFU from 40% to 50% would cut the time, the cost and the energy by 20% each, with no new hardware. This is why Section 3 matters.
@@ -629,17 +541,11 @@ Notice what the example shows: improving MFU from 40% to 50% would cut the time,
 
 **Total cost of ownership (TCO)** adds the purchase price (spread over the chip's life, typically a few years), electricity and cooling, networking, buildings, maintenance and staff. For serving, the useful figure is **cost per million tokens**:
 
-```python
-cost_per_chip_hour = 2.0
-tokens_per_second = 5000
-million_tokens_per_hour = tokens_per_second * 3600 / 1e6      # 18.0
-print(round(cost_per_chip_hour / million_tokens_per_hour, 3))
-```
-
-Expected output:
-
-```
-0.111
+```mermaid
+flowchart LR
+    S["5,000 tokens per second"] --> M["Per hour<br/>5,000 × 3,600 ÷ 1e6<br/>= 18 million tokens"]
+    C["Chip cost $2 per hour"] --> R["Cost per million tokens<br/>2 ÷ 18<br/>≈ $0.111"]
+    M --> R
 ```
 
 So a chip delivering 5,000 tokens per second at $2 per hour costs about **$0.11 per million tokens**. Anything that raises tokens per second (batching, quantisation) or utilisation lowers this directly. Training is a one-off cost; serving is a recurring cost that grows with every user, which is why many hardware generations are now designed with inference in mind (Module 01, Section 1.5).
@@ -657,24 +563,12 @@ A single chip may run for years without failing. A system of thousands of chips 
 - Saving too rarely wastes much work at each failure; saving too often wastes time on saving. A classic approximation (Young, 1974) for the best interval is **√(2 × C × MTBF)**, where C is the time to write one checkpoint.
 - With C = 2 minutes (0.0333 h): interval ≈ √(2 × 0.0333 × 10.7) ≈ 0.84 h ≈ **51 minutes**, at a saving overhead of about 3.9%.
 
-```python
-import math
-mtbf_chip = 5 * 8760
-system = mtbf_chip / 4096
-c = 2 / 60
-interval = math.sqrt(2 * c * system)
-
-print(round(system, 2))
-print(round(interval * 60, 1))
-print(f'{c / interval:.1%}')
-```
-
-Expected output:
-
-```
-10.69
-50.7
-3.9%
+```mermaid
+flowchart LR
+    A["Chip MTBF<br/>5 years = 43,800 h"] --> S["System MTBF<br/>43,800 ÷ 4,096<br/>≈ 10.69 h"]
+    C["Checkpoint write time<br/>C = 2 min = 0.0333 h"] --> I["Best interval<br/>√(2 × C × MTBF)<br/>≈ 50.7 minutes"]
+    S --> I
+    I --> O["Saving overhead<br/>C ÷ interval<br/>≈ 3.9%"]
 ```
 
 Failures are not only chips: links, power supplies, cooling and software bugs contribute. Large systems therefore also use spare chips, automatic detection of slow or faulty chips, and fast restart.
@@ -758,10 +652,13 @@ Using the TPU v4 description in Jouppi et al. (2023) as a concrete example:
 
 *Table 5.2. Levels of a TPU system (v4 example).*
 
-```
-   chip --> tray (4 chips + host) --> cube (64 chips, 4x4x4) --> pod (64 cubes = 4,096 chips)
-                                                                   |
-                                      many pods linked by data-centre network --> multi-slice job
+```mermaid
+flowchart LR
+    A["Chip"] --> B["Tray<br/>4 chips + host"]
+    B --> C["Cube<br/>64 chips, 4×4×4"]
+    C --> D["Pod<br/>64 cubes = 4,096 chips"]
+    D --> E["Many pods linked by<br/>data-centre network"]
+    E --> F["Multi-slice job"]
 ```
 
 *Figure 5.1. The hierarchy from chip to multi-slice job. Source: author's own diagram, based on Jouppi et al. (2023).*
@@ -785,20 +682,10 @@ In a grid with *side* chips along each dimension, the longest path (the **diamet
 
 For a 4 × 4 × 4 cube (64 chips): mesh = 9 hops, torus = **6 hops**. For a 16 × 16 × 16 pod (4,096 chips): mesh = 45 hops, torus = **24 hops**.
 
-```python
-def diameter(side, wrap):
-    per_dim = side // 2 if wrap else side - 1
-    return 3 * per_dim
-
-for side in (4, 16):
-    print(side ** 3, diameter(side, True), diameter(side, False))
-```
-
-Expected output:
-
-```
-64 6 9
-4096 24 45
+```mermaid
+flowchart LR
+    R["Diameter rules<br/>mesh: 3 × (side − 1)<br/>torus: 3 × (side ÷ 2)"] --> A["4 × 4 × 4 cube<br/>64 chips<br/>torus 6 hops, mesh 9 hops"]
+    R --> B["16 × 16 × 16 pod<br/>4,096 chips<br/>torus 24 hops, mesh 45 hops"]
 ```
 
 ### Optical circuit switches (OCS)
@@ -829,22 +716,13 @@ The hardware would be unusable without software that hides its structure.
 - **Hierarchical:** first, inside each slice (fast ICI), a *reduce-scatter* leaves each of the 256 chips holding just 14 ÷ 256 ≈ 0.055 GB of the summed gradient. Only these small pieces cross the slow network: 0.055 ÷ 12.5 ≈ **4.4 ms**.
 - The slow-network traffic and time shrink by a factor of **256**, the number of chips in a slice.
 
-```python
-grad_gb = 14
-slow_bw = 12.5                          # GB/s per chip between slices
-naive = grad_gb / slow_bw
-hier = grad_gb / 256 / slow_bw
-print(round(naive, 2))
-print(round(hier * 1e3, 1))
-print(round(naive / hier))
-```
-
-Expected output:
-
-```
-1.12
-4.4
-256
+```mermaid
+flowchart LR
+    G["Gradients 14 GB<br/>slow network 12.5 GB/s per chip"] --> N["Naive<br/>14 ÷ 12.5<br/>= 1.12 s"]
+    G --> RS["Reduce-scatter inside slice (fast ICI)<br/>14 ÷ 256 ≈ 0.055 GB per chip"]
+    RS --> H["Hierarchical<br/>0.055 ÷ 12.5<br/>≈ 4.4 ms"]
+    N --> S["Speed-up<br/>1.12 s ÷ 4.4 ms<br/>= 256×"]
+    H --> S
 ```
 
 The general principle: *do as much reduction as possible on the fastest links, and send only the minimum across the slowest.* This is the Module 01 memory-hierarchy idea (keep data near the compute) applied to a network hierarchy.
