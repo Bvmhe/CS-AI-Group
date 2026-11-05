@@ -325,111 +325,522 @@ def mc_note(ans):
     return '(Select ALL that apply)' if isinstance(ans, list) else '(Choose ONE)'
 
 
-def new_doc(title, sub):
-    doc = Document()
-    st = doc.styles['Normal']
-    st.font.name = 'Arial'
-    st.font.size = Pt(11)
-    doc.core_properties.title = title
-    doc.core_properties.author = 'Team Fengwei Fried Rice'
-    t = heading(doc, title, 22)
-    t.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    s = doc.add_paragraph(sub)
-    s.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    return doc
-
-
-def write_key(doc, head=True):
-    if head:
-        heading(doc, 'Answer Key', 20, RED)
-    n = 1
-    heading(doc, 'Part A · True or False (false statements are corrected)', 13)
-    for tag, _, ans, why in TF:
-        doc.add_paragraph(f'{n}. {"True" if ans else "False"}. {why}  [{tag}]')
-        n += 1
-    heading(doc, 'Part B · Multiple choice', 13)
-    for tag, _, opts, ans, why in MC:
-        sel = ans if isinstance(ans, list) else [ans]
-        doc.add_paragraph(f'{n}. {letters(ans)}) {" / ".join(opts[i] for i in sel)}. {why}  [{tag}]')
-        n += 1
-    heading(doc, 'Part C · Open questions (sample answers, key points and marking guide)', 13)
-    doc.add_paragraph(KEY_NOTE)
-    for tag, _, ans in OPEN:
-        doc.add_paragraph(f'{n}. {ans}  [{tag}]')
-        n += 1
-
-
 def write_markdown(path):
     """All questions written out one by one, readable directly on GitHub (no answers)."""
-    L = [f'# {TITLE}', '', f'*{SUB}*', '',
+    L = ['<p align="center"><img src="../Study-Guide/assets/sprites/mama_cheer.png" height="110"> '
+         '<img src="../Study-Guide/assets/sprites/fried_rice.png" height="70"> '
+         '<img src="../Study-Guide/assets/sprites/boy_grin.png" height="100"></p>', '',
+         f'# 🍳 {TITLE}', '', f'*{SUB}*', '',
+         '> 👩‍🍳 **Mama says:** Welcome back to the kitchen, apprentice! Time to taste-test what you learned.', '',
          f'{len(TF)} True/False · {len(MC)} multiple-choice ({len(MC) - MULTI} choose-one, {MULTI} select-all) · '
          f'{len(OPEN)} open · **{TOTAL} questions**. Each question is tagged [Recipe · guide section · level]. '
          'The answers are in the separate Answer Key PDF and at the end of the Word file.', '',
-         '## Part A · True or False', '', 'Write T (true) or F (false) for each statement.', '']
+         '## 🥚 Part A · True or False', '', 'Write T (true) or F (false) for each statement.', '']
     n = 1
     for tag, text, _, _ in TF:
         L += [f'**{n}.** {text} `[{tag}]`', '']
         n += 1
-    L += ['## Part B · Multiple choice', '', MC_NOTE, '']
+    L += ['---', '', '## 🍙 Part B · Multiple choice', '', MC_NOTE, '']
     for tag, text, opts, ans, _ in MC:
         L += [f'**{n}. {mc_note(ans)}** {text} `[{tag}]`', '']
         L += [f'- {"ABCD"[k]}) {o}' for k, o in enumerate(opts)] + ['']
         n += 1
-    L += ['## Part C · Open questions', '', OPEN_NOTE, '']
+    L += ['---', '', '## 🍲 Part C · Open questions', '', OPEN_NOTE, '']
     for tag, text, _ in OPEN:
         body = '\n\n'.join(text.split('\n'))
         L += [f'**{n}.** {body} `[{tag}]`', '']
         n += 1
+    L += ['---', '', f'<sub>{CREDIT}</sub>', '']
     with open(path, 'w', encoding='utf-8') as f:
         f.write('\n'.join(L))
 
 
-def main():
-    doc = new_doc(TITLE, SUB)
-    multi = MULTI
-    doc.add_paragraph(
-        f'Contents: {len(TF)} True/False, {len(MC)} multiple-choice ({len(MC) - multi} choose-one, {multi} select-all) and '
-        f'{len(OPEN)} open questions, {len(TF) + len(MC) + len(OPEN)} in total, numbered 1-{len(TF) + len(MC) + len(OPEN)}. '
+# ======================================================================= Cooking Mama theme (same look as the guide)
+import tempfile
+from docx.enum.table import WD_TABLE_ALIGNMENT
+from docx.enum.text import WD_BREAK
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
+from docx.shared import Inches
+from PIL import Image, ImageDraw, ImageFont
+
+ROOT = os.path.dirname(HERE)
+FONTS = os.path.join(ROOT, 'assets', 'fonts')
+SPR = os.path.join(ROOT, 'assets', 'sprites')
+P_NAVY, P_RED, P_CREAM = (23, 50, 77), (239, 63, 79), (255, 244, 220)
+P_YEL, P_MINT, P_PINK = (255, 201, 74), (143, 213, 192), (255, 214, 222)
+REC = {1: ('THE KITCHEN CREW: AI HARDWARE', (231, 76, 60), 'fried_rice.png'),
+       2: ('ORDER UP! NETWORKS & AI INFRA', (52, 152, 219), 'bento.png'),
+       3: ('TRAINING THE KITCHEN PUP: RL', (46, 174, 96), 'pup.png'),
+       4: ("CHEF'S SENSES: AI SENSORS", (155, 89, 182), 'peppers.png'),
+       5: ('RUNNING THE CHAIN: INTEGRATION', (230, 126, 34), 'nabe.png')}
+HEAD_FONT = 'Arial Rounded MT Bold'
+CREDIT = 'Cooking Mama characters and pictures © Office Create. Used for class only, not for sale.'
+IMG = tempfile.mkdtemp(prefix='tb_img_')
+
+
+def hexc(c):
+    return '%02X%02X%02X' % c
+
+
+def pix(n):
+    return ImageFont.truetype(os.path.join(FONTS, 'PressStart2P.ttf'), n)
+
+
+def fred(n, var='SemiBold'):
+    f = ImageFont.truetype(os.path.join(FONTS, 'Fredoka.ttf'), n)
+    f.set_variation_by_name(var)
+    return f
+
+
+def sprite(name, h):
+    im = Image.open(os.path.join(SPR, name)).convert('RGBA')
+    return im.resize((max(1, round(im.width * h / im.height)), h), Image.LANCZOS)
+
+
+def paste(base, name, x, y, h):
+    s = sprite(name, h)
+    base.alpha_composite(s, (int(x), int(y)))
+    return s.width
+
+
+def gingham(d, w, y0, y1, s=50):
+    for y in range(y0, y1, s):
+        for x in range(0, w, s):
+            i, j = (x // s) % 2, (y // s) % 2
+            d.rectangle([x, y, x + s, y + s], fill=(255, 180, 196) if i and j else (P_PINK if i or j else (255, 255, 255)))
+
+
+def pill(d, box, text, f, fill=P_NAVY, fg=(255, 255, 255), r=None, shadow=True):
+    x0, y0, x1, y1 = box
+    r = r or (y1 - y0) // 2
+    if shadow:
+        d.rounded_rectangle([x0 + 8, y0 + 8, x1 + 8, y1 + 8], r, fill=(0, 0, 0, 60))
+    d.rounded_rectangle(box, r, fill=fill, outline=P_NAVY, width=6)
+    d.text(((x0 + x1) // 2, (y0 + y1) // 2), text, font=f, fill=fg, anchor='mm')
+
+
+def save(im, name):
+    p = os.path.join(IMG, name)
+    bg = Image.new('RGB', im.size, P_CREAM)
+    bg.paste(im, mask=im.split()[3])
+    bg.save(p)
+    return p
+
+
+def img_cover():
+    W, H = 1600, 1250
+    im = Image.new('RGBA', (W, H), P_CREAM + (255,))
+    d = ImageDraw.Draw(im)
+    gingham(d, W, 0, 280)
+    for x in range(-40, W + 80, 80):
+        d.ellipse([x, 250, x + 80, 330], fill=P_CREAM)
+    d.rounded_rectangle([60, 60, 940, 200], 26, fill=P_NAVY)
+    d.rounded_rectangle([76, 76, 186, 184], 18, fill=P_YEL)
+    d.text((131, 131), '?', font=pix(52), fill=P_NAVY, anchor='mm')
+    d.polygon([(206, 106), (206, 156), (236, 131)], fill=P_RED)
+    d.text((262, 131), 'FENGWEI FRIED RICE', font=pix(36), fill='white', anchor='lm')
+    d.rounded_rectangle([160, 380, W - 152, 700], 40, fill=(0, 0, 0, 60))
+    d.rounded_rectangle([150, 370, W - 160, 690], 40, fill='white', outline=P_NAVY, width=8)
+    d.text((W // 2, 470), 'STAGE 2', font=pix(60), fill=P_RED, anchor='mm')
+    d.text((W // 2, 590), 'TEST BANK', font=pix(92), fill=P_NAVY, anchor='mm')
+    d.text((W // 2, 770), 'Hardware, Networks & Behaviourist AI', font=fred(54), fill=P_NAVY, anchor='mm')
+    d.text((W // 2, 840), "Let's cook up some answers!  ·  November 2026", font=fred(42, 'Medium'), fill=P_RED, anchor='mm')
+    d.rectangle([0, 1140, W, H], fill=(205, 140, 90))
+    d.rectangle([0, 1140, W, 1156], fill=(170, 105, 60))
+    items = (('mama_cheer.png', 300), ('boy_grin.png', 280), ('fried_rice.png', 150), ('girl_pigtails.png', 270),
+             ('pup.png', 200), ('mama_book.png', 290))
+    ws = [sprite(n, h).width for n, h in items]
+    gap = (W - sum(ws)) // (len(items) + 1)
+    x = gap
+    for (n, h), w in zip(items, ws):
+        paste(im, n, x, 1150 - h, h)
+        x += w + gap
+    return save(im, 'cover.png')
+
+
+def img_banner(key, text, color, spr):
+    W, H = 1600, 230
+    im = Image.new('RGBA', (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    d.rounded_rectangle([18, 48, W - 222, 198], 30, fill=(0, 0, 0, 60))
+    d.rounded_rectangle([10, 40, W - 230, 190], 30, fill=P_NAVY)
+    d.rounded_rectangle([28, 58, 140, 172], 20, fill=color)
+    d.text((84, 115), key, font=pix(46), fill=P_NAVY if color in (P_YEL, P_MINT) else (255, 255, 255), anchor='mm')
+    d.polygon([(160, 90), (160, 140), (190, 115)], fill=P_RED)
+    d.text((214, 115), text, font=pix(34), fill='white', anchor='lm')
+    s = sprite(spr, 220)
+    im.alpha_composite(s, (W - 30 - s.width, 5))
+    return save(im, f'banner_{key}.png')
+
+
+def img_header():
+    W, H = 1600, 120
+    im = Image.new('RGBA', (W, H), P_CREAM + (255,))
+    d = ImageDraw.Draw(im)
+    gingham(d, W, 0, 70, 35)
+    d.rounded_rectangle([20, 14, 760, 98], 20, fill=P_NAVY)
+    d.rounded_rectangle([30, 24, 94, 88], 12, fill=P_YEL)
+    d.text((62, 56), '?', font=pix(30), fill=P_NAVY, anchor='mm')
+    d.text((112, 56), 'FENGWEI FRIED RICE', font=pix(22), fill='white', anchor='lm')
+    pill(d, (1040, 22, 1580, 92), 'TEST BANK', pix(24), fill='white', fg=P_NAVY, shadow=False)
+    return save(im, 'header.png')
+
+
+def img_counter():
+    W, H = 1600, 150
+    im = Image.new('RGBA', (W, H), P_CREAM + (255,))
+    d = ImageDraw.Draw(im)
+    d.rectangle([0, 110, W, H], fill=(205, 140, 90))
+    d.rectangle([0, 110, W, 120], fill=(170, 105, 60))
+    x = 60
+    for n in ('tomato.png', 'carrot.png', 'onion.png', 'mama_icon_egg.png', 'cabbage.png', 'apple.png', 'eggplant.png',
+              'mushroom.png' if os.path.exists(os.path.join(SPR, 'mushroom.png')) else 'peach.png', 'cucumber.png', 'pumpkin.png'):
+        x += paste(im, n, x, 112 - 90, 90) + 70
+    return save(im, 'counter.png')
+
+
+# ---------------------------------------------------------------- Word helpers
+def shade(cell, color):
+    tcPr = cell._tc.get_or_add_tcPr()
+    sh = OxmlElement('w:shd')
+    sh.set(qn('w:val'), 'clear')
+    sh.set(qn('w:color'), 'auto')
+    sh.set(qn('w:fill'), hexc(color))
+    tcPr.append(sh)
+
+
+def borders(table, color=P_NAVY, size=18):
+    tblPr = table._tbl.tblPr
+    b = OxmlElement('w:tblBorders')
+    for e in ('top', 'left', 'bottom', 'right', 'insideH', 'insideV'):
+        el = OxmlElement(f'w:{e}')
+        el.set(qn('w:val'), 'single')
+        el.set(qn('w:sz'), str(size))
+        el.set(qn('w:color'), hexc(color))
+        b.append(el)
+    tblPr.append(b)
+
+
+def keep_together(table):
+    for row in table.rows:
+        trPr = row._tr.get_or_add_trPr()
+        cs = OxmlElement('w:cantSplit')
+        trPr.append(cs)
+        for c in row.cells:
+            for p in c.paragraphs:
+                p.paragraph_format.keep_with_next = True
+
+
+def run(p, text, bold=False, size=None, color=P_NAVY, font=None, italic=False):
+    r = p.add_run(text)
+    r.bold, r.italic = bold, italic
+    if size:
+        r.font.size = Pt(size)
+    r.font.color.rgb = RGBColor(*color)
+    if font:
+        r.font.name = font
+        r._element.rPr.rFonts.set(qn('w:eastAsia'), font)
+    return r
+
+
+def spacer(doc, pt=4):
+    p = doc.add_paragraph()
+    p.paragraph_format.space_after = Pt(0)
+    p.paragraph_format.space_before = Pt(0)
+    r = p.add_run('')
+    r.font.size = Pt(pt)
+    return p
+
+
+def window(doc, title, title_color, body_lines, title_fg=(255, 255, 255), icon=None):
+    """A guide-style window: coloured title bar + white body, navy border. body_lines = list of (text, bold) or callables."""
+    t = doc.add_table(rows=2, cols=1)
+    t.alignment = WD_TABLE_ALIGNMENT.CENTER
+    borders(t)
+    top, body = t.rows[0].cells[0], t.rows[1].cells[0]
+    shade(top, title_color)
+    shade(body, (255, 255, 255))
+    p = top.paragraphs[0]
+    p.paragraph_format.space_after = Pt(1)
+    if icon:
+        p.add_run().add_picture(os.path.join(SPR, icon), height=Inches(0.22))
+        p.add_run('  ')
+    run(p, title, bold=True, size=10.5, color=title_fg, font=HEAD_FONT)
+    first = True
+    for item in body_lines:
+        bp = body.paragraphs[0] if first else body.add_paragraph()
+        first = False
+        bp.paragraph_format.space_after = Pt(2)
+        item(bp) if callable(item) else run(bp, item[0], bold=item[1], size=10.5)
+    keep_together(t)
+    spacer(doc, 6)
+    return t
+
+
+def banner(doc, path):
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p.paragraph_format.space_before = Pt(6)
+    p.paragraph_format.space_after = Pt(4)
+    p.paragraph_format.keep_with_next = True
+    p.add_run().add_picture(path, width=Inches(7.0))
+
+
+def recipe_head(doc, r):
+    name, col, icon = REC[r]
+    p = doc.add_paragraph()
+    p.paragraph_format.space_before = Pt(8)
+    p.paragraph_format.space_after = Pt(4)
+    p.paragraph_format.keep_with_next = True
+    p.add_run().add_picture(os.path.join(SPR, icon), height=Inches(0.36))
+    run(p, f'  RECIPE 0{r} · {name}', bold=True, size=13, color=col, font=HEAD_FONT)
+
+
+def mama_says(doc, text, spr='mama_ok.png'):
+    """Speech bubble next to Mama, like the guide's intro pages."""
+    t = doc.add_table(rows=1, cols=2)
+    t.alignment = WD_TABLE_ALIGNMENT.CENTER
+    a, b = t.rows[0].cells
+    a.width, b.width = Inches(0.9), Inches(6.1)
+    a.paragraphs[0].add_run().add_picture(os.path.join(SPR, spr), height=Inches(1.0))
+    shade(b, (255, 255, 255))
+    tcPr = b._tc.get_or_add_tcPr()
+    tb = OxmlElement('w:tcBorders')
+    for e in ('top', 'left', 'bottom', 'right'):
+        el = OxmlElement(f'w:{e}')
+        el.set(qn('w:val'), 'single')
+        el.set(qn('w:sz'), '18')
+        el.set(qn('w:color'), hexc(P_NAVY))
+        tb.append(el)
+    tcPr.append(tb)
+    first = True
+    for para in text.split('\n'):
+        p = b.paragraphs[0] if first else b.add_paragraph()
+        first = False
+        p.paragraph_format.space_after = Pt(3)
+        run(p, para, size=10.5)
+    spacer(doc, 6)
+
+
+def page_setup(doc, header_img, counter_img):
+    sec = doc.sections[0]
+    sec.page_width, sec.page_height = Inches(8.27), Inches(11.69)
+    sec.left_margin = sec.right_margin = Inches(0.6)
+    sec.top_margin, sec.bottom_margin = Inches(1.0), Inches(1.05)
+    sec.header_distance, sec.footer_distance = Inches(0.25), Inches(0.2)
+    sec.different_first_page_header_footer = True
+    hp = sec.header.paragraphs[0]
+    hp.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    hp.add_run().add_picture(header_img, width=Inches(7.07))
+    fp = sec.footer.paragraphs[0]
+    fp.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    fp.add_run().add_picture(counter_img, width=Inches(7.07))
+    fp2 = sec.footer.add_paragraph()
+    fp2.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run(fp2, 'Fengwei Fried Rice · Stage 2 Test Bank · page ', size=8.5, color=P_NAVY, font=HEAD_FONT)
+    r = fp2.add_run()
+    for kind, txt in (('begin', None), (None, 'PAGE'), ('end', None)):
+        if kind:
+            el = OxmlElement('w:fldChar')
+            el.set(qn('w:fldCharType'), kind)
+        else:
+            el = OxmlElement('w:instrText')
+            el.set(qn('xml:space'), 'preserve')
+            el.text = txt
+        r._r.append(el)
+    r.font.size = Pt(8.5)
+    # cream page colour like the guide
+    bg = OxmlElement('w:background')
+    bg.set(qn('w:color'), hexc(P_CREAM))
+    doc.element.insert(0, bg)
+    st = doc.settings.element
+    st.insert(0, OxmlElement('w:displayBackgroundShape'))
+
+
+def new_doc():
+    doc = Document()
+    st = doc.styles['Normal']
+    st.font.name = 'Arial'
+    st.font.size = Pt(10.5)
+    st.font.color.rgb = RGBColor(*P_NAVY)
+    doc.core_properties.title = TITLE
+    doc.core_properties.author = 'Team Fengwei Fried Rice'
+    page_setup(doc, IMGS['header'], IMGS['counter'])
+    return doc
+
+
+def cover(doc, key_only=False):
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p.add_run().add_picture(IMGS['cover'], width=Inches(6.0))
+    if key_only:
+        p = doc.add_paragraph()
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        run(p, "MAMA'S ANSWER KEY", bold=True, size=24, color=P_RED, font=HEAD_FONT)
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run(p, 'Team Fengwei Fried Rice · Stage 2 Study Guide companion', bold=True, size=12, font=HEAD_FONT)
+    p.paragraph_format.space_after = Pt(0)
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run(p, CREDIT, size=8, color=(120, 120, 120), italic=True)
+    mama_says(doc, (
+        "Welcome back to the kitchen, apprentice! Time to taste-test what you learned. "
+        f"This Test Bank has {TOTAL} questions from our five recipes: {len(TF)} True/False, {len(MC)} multiple-choice "
+        f"({len(MC) - MULTI} choose-one, {MULTI} select-all) and {len(OPEN)} open questions, numbered 1-{TOTAL}.\n"
         'Each question is tagged [Recipe · guide section · level]. Levels: R = remember, U = understand, A = apply, '
-        'An = analyse, E = evaluate, C = create, P = predict. Questions tagged "Lab" use a Kitchen Lab from the guide; '
-        'all the data you need is in the question, so no website or app is required. '
-        'The answer key starts on a new page after all questions.')
-    heading(doc, 'Coverage', 13)
-    coverage_table(doc)
+        'An = analyse, E = evaluate, C = create, P = predict. Questions marked "Kitchen Lab" use a lab from the guide; '
+        'all the data you need is in the question, so no website or app is needed.\n'
+        + ('This file has only the answers. The questions are in the Word Test Bank and on GitHub (Test-Bank/Questions.md).'
+           if key_only else "The answer key (Mama's Feedback) starts on a new page after all the questions. No peeking!")),
+        'mama_cheer.png')
+    if not key_only:
+        coverage(doc)
+    doc.paragraphs[-1].add_run().add_break(WD_BREAK.PAGE)
 
-    heading(doc, 'Part A · True or False')
-    doc.add_paragraph('Write T (true) or F (false) for each statement.')
+
+def coverage(doc):
+    t = doc.add_table(rows=1, cols=4)
+    t.alignment = WD_TABLE_ALIGNMENT.CENTER
+    borders(t, size=12)
+    for c, h in enumerate(['Recipe (guide topic)', 'True/False', 'Multiple choice', 'Open']):
+        cell = t.rows[0].cells[c]
+        shade(cell, P_NAVY)
+        run(cell.paragraphs[0], h, bold=True, size=10, color=(255, 255, 255), font=HEAD_FONT)
+    for r in range(1, 6):
+        key = f'R{r} '
+        nice = {1: 'The Kitchen Crew: AI Hardware', 2: 'Order Up! Networks & AI Infrastructure',
+                3: 'Training the Kitchen Pup: Reinforcement Learning', 4: "Chef's Senses: AI Sensors",
+                5: 'Running the Chain: System Integration'}
+        vals = [f'Recipe 0{r} · {nice[r]}', sum(x[0].startswith(key) for x in TF),
+                sum(x[0].startswith(key) for x in MC), sum(x[0].startswith(key) for x in OPEN)]
+        cells = t.add_row().cells
+        for c, v in enumerate(vals):
+            shade(cells[c], (255, 255, 255))
+            run(cells[c].paragraphs[0], str(v), bold=(c == 0), size=10, color=REC[r][1] if c == 0 else P_NAVY)
+    cells = t.add_row().cells
+    for c, v in enumerate(['Total', len(TF), len(MC), len(OPEN)]):
+        shade(cells[c], P_YEL)
+        run(cells[c].paragraphs[0], str(v), bold=True, size=10)
+    t.autofit = False
+    for row in t.rows:
+        for c, w in enumerate((3.6, 1.15, 1.35, 0.9)):
+            row.cells[c].width = Inches(w)
+            for p in row.cells[c].paragraphs:
+                p.paragraph_format.space_after = Pt(1)
+                if c:
+                    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    spacer(doc, 6)
+
+
+def rnum(tag):
+    return int(tag[1])
+
+
+def tag_title(n, tag, extra=''):
+    lab = '  ·  KITCHEN LAB' if 'Lab' in tag else ''
+    return f'Q{n}  ·  {tag}{lab}{extra}'
+
+
+def questions(doc):
     n = 1
+    banner(doc, IMGS['A'])
+    mama_says(doc, 'Part A · True or False. Read each statement and write T (true) or F (false).', 'mama_happy.png')
+    cur = None
     for tag, text, _, _ in TF:
-        q(doc, n, tag, text)
+        if rnum(tag) != cur:
+            cur = rnum(tag)
+            recipe_head(doc, cur)
+        window(doc, tag_title(n, tag), REC[cur][1], [(text, False), ('Answer:  T  /  F', True)])
         n += 1
-    heading(doc, 'Part B · Multiple choice')
-    doc.add_paragraph(MC_NOTE)
+    doc.add_page_break()
+    banner(doc, IMGS['B'])
+    mama_says(doc, 'Part B · Multiple choice. ' + MC_NOTE, 'mama_ok.png')
+    cur = None
     for tag, text, opts, ans, _ in MC:
-        q(doc, n, tag, text, mc_note(ans))
-        for k, o in enumerate(opts):
-            doc.add_paragraph(f'{"ABCD"[k]}) {o}', style='List Bullet')
+        if rnum(tag) != cur:
+            cur = rnum(tag)
+            recipe_head(doc, cur)
+        lines = [lambda p, t=text, a=ans: (run(p, mc_note(a) + ' ', bold=True, size=10.5, color=P_RED), run(p, t, size=10.5))]
+        lines += [(f'{"ABCD"[k]})  {o}', False) for k, o in enumerate(opts)]
+        window(doc, tag_title(n, tag), REC[cur][1], lines)
         n += 1
-    heading(doc, 'Part C · Open questions')
-    doc.add_paragraph('Write a developed answer of more than 100 words, or show full working (calculations, a diagram or '
-                      'worked steps) with a short explanation of what the result means.')
+    doc.add_page_break()
+    banner(doc, IMGS['C'])
+    mama_says(doc, 'Part C · Open questions. ' + OPEN_NOTE, 'mama_book.png')
+    cur = None
     for tag, text, _ in OPEN:
-        q(doc, n, tag, text)
+        if rnum(tag) != cur:
+            cur = rnum(tag)
+            recipe_head(doc, cur)
+        body = [(para, False) for para in text.split('\n')]
+        body += [('Your answer:', True)] + [('_' * 86, False)] * 6
+        window(doc, tag_title(n, tag), REC[cur][1], body)
         n += 1
 
+
+def answer_key(doc):
+    banner(doc, IMGS['K'])
+    mama_says(doc, "Mama's Feedback! Check your answers here. False statements are corrected, every multiple-choice "
+                   'answer has its reasoning, and open questions have key points with marks.', 'mama_cheer.png')
+    n = 1
+    recipe = None
+    run(doc.add_paragraph(), 'PART A · TRUE OR FALSE', bold=True, size=13, color=P_RED, font=HEAD_FONT)
+    for tag, _, ans, why in TF:
+        window(doc, f'⭐ MAMA\'S FEEDBACK  ·  Q{n}  ·  {tag}', P_MINT,
+               [lambda p, a=ans, w=why: (run(p, ('True. ' if a else 'False. '), bold=True, size=10.5,
+                                             color=(46, 140, 80) if a else P_RED), run(p, w, size=10.5))], title_fg=P_NAVY)
+        n += 1
+    run(doc.add_paragraph(), 'PART B · MULTIPLE CHOICE', bold=True, size=13, color=P_RED, font=HEAD_FONT)
+    for tag, _, opts, ans, why in MC:
+        sel = ans if isinstance(ans, list) else [ans]
+        window(doc, f'⭐ MAMA\'S FEEDBACK  ·  Q{n}  ·  {tag}', P_MINT,
+               [lambda p, a=ans, s=sel, o=opts, w=why: (
+                   run(p, f'{letters(a)})  {" / ".join(o[i] for i in s)}. ', bold=True, size=10.5, color=(46, 140, 80)),
+                   run(p, w, size=10.5))], title_fg=P_NAVY)
+        n += 1
+    run(doc.add_paragraph(), 'PART C · OPEN QUESTIONS (5 marks each)', bold=True, size=13, color=P_RED, font=HEAD_FONT)
+    mama_says(doc, KEY_NOTE, 'mama_happy.png')
+    for tag, _, ans in OPEN:
+        window(doc, f'⭐ MAMA\'S FEEDBACK  ·  Q{n}  ·  {tag}', P_MINT, [(ans, False)], title_fg=P_NAVY)
+        n += 1
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p.add_run().add_picture(os.path.join(SPR, 'sticker_tasty.png'), height=Inches(1.1))
+    run(doc.add_paragraph(), CREDIT, size=8, color=(120, 120, 120), italic=True).font.size = Pt(8)
+
+
+IMGS = {}
+
+
+def render_images():
+    IMGS['cover'] = img_cover()
+    IMGS['header'] = img_header()
+    IMGS['counter'] = img_counter()
+    IMGS['A'] = img_banner('A', 'PART A · TRUE OR FALSE', P_YEL, 'mama_ok.png')
+    IMGS['B'] = img_banner('B', 'PART B · MULTIPLE CHOICE', P_MINT, 'boy_grin.png')
+    IMGS['C'] = img_banner('C', 'PART C · OPEN QUESTIONS', (255, 141, 161), 'girl_pigtails.png')
+    IMGS['K'] = img_banner('★', "MAMA'S ANSWER KEY", P_RED, 'mama_cheer.png')
+
+
+def main():
+    render_images()
+    doc = new_doc()
+    cover(doc)
+    questions(doc)
     doc.add_page_break()
-    write_key(doc)
+    answer_key(doc)
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     doc.save(OUT)
-    key = new_doc('Fengwei Fried Rice · Stage 2 Test Bank: Answer Key', SUB)
-    write_key(key, head=False)
+    key = new_doc()
+    cover(key, key_only=True)
+    answer_key(key)
     key.save(KEY_OUT)
     write_markdown(MD_OUT)
     print(os.path.abspath(OUT), TOTAL, 'questions')
-    print(os.path.abspath(KEY_OUT))
-    print(os.path.abspath(MD_OUT))
     print('TF true/false:', Counter(t[2] for t in TF))
-    print('MC keys:', Counter(letters(m[3]) for m in MC if isinstance(m[3], int)), 'multi:', multi)
+    print('MC keys:', Counter(letters(m[3]) for m in MC if isinstance(m[3], int)), 'multi:', MULTI)
 
 
 if __name__ == '__main__':

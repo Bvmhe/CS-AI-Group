@@ -1,10 +1,14 @@
-# Fengwei Fried Rice · Stage 2 Test Bank
+<p align="center"><img src="../Study-Guide/assets/sprites/mama_cheer.png" height="110"> <img src="../Study-Guide/assets/sprites/fried_rice.png" height="70"> <img src="../Study-Guide/assets/sprites/boy_grin.png" height="100"></p>
+
+# 🍳 Fengwei Fried Rice · Stage 2 Test Bank
 
 *Team Fengwei Fried Rice · Stage 2 Study Guide · Hardware, Networks & Behaviourist AI · November 2026*
 
+> 👩‍🍳 **Mama says:** Welcome back to the kitchen, apprentice! Time to taste-test what you learned.
+
 25 True/False · 25 multiple-choice (21 choose-one, 4 select-all) · 10 open · **60 questions**. Each question is tagged [Recipe · guide section · level]. The answers are in the separate Answer Key PDF and at the end of the Word file.
 
-## Part A · True or False
+## 🥚 Part A · True or False
 
 Write T (true) or F (false) for each statement.
 
@@ -58,7 +62,9 @@ Write T (true) or F (false) for each statement.
 
 **25.** In Kitchen Lab 5, the FIRST call of a jax.jit function is much slower than later calls mainly because XLA compiles it. `[R5 · Lab 5 · U]`
 
-## Part B · Multiple choice
+---
+
+## 🍙 Part B · Multiple choice
 
 Each question says how many answers to choose: "(Choose ONE)" means exactly one correct option; "(Select ALL that apply)" means one or more options are correct and you must choose all of them.
 
@@ -237,7 +243,9 @@ Each question says how many answers to choose: "(Choose ONE)" means exactly one 
 - C) 4×
 - D) 8×
 
-## Part C · Open questions
+---
+
+## 🍲 Part C · Open questions
 
 Write a developed answer of more than 100 words, or show full working (calculations, a diagram or worked steps) with a short explanation of what the result means.
 
@@ -264,3 +272,7 @@ Write a developed answer of more than 100 words, or show full working (calculati
     f = jax.jit(lambda a: (a @ a).sum())
 
 Measured times: size 1,024: first call 0.62 s, second call 0.0021 s; size 4,096: 0.034 s; size 8,192: 0.27 s. Explain the slow first call, compute the TFLOP/s and MFU for each size, and explain why the time ratio from 1,024 to 4,096 is far from the FLOP ratio while 4,096 → 8,192 is close to 8×. Predict the time for size 16,384. `[R5 · Lab 5 · P]`
+
+---
+
+<sub>Cooking Mama characters and pictures © Office Create. Used for class only, not for sale.</sub>
