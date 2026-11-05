@@ -1,6 +1,6 @@
 # Fengwei Fried Rice · Stage 2 Test Bank
 
-*For the study guide "Hot Wok, Smart Chips" · Hardware, Networks & Behaviourist AI · November 2026*
+*Team Fengwei Fried Rice · Stage 2 Study Guide · Hardware, Networks & Behaviourist AI · November 2026*
 
 25 True/False · 25 multiple-choice (21 choose-one, 4 select-all) · 10 open · **60 questions**. Each question is tagged [Recipe · guide section · level]. The answers are in the separate Answer Key PDF and at the end of the Word file.
 

@@ -3,7 +3,7 @@
 **Module:** Hardware, Networks & Behaviourist AI
 **Team:** Fengwei Fried Rice
 
-This document records how our team used AI tools in Stage 2, while building the study guide *Hot Wok, Smart Chips* (`Study-Guide/`) and the separate Test Bank (`Test-Bank/`). The main tool was **Claude Code** (an AI coding assistant), plus the Canva connector it used. Team members chose the topics, theme and structure, reviewed the results and made the final decisions.
+This document records how our team used AI tools in Stage 2, while building our Stage 2 Study Guide (`Study-Guide/`) and the separate Test Bank (`Test-Bank/`). The main tool was **Claude Code** (an AI coding assistant), plus the Canva connector it used. Team members chose the topics, theme and structure, reviewed the results and made the final decisions.
 
 > **To complete before submission:** replace every `[ ... ]` with your own details (who reviewed what, when, and a screenshot or commit link as evidence).
 

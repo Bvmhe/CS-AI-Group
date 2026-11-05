@@ -1,6 +1,6 @@
 # Fengwei Fried Rice · Stage 2 Test Bank
 
-Separate Test Bank for the study guide *Hot Wok, Smart Chips*.
+Separate Test Bank for the Fengwei Fried Rice Stage 2 Study Guide.
 
 | File | What it is |
 |------|------------|

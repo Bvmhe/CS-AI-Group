@@ -310,7 +310,7 @@ def coverage_table(doc):
 
 
 TITLE = 'Fengwei Fried Rice · Stage 2 Test Bank'
-SUB = 'For the study guide "Hot Wok, Smart Chips" · Hardware, Networks & Behaviourist AI · November 2026'
+SUB = 'Team Fengwei Fried Rice · Stage 2 Study Guide · Hardware, Networks & Behaviourist AI · November 2026'
 MULTI = sum(isinstance(m[3], list) for m in MC)
 TOTAL = len(TF) + len(MC) + len(OPEN)
 MC_NOTE = ('Each question says how many answers to choose: "(Choose ONE)" means exactly one correct option; '
