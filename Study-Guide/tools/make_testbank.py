@@ -11,7 +11,10 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Pt, RGBColor
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(HERE, '..', '..', 'Test-Bank', 'FengweiFriedRice_Stage2_TestBank_V1.docx')
+TB = os.path.join(HERE, '..', '..', 'Test-Bank')
+OUT = os.path.join(TB, 'FengweiFriedRice_Stage2_TestBank_V1.docx')
+KEY_OUT = os.path.join(TB, 'FengweiFriedRice_Stage2_TestBank_AnswerKey.docx')
+MD_OUT = os.path.join(TB, 'Questions.md')
 NAVY = RGBColor(0x17, 0x32, 0x4D)
 RED = RGBColor(0xEF, 0x3F, 0x4F)
 LAB = 'Kitchen Lab'
@@ -306,16 +309,84 @@ def coverage_table(doc):
     cells[0].text, cells[1].text, cells[2].text, cells[3].text = 'Total', str(len(TF)), str(len(MC)), str(len(OPEN))
 
 
-def main():
+TITLE = 'Fengwei Fried Rice · Stage 2 Test Bank'
+SUB = 'For the study guide "Hot Wok, Smart Chips" · Hardware, Networks & Behaviourist AI · November 2026'
+MULTI = sum(isinstance(m[3], list) for m in MC)
+TOTAL = len(TF) + len(MC) + len(OPEN)
+MC_NOTE = ('Each question says how many answers to choose: "(Choose ONE)" means exactly one correct option; '
+           '"(Select ALL that apply)" means one or more options are correct and you must choose all of them.')
+OPEN_NOTE = ('Write a developed answer of more than 100 words, or show full working (calculations, a diagram or '
+             'worked steps) with a short explanation of what the result means.')
+KEY_NOTE = ('Each open question is worth 5 marks. The key points below are a guide, not the only correct answer: '
+            'give credit to any valid alternative that is correct and well reasoned.')
+
+
+def mc_note(ans):
+    return '(Select ALL that apply)' if isinstance(ans, list) else '(Choose ONE)'
+
+
+def new_doc(title, sub):
     doc = Document()
     st = doc.styles['Normal']
     st.font.name = 'Arial'
     st.font.size = Pt(11)
-    t = heading(doc, 'Hot Wok, Smart Chips: Test Bank', 22)
+    doc.core_properties.title = title
+    doc.core_properties.author = 'Team Fengwei Fried Rice'
+    t = heading(doc, title, 22)
     t.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    s = doc.add_paragraph('Team Fengwei Fried Rice · Hardware, Networks & Behaviourist AI · Stage 2 · November 2026')
+    s = doc.add_paragraph(sub)
     s.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    multi = sum(isinstance(m[3], list) for m in MC)
+    return doc
+
+
+def write_key(doc, head=True):
+    if head:
+        heading(doc, 'Answer Key', 20, RED)
+    n = 1
+    heading(doc, 'Part A · True or False (false statements are corrected)', 13)
+    for tag, _, ans, why in TF:
+        doc.add_paragraph(f'{n}. {"True" if ans else "False"}. {why}  [{tag}]')
+        n += 1
+    heading(doc, 'Part B · Multiple choice', 13)
+    for tag, _, opts, ans, why in MC:
+        sel = ans if isinstance(ans, list) else [ans]
+        doc.add_paragraph(f'{n}. {letters(ans)}) {" / ".join(opts[i] for i in sel)}. {why}  [{tag}]')
+        n += 1
+    heading(doc, 'Part C · Open questions (sample answers, key points and marking guide)', 13)
+    doc.add_paragraph(KEY_NOTE)
+    for tag, _, ans in OPEN:
+        doc.add_paragraph(f'{n}. {ans}  [{tag}]')
+        n += 1
+
+
+def write_markdown(path):
+    """All questions written out one by one, readable directly on GitHub (no answers)."""
+    L = [f'# {TITLE}', '', f'*{SUB}*', '',
+         f'{len(TF)} True/False · {len(MC)} multiple-choice ({len(MC) - MULTI} choose-one, {MULTI} select-all) · '
+         f'{len(OPEN)} open · **{TOTAL} questions**. Each question is tagged [Recipe · guide section · level]. '
+         'The answers are in the separate Answer Key PDF and at the end of the Word file.', '',
+         '## Part A · True or False', '', 'Write T (true) or F (false) for each statement.', '']
+    n = 1
+    for tag, text, _, _ in TF:
+        L += [f'**{n}.** {text} `[{tag}]`', '']
+        n += 1
+    L += ['## Part B · Multiple choice', '', MC_NOTE, '']
+    for tag, text, opts, ans, _ in MC:
+        L += [f'**{n}. {mc_note(ans)}** {text} `[{tag}]`', '']
+        L += [f'- {"ABCD"[k]}) {o}' for k, o in enumerate(opts)] + ['']
+        n += 1
+    L += ['## Part C · Open questions', '', OPEN_NOTE, '']
+    for tag, text, _ in OPEN:
+        body = '\n\n'.join(text.split('\n'))
+        L += [f'**{n}.** {body} `[{tag}]`', '']
+        n += 1
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write('\n'.join(L))
+
+
+def main():
+    doc = new_doc(TITLE, SUB)
+    multi = MULTI
     doc.add_paragraph(
         f'Contents: {len(TF)} True/False, {len(MC)} multiple-choice ({len(MC) - multi} choose-one, {multi} select-all) and '
         f'{len(OPEN)} open questions, {len(TF) + len(MC) + len(OPEN)} in total, numbered 1-{len(TF) + len(MC) + len(OPEN)}. '
@@ -333,10 +404,9 @@ def main():
         q(doc, n, tag, text)
         n += 1
     heading(doc, 'Part B · Multiple choice')
-    doc.add_paragraph('Each question says how many answers to choose: "(Choose ONE)" means exactly one correct option; '
-                      '"(Select ALL that apply)" means one or more options are correct and you must choose all of them.')
+    doc.add_paragraph(MC_NOTE)
     for tag, text, opts, ans, _ in MC:
-        q(doc, n, tag, text, '(Select ALL that apply)' if isinstance(ans, list) else '(Choose ONE)')
+        q(doc, n, tag, text, mc_note(ans))
         for k, o in enumerate(opts):
             doc.add_paragraph(f'{"ABCD"[k]}) {o}', style='List Bullet')
         n += 1
@@ -348,26 +418,16 @@ def main():
         n += 1
 
     doc.add_page_break()
-    heading(doc, 'Answer Key', 20, RED)
-    n = 1
-    heading(doc, 'Part A · True or False (false statements are corrected)', 13)
-    for tag, _, ans, why in TF:
-        doc.add_paragraph(f'{n}. {"True" if ans else "False"}. {why}  [{tag}]')
-        n += 1
-    heading(doc, 'Part B · Multiple choice', 13)
-    for tag, _, opts, ans, why in MC:
-        sel = ans if isinstance(ans, list) else [ans]
-        doc.add_paragraph(f'{n}. {letters(ans)}) {" / ".join(opts[i] for i in sel)}. {why}  [{tag}]')
-        n += 1
-    heading(doc, 'Part C · Open questions (sample answers, key points and marking guide)', 13)
-    doc.add_paragraph('Each open question is worth 5 marks. The key points below are a guide, not the only correct answer: '
-                      'give credit to any valid alternative that is correct and well reasoned.')
-    for tag, _, ans in OPEN:
-        doc.add_paragraph(f'{n}. {ans}  [{tag}]')
-        n += 1
+    write_key(doc)
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     doc.save(OUT)
-    print(os.path.abspath(OUT), n - 1, 'questions')
+    key = new_doc('Fengwei Fried Rice · Stage 2 Test Bank: Answer Key', SUB)
+    write_key(key, head=False)
+    key.save(KEY_OUT)
+    write_markdown(MD_OUT)
+    print(os.path.abspath(OUT), TOTAL, 'questions')
+    print(os.path.abspath(KEY_OUT))
+    print(os.path.abspath(MD_OUT))
     print('TF true/false:', Counter(t[2] for t in TF))
     print('MC keys:', Counter(letters(m[3]) for m in MC if isinstance(m[3], int)), 'multi:', multi)
 
