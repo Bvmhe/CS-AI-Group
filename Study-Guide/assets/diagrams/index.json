@@ -1,0 +1,1163 @@
+{
+ "ch01_01": {
+  "line": 88,
+  "heading": "1.1 What is AI hardware?",
+  "code": "flowchart TB\n    subgraph P[\"Processors\"]\n        CPU[\"CPU<br/>general-purpose\"]\n        GPU[\"GPU<br/>massively parallel\"]\n        ACC[\"TPU / NPU<br/>domain-specific\"]\n    end\n    subgraph M[\"Memory systems\"]\n        SRAM[\"On-chip SRAM\"]\n        HBM[\"HBM / DRAM\"]\n    end\n    subgraph I[\"Interconnects\"]\n        LINK[\"NVLink / InfiniBand / Ethernet\"]\n    end\n    CPU --> M\n    GPU --> M\n    ACC --> M\n    M --> I",
+  "size": [
+   1564,
+   1339
+  ]
+ },
+ "ch01_02": {
+  "line": 129,
+  "heading": "1.2 What do AI models actually compute?",
+  "code": "flowchart LR\n    X1[\"x1\"] --> M1((\"× w1\"))\n    X2[\"x2\"] --> M2((\"× w2\"))\n    X3[\"x3\"] --> M3((\"× w3\"))\n    M1 --> S[\"Σ (sum)\"]\n    M2 --> S\n    M3 --> S\n    S --> Y[\"output\"]",
+  "size": [
+   1043,
+   659
+  ]
+ },
+ "ch01_03": {
+  "line": 160,
+  "heading": "Worked example 1.A: a single neuron by hand",
+  "code": "flowchart LR\n    S[\"Start<br/>total = 0\"] --> M1[\"MAC 1<br/>0 + 0.5 × 4<br/>= 2.0\"]\n    M1 --> M2[\"MAC 2<br/>2.0 + (−1.0 × 3)<br/>= −1.0\"]\n    M2 --> M3[\"MAC 3<br/>−1.0 + 2.0 × 1<br/>= 1.0\"]\n    M3 --> R[\"ReLU<br/>max(0, 1.0)<br/><b>output = 1.0</b>\"]",
+  "size": [
+   381,
+   1463
+  ]
+ },
+ "ch01_04": {
+  "line": 177,
+  "heading": "Matrices: the same thing, written compactly",
+  "code": "flowchart LR\n    W[\"<b>Weight matrix W</b><br/>(rows = neurons)<br/>w11 w12 w13<br/>w21 w22 w23<br/>w31 w32 w33\"] --> X((\"×\"))\n    V[\"<b>Input vector x</b><br/>x1<br/>x2<br/>x3\"] --> X\n    X --> Y1[\"y1 = w11·x1 + w12·x2 + w13·x3\"]\n    X --> Y2[\"y2 = w21·x1 + w22·x2 + w23·x3\"]\n    X --> Y3[\"y3 = w31·x1 + w32·x2 + w33·x3\"]",
+  "size": [
+   1402,
+   666
+  ]
+ },
+ "ch01_05": {
+  "line": 190,
+  "heading": "Matrices: the same thing, written compactly",
+  "code": "flowchart LR\n    W[\"<b>W</b><br/>0.5, −1.0, 2.0<br/>1.0, 0.0, 1.0<br/>0.0, 2.0, −1.0\"] --> P((\"W × x<br/>9 MACs\"))\n    X[\"<b>x</b><br/>4, 3, 1\"] --> P\n    P --> Y[\"<b>y = [1, 5, 5]</b>\"]",
+  "size": [
+   1039,
+   531
+  ]
+ },
+ "ch01_06": {
+  "line": 225,
+  "heading": "1.3 Key terms",
+  "code": "flowchart LR\n    FP32[\"FP32<br/>4 bytes<br/>32 bits\"] --> FP16[\"FP16<br/>2 bytes<br/>16 bits\"]\n    FP16 --> INT8[\"INT8<br/>1 byte<br/>8 bits\"]\n    FP32 -.->|\"less memory, less energy,<br/>some accuracy loss\"| INT8",
+  "size": [
+   818,
+   873
+  ]
+ },
+ "ch01_07": {
+  "line": 264,
+  "heading": "1.4 Why not just use a faster CPU?",
+  "code": "xychart-beta\n    title \"CPU clock speed (schematic)\"\n    x-axis [\"1990\", \"1995\", \"2000\", \"2005\", \"2010\", \"2015\", \"2020\"]\n    y-axis \"GHz\" 0 --> 5\n    line [0.03, 0.1, 1.0, 2.5, 3.0, 3.2, 3.3]",
+  "size": [
+   780,
+   556
+  ]
+ },
+ "ch01_08": {
+  "line": 292,
+  "heading": "1.5 Training versus inference",
+  "code": "flowchart LR\n    D[\"Large data set\"] --> T[\"Training<br/>data centre, GPU/TPU clusters<br/>large batch, higher precision\"]\n    T --> W[\"Trained weights\"]\n    W --> I1[\"Inference<br/>data centre<br/>high volume\"]\n    W --> I2[\"Inference<br/>edge device (phone, car)<br/>batch 1, low precision\"]\n    I1 --> R[\"Answers to users\"]\n    I2 --> R",
+  "size": [
+   980,
+   1238
+  ]
+ },
+ "ch01_09": {
+  "line": 326,
+  "heading": "1.6 Choosing hardware: metrics to compare",
+  "code": "xychart-beta\n    title \"Peak vs achieved utilisation\"\n    x-axis [\"Peak (quoted)\", \"Achieved (real workload)\"]\n    y-axis \"Percent of peak\" 0 --> 100\n    bar [100, 30]",
+  "size": [
+   780,
+   555
+  ]
+ },
+ "ch01_10": {
+  "line": 389,
+  "heading": "2.1 The three chips in one sentence each",
+  "code": "flowchart LR\n    CPU[\"CPU<br/>most flexible<br/>lowest AI efficiency\"] --> GPU[\"GPU<br/>parallel throughput<br/>medium efficiency\"]\n    GPU --> TPU[\"TPU<br/>tensor-only<br/>highest AI efficiency\"]\n    TPU -.-> NPU[\"NPU<br/>same idea, few watts\"]",
+  "size": [
+   511,
+   1146
+  ]
+ },
+ "ch01_11": {
+  "line": 437,
+  "heading": "2.3 Visual: where the chip area goes",
+  "code": "flowchart LR\n    subgraph CPU[\"CPU: few smart cores\"]\n        direction TB\n        C1[\"4 big cores\"]\n        C2[\"Large caches\"]\n        C3[\"Big control logic\"]\n    end\n    subgraph GPU[\"GPU: many simple cores\"]\n        direction TB\n        G1[\"Thousands of small cores\"]\n        G2[\"Small control and cache\"]\n    end\n    subgraph TPU[\"TPU: matrix-multiply engine\"]\n        direction TB\n        T1[\"Systolic array of MAC units<br/>(data flows through)\"]\n        T2[\"On-chip buffer\"]\n    end\n    CPU ~~~ GPU ~~~ TPU",
+  "size": [
+   1418,
+   1011
+  ]
+ },
+ "ch01_12": {
+  "line": 472,
+  "heading": "Worked example 2.A: a 2 × 2 systolic array (weight-stationary)",
+  "code": "flowchart LR\n    X1([\"x1 = 5\"]) --> A[\"weight 1\"]\n    X1 --> C[\"weight 3\"]\n    X2([\"x2 = 6\"]) --> B[\"weight 2\"]\n    X2 --> D[\"weight 4\"]\n    A -->|\"partial sum 5\"| B\n    C -->|\"partial sum 15\"| D\n    B --> Y1([\"y1 = 17\"])\n    D --> Y2([\"y2 = 39\"])",
+  "size": [
+   915,
+   886
+  ]
+ },
+ "ch01_13": {
+  "line": 497,
+  "heading": "Worked example 2.A: a 2 × 2 systolic array (weight-stationary)",
+  "code": "flowchart LR\n    I[\"W = [[1, 2], [3, 4]]<br/>x = [5, 6]<br/>4 MACs → y = [17, 39]\"] --> N[\"Without reuse<br/>each MAC reads 1 weight + 1 input<br/>4 × 2 = <b>8 reads</b>\"]\n    I --> S[\"Systolic style<br/>4 weights + 2 inputs, each once<br/>= <b>6 reads</b>\"]",
+  "size": [
+   1547,
+   556
+  ]
+ },
+ "ch01_14": {
+  "line": 516,
+  "heading": "2.5 What the first TPU paper measured",
+  "code": "flowchart LR\n    TPU[\"First TPU<br/>65,536 MACs<br/>92 TOPS peak\"] --> S[\"~15–30x faster than<br/>Haswell CPU and K80 GPU\"]\n    TPU --> E[\"~30–80x more<br/>TOPS per watt\"]\n    TPU --> M[\"4 of 6 benchmarks<br/>memory-bandwidth limited\"]\n    M --> F[\"Faster memory (GDDR5)<br/>would have tripled TOPS\"]",
+  "size": [
+   1758,
+   783
+  ]
+ },
+ "ch01_15": {
+  "line": 547,
+  "heading": "2.6 The NPU: AI on small devices",
+  "code": "flowchart TB\n    subgraph SoC[\"System-on-a-chip\"]\n        CPU[\"CPU\"]\n        GPU[\"GPU\"]\n        NPU[\"NPU<br/>(e.g. Neural Engine)\"]\n        MEM[(\"Shared memory\")]\n    end\n    CPU --- MEM\n    GPU --- MEM\n    NPU --- MEM",
+  "size": [
+   1085,
+   786
+  ]
+ },
+ "ch01_16": {
+  "line": 581,
+  "heading": "2.7 Software: why a chip is only as useful as its tools",
+  "code": "flowchart TB\n    MODEL[\"Model (PyTorch / TensorFlow)\"] --> COMP[\"Compiler / runtime<br/>(XLA, CUDA, Core ML)\"]\n    COMP --> HW[\"Hardware<br/>(CPU, GPU, TPU, NPU)\"]\n    COMP -.->|\"unsupported op\"| FB[\"Fallback to CPU\"]\n    FB -.->|\"slow\"| HW",
+  "size": [
+   702,
+   1031
+  ]
+ },
+ "ch01_17": {
+  "line": 645,
+  "heading": "3.1 Kinds of parallelism",
+  "code": "flowchart LR\n    I[\"Instruction-level<br/>one core, overlapping instructions\"] --> D[\"Data-level<br/>SIMD / SIMT\"]\n    D --> M[\"Matrix-level<br/>systolic array\"]\n    M --> C[\"Across chips<br/>data, pipeline, model splitting\"]",
+  "size": [
+   776,
+   1011
+  ]
+ },
+ "ch01_18": {
+  "line": 695,
+  "heading": "3.2 Worked example 3.A: how many MACs, and how long?",
+  "code": "xychart-beta\n    title \"Time for one pass (log scale)\"\n    x-axis [\"CPU core (3 GHz)\", \"Accelerator (1 GHz, 4096 units)\"]\n    y-axis \"Time (microseconds)\" 0 --> 2000\n    bar [1400, 1.0]",
+  "size": [
+   781,
+   558
+  ]
+ },
+ "ch01_19": {
+  "line": 705,
+  "heading": "3.2 Worked example 3.A: how many MACs, and how long?",
+  "code": "flowchart LR\n    M[\"Layer<br/>1,024 × 4,096<br/>= 4,194,304 MACs\"] --> C[\"CPU<br/>1 MAC per cycle at 3 GHz<br/>4,194,304 ÷ 3e9<br/>≈ 1.4 ms\"]\n    M --> A[\"Accelerator<br/>4,096 MACs per cycle at 1 GHz<br/>4,194,304 ÷ 4.096e12<br/>≈ 1.02 µs\"]\n    C --> S[\"Speed-up<br/>1.4 ms ÷ 1.02 µs<br/>≈ 1,365×\"]\n    A --> S",
+  "size": [
+   1363,
+   918
+  ]
+ },
+ "ch01_20": {
+  "line": 724,
+  "heading": "3.3 Why parallel hardware has limits",
+  "code": "flowchart TB\n    S[\"Ideal speed-up<br/>N units → N×\"] --> L1[\"1. Amdahl's law<br/>serial fraction caps it\"]\n    S --> L2[\"2. Idle units<br/>not enough independent MACs\"]\n    S --> L3[\"3. Feeding the units<br/>memory cannot keep up\"]\n    S --> L4[\"4. Communication<br/>chips exchanging results\"]\n    L1 --> R[\"Real speed-up\"]\n    L2 --> R\n    L3 --> R\n    L4 --> R",
+  "size": [
+   2557,
+   693
+  ]
+ },
+ "ch01_21": {
+  "line": 748,
+  "heading": "1. Amdahl's law",
+  "code": "xychart-beta\n    title \"Amdahl's law (p = 0.9)\"\n    x-axis [\"1\", \"2\", \"4\", \"8\", \"16\", \"32\", \"64\", \"128\"]\n    y-axis \"Speed-up\" 0 --> 10\n    line [1, 1.8, 3.1, 4.7, 6.4, 7.8, 8.8, 9.4]",
+  "size": [
+   780,
+   556
+  ]
+ },
+ "ch01_22": {
+  "line": 758,
+  "heading": "1. Amdahl's law",
+  "code": "flowchart LR\n    F[\"speed-up = 1 ÷ ((1 − p) + p ÷ N)<br/>p = 0.9 (90% parallel)\"] --> A[\"N = 100 units<br/>1 ÷ (0.1 + 0.009)<br/>≈ 9.2×\"]\n    F --> B[\"N → unlimited<br/>1 ÷ 0.1<br/>= 10.0× (the ceiling)\"]",
+  "size": [
+   1245,
+   531
+  ]
+ },
+ "ch01_23": {
+  "line": 792,
+  "heading": "3.4 Other acceleration techniques",
+  "code": "flowchart LR\n    W[\"Workload\"] --> Q[\"Quantisation<br/>FP32 → INT8\"]\n    W --> S[\"Specialised units<br/>Tensor Cores / ANE\"]\n    W --> B[\"Batching<br/>reuse weights\"]\n    Q --> F[\"Faster, cheaper inference\"]\n    S --> F\n    B --> F",
+  "size": [
+   1546,
+   688
+  ]
+ },
+ "ch01_24": {
+  "line": 824,
+  "heading": "Reduced precision (quantisation) in more detail",
+  "code": "xychart-beta\n    title \"Original vs dequantised weights\"\n    x-axis [\"w1\", \"w2\", \"w3\", \"w4\"]\n    y-axis \"Value\" -1 --> 1\n    bar [0.5, -0.31, 0.02, 0.97]\n    line [0.5039, -0.3071, 0.0236, 0.9685]",
+  "size": [
+   780,
+   555
+  ]
+ },
+ "ch01_25": {
+  "line": 835,
+  "heading": "Reduced precision (quantisation) in more detail",
+  "code": "flowchart LR\n    W[\"FP32 weights<br/>0.5, −0.31, 0.02, 0.97\"] --> Q[\"Quantise<br/>round(w ÷ (1/127))<br/>INT8: 64, −39, 3, 123\"]\n    Q --> D[\"Dequantise<br/>q × (1/127)<br/>0.5039, −0.3071, 0.0236, 0.9685\"]\n    D --> E[\"<b>Max error = 0.0039</b>\"]",
+  "size": [
+   714,
+   1056
+  ]
+ },
+ "ch01_26": {
+  "line": 901,
+  "heading": "Terms",
+  "code": "flowchart LR\n    HANDS[\"In your hands<br/>(registers)\"] --> BOARD[\"Chopping board<br/>(cache / SRAM)\"]\n    BOARD --> FRIDGE[\"Fridge across the kitchen<br/>(DRAM)\"]\n    FRIDGE --> SHOP[\"Supermarket<br/>(storage)\"]",
+  "size": [
+   598,
+   1011
+  ]
+ },
+ "ch01_27": {
+  "line": 924,
+  "heading": "4.2 The surprising fact: data movement dominates energy",
+  "code": "xychart-beta\n    title \"Energy per operation (pJ, log scale)\"\n    x-axis [\"Multiply\", \"SRAM read\", \"DRAM read\"]\n    y-axis \"picojoules\" 0 --> 700\n    bar [3.7, 5, 640]",
+  "size": [
+   780,
+   556
+  ]
+ },
+ "ch01_28": {
+  "line": 934,
+  "heading": "4.2 The surprising fact: data movement dominates energy",
+  "code": "flowchart LR\n    D[\"DRAM read<br/>640 pJ\"] --> R1[\"DRAM ÷ multiply<br/>640 ÷ 3.7<br/>≈ <b>173×</b>\"]\n    M[\"32-bit multiply<br/>3.7 pJ\"] --> R1\n    D --> R2[\"DRAM ÷ SRAM<br/>640 ÷ 5<br/>= <b>128×</b>\"]\n    S[\"SRAM read<br/>5 pJ\"] --> R2",
+  "size": [
+   894,
+   711
+  ]
+ },
+ "ch01_29": {
+  "line": 975,
+  "heading": "4.3 Arithmetic intensity and the roofline model",
+  "code": "xychart-beta\n    title \"Roofline (10 TFLOP/s, 500 GB/s)\"\n    x-axis \"Arithmetic intensity (FLOP/byte)\" 0 --> 40\n    y-axis \"Attainable performance (TFLOP/s)\" 0 --> 12\n    line [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]",
+  "size": [
+   781,
+   556
+  ]
+ },
+ "ch01_30": {
+  "line": 1017,
+  "heading": "Batch 32",
+  "code": "xychart-beta\n    title \"Batch 1 vs batch 32 on the roofline\"\n    x-axis \"Arithmetic intensity (FLOP/byte)\" 0 --> 40\n    y-axis \"Attainable performance (TFLOP/s)\" 0 --> 12\n    line [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]",
+  "size": [
+   781,
+   555
+  ]
+ },
+ "ch01_31": {
+  "line": 1027,
+  "heading": "Batch 32",
+  "code": "flowchart TD\n    I[\"Layer 1,024 → 4,096, FP16<br/>peak 10 TFLOP/s, bandwidth 500 GB/s\"] --> F[\"intensity = FLOPs ÷ (weight bytes + input/output bytes)<br/>attainable = min(peak, intensity × bandwidth)\"]\n    F --> B1[\"Batch 1<br/>intensity ≈ 1.0 FLOP/byte<br/>0.5 TFLOP/s = <b>5% of peak</b><br/>memory-bound\"]\n    F --> B32[\"Batch 32<br/>intensity ≈ 30.8 FLOP/byte<br/>10.0 TFLOP/s = <b>100% of peak</b><br/>compute-bound\"]",
+  "size": [
+   1346,
+   828
+  ]
+ },
+ "ch01_32": {
+  "line": 1071,
+  "heading": "4.6 Further efficiency ideas",
+  "code": "flowchart LR\n    MB[\"Memory-bound workload\"] --> UP[\"Raise the slope<br/>higher bandwidth, larger on-chip memory\"]\n    MB --> RIGHT[\"Move right on the x-axis<br/>batching, weight reuse, lower precision\"]\n    UP --> CB[\"Compute-bound\"]\n    RIGHT --> CB",
+  "size": [
+   1857,
+   648
+  ]
+ },
+ "ch01_33": {
+  "line": 1092,
+  "heading": "4.7 Bridges to the rest of the course",
+  "code": "flowchart LR\n    S[\"Sense<br/>one observation\"] --> D[\"Decide<br/>batch = 1, memory-bound\"]\n    D --> A[\"Act\"]\n    A --> S",
+  "size": [
+   684,
+   693
+  ]
+ },
+ "ch01_34": {
+  "line": 1143,
+  "heading": "5.1 Introduction",
+  "code": "flowchart TB\n    subgraph SoC[\"Apple system-on-a-chip\"]\n        CPU[\"CPU\"]\n        GPU[\"GPU\"]\n        ANE[\"Neural Engine\"]\n        MEM[(\"Unified memory\")]\n        SEC[\"Secure Enclave\"]\n    end\n    CPU --- MEM\n    GPU --- MEM\n    ANE --- MEM\n    ANE --- SEC",
+  "size": [
+   975,
+   792
+  ]
+ },
+ "ch01_35": {
+  "line": 1190,
+  "heading": "5.2 How the Apple Neural Engine works",
+  "code": "flowchart LR\n    App[\"App / model\"] --> CML[\"Core ML<br/>(decides where to run)\"]\n    CML --> CPU[\"CPU\"]\n    CML --> GPU[\"GPU\"]\n    CML --> ANE[\"Neural Engine\"]\n    CPU --- MEM[(\"Unified memory\")]\n    GPU --- MEM\n    ANE --- MEM",
+  "size": [
+   851,
+   973
+  ]
+ },
+ "ch01_36": {
+  "line": 1218,
+  "heading": "5.3 Connection between training and inference",
+  "code": "flowchart LR\n    D[\"Large data set\"] --> T[\"Training<br/>data centre, GPUs / accelerators\"]\n    T --> M[\"Trained model<br/>(weights)\"]\n    M --> I[\"Inference<br/>on the iPhone, Neural Engine\"]\n    I --> R[\"Fast, private answer\"]",
+  "size": [
+   759,
+   1193
+  ]
+ },
+ "ch01_37": {
+  "line": 1253,
+  "heading": "How Face ID works",
+  "code": "flowchart LR\n    S[\"1. Scan<br/>TrueDepth camera\"] --> P[\"2. Process<br/>mathematical representation\"]\n    P --> A[\"3. AI inference<br/>Neural Engine\"]\n    A --> C[\"4. Compare<br/>with registered face\"]\n    C --> U[\"5. Unlock<br/>if match\"]",
+  "size": [
+   682,
+   1283
+  ]
+ },
+ "ch01_38": {
+  "line": 1285,
+  "heading": "5.5 Advantages of the Apple Neural Engine",
+  "code": "flowchart LR\n    ANE[\"Apple Neural Engine\"] --> F[\"Faster processing\"]\n    ANE --> E[\"Energy efficiency\"]\n    ANE --> P[\"Better privacy\"]\n    ANE --> R[\"Real-time performance\"]\n    ANE --> O[\"Offline capability\"]",
+  "size": [
+   1155,
+   958
+  ]
+ },
+ "ch01_39": {
+  "line": 1317,
+  "heading": "5.7 Case-study questions",
+  "code": "flowchart LR\n    P[\"3 billion parameters\"] --> B[\"× 0.5 bytes each<br/>(4-bit = half a byte)\"]\n    B --> R[\"<b>1.5 GB</b>\"]",
+  "size": [
+   495,
+   648
+  ]
+ },
+ "ch02_01": {
+  "line": 130,
+  "heading": "1.3 Network architectures",
+  "code": "flowchart TB\n    subgraph Spines[\"Spine switches\"]\n        S1[\"Spine 1\"]\n        S2[\"Spine 2\"]\n    end\n    subgraph Leaves[\"Leaf switches\"]\n        L1[\"Leaf 1\"]\n        L2[\"Leaf 2\"]\n        L3[\"Leaf 3\"]\n    end\n    S1 --- L1\n    S1 --- L2\n    S1 --- L3\n    S2 --- L1\n    S2 --- L2\n    S2 --- L3\n    L1 --- A[\"GPU servers\"]\n    L2 --- B[\"GPU servers\"]\n    L3 --- C[\"Storage servers\"]",
+  "size": [
+   1224,
+   877
+  ]
+ },
+ "ch02_02": {
+  "line": 173,
+  "heading": "1.4 Layered models and encapsulation",
+  "code": "flowchart LR\n    D[\"Application data<br/>payload\"] --> T[\"TCP header (20 B)<br/>+ payload\"]\n    T --> I[\"IP header (20 B)<br/>+ TCP segment\"]\n    I --> E[\"Ethernet header (14 B)<br/>+ IP packet + FCS (4 B)\"]",
+  "size": [
+   552,
+   1011
+  ]
+ },
+ "ch02_03": {
+  "line": 193,
+  "heading": "Worked example 1.A: how much of a packet is useful?",
+  "code": "flowchart LR\n    H[\"Headers<br/>TCP 20 + IP 20 + Ethernet 14 + FCS 4<br/>= 58 bytes\"] --> A[\"1,000-byte payload<br/>frame = 1,058 bytes<br/>efficiency 1,000 ÷ 1,058<br/>= <b>94.5%</b>\"]\n    H --> B[\"100-byte payload<br/>frame = 158 bytes<br/>efficiency 100 ÷ 158<br/>= <b>63.3%</b>\"]",
+  "size": [
+   1456,
+   621
+  ]
+ },
+ "ch02_04": {
+  "line": 220,
+  "heading": "1.5 Application protocols for AI services",
+  "code": "flowchart LR\n    U[\"Phone app\"] -->|\"HTTPS / JSON\"| G[\"API gateway\"]\n    G -->|\"gRPC\"| M[\"Model server<br/>GPU / TPU\"]\n    M -->|\"gRPC\"| G\n    G -->|\"HTTPS / JSON\"| U\n    SENS[\"Sensors\"] -->|\"MQTT\"| HUB[\"IoT hub\"]\n    HUB -->|\"gRPC\"| M",
+  "size": [
+   954,
+   758
+  ]
+ },
+ "ch02_05": {
+  "line": 299,
+  "heading": "2.1 IP: addressing and best-effort delivery",
+  "code": "flowchart LR\n    P[\"Phone\"] --> R1[\"Router 1\"]\n    R1 --> R2[\"Router 2\"]\n    R2 --> R3[\"Router 3\"]\n    R3 --> S[\"Cloud server\"]\n    R2 -.->|\"overloaded: packet dropped\"| X[\"lost\"]",
+  "size": [
+   811,
+   1113
+  ]
+ },
+ "ch02_06": {
+  "line": 321,
+  "heading": "2.2 TCP: a reliable stream on top of unreliable packets",
+  "code": "sequenceDiagram\n    participant C as Client (phone)\n    participant S as Server (cloud)\n    C->>S: SYN\n    S->>C: SYN-ACK\n    C->>S: ACK + first data\n    S->>C: data / ACK",
+  "size": [
+   931,
+   933
+  ]
+ },
+ "ch02_07": {
+  "line": 383,
+  "heading": "2.4 Worked example 2.A: time to first byte",
+  "code": "flowchart LR\n    R[\"Round-trip time<br/>40 ms\"] --> T[\"TCP + TLS 1.3<br/>3 round trips × 40 ms<br/>= <b>120 ms</b>\"]\n    R --> Q[\"QUIC<br/>2 round trips × 40 ms<br/>= <b>80 ms</b>\"]",
+  "size": [
+   1005,
+   531
+  ]
+ },
+ "ch02_08": {
+  "line": 412,
+  "heading": "2.5 Worked example 2.B: why a fast link can give a slow transfer",
+  "code": "flowchart LR\n    SND[\"Sender\"] -->|\"window = 64 KB in flight\"| PIPE[\"Pipe holds 5 MB<br/>(1 Gbit/s × 40 ms)\"]\n    PIPE -->|\"ACKs return after one RTT\"| SND",
+  "size": [
+   1108,
+   476
+  ]
+ },
+ "ch02_09": {
+  "line": 420,
+  "heading": "2.5 Worked example 2.B: why a fast link can give a slow transfer",
+  "code": "flowchart LR\n    I[\"Link 1 Gbit/s<br/>RTT 40 ms<br/>window 65,535 bytes\"] --> B[\"Bandwidth-delay product<br/>1e9 × 0.040 ÷ 8<br/>= <b>5.0 MB</b> needed in flight\"]\n    I --> L[\"Window limit<br/>65,535 × 8 ÷ 0.040<br/>≈ <b>13.1 Mbit/s</b>\"]\n    L --> U[\"Link used<br/>13.1 ÷ 1,000<br/>≈ <b>1.31%</b>\"]",
+  "size": [
+   1110,
+   873
+  ]
+ },
+ "ch02_10": {
+  "line": 443,
+  "heading": "2.6 Worked example 2.C: how packet loss limits throughput",
+  "code": "flowchart LR\n    F[\"throughput ≈ 1.22 × MSS ÷ (RTT × √p)<br/>MSS = 1,460 bytes, RTT = 40 ms\"] --> A[\"Loss p = 0.0001%<br/>(1 in a million)<br/><b>356.2 Mbit/s</b>\"]\n    F --> B[\"Loss p = 0.01%<br/>(1 in 10,000)<br/><b>35.6 Mbit/s</b>\"]\n    F --> C[\"Loss p = 1%<br/>(1 in 100)<br/><b>3.6 Mbit/s</b>\"]",
+  "size": [
+   1343,
+   823
+  ]
+ },
+ "ch02_11": {
+  "line": 530,
+  "heading": "3.2 Edge computing",
+  "code": "flowchart LR\n    DEV[\"On-device<br/>NPU, ~0 ms network\"] --> EDGE[\"Near edge / MEC<br/>a few ms away\"]\n    EDGE --> REG[\"Regional cloud<br/>tens of ms\"]\n    REG --> FAR[\"Distant cloud<br/>up to ~100+ ms\"]",
+  "size": [
+   497,
+   1011
+  ]
+ },
+ "ch02_12": {
+  "line": 581,
+  "heading": "3.4 Worked example 3.A: an end-to-end latency budget",
+  "code": "xychart-beta\n    title \"End-to-end latency (ms)\"\n    x-axis [\"Cloud\", \"Edge\", \"On-device\"]\n    y-axis \"ms\" 0 --> 160\n    bar [150, 100, 15]",
+  "size": [
+   776,
+   556
+  ]
+ },
+ "ch02_13": {
+  "line": 591,
+  "heading": "3.4 Worked example 3.A: an end-to-end latency budget",
+  "code": "flowchart LR\n    U[\"Upload<br/>200,000 bytes × 8 ÷ 20 Mbit/s<br/>= 80 ms\"] --> C[\"Cloud<br/>80 + 60 round trip + 10 inference<br/>= <b>150 ms</b>\"]\n    U --> E[\"Edge<br/>80 + 10 round trip + 10 inference<br/>= <b>100 ms</b>\"]\n    D[\"On-device<br/>no upload\"] --> O[\"<b>15 ms</b>\"]",
+  "size": [
+   1513,
+   767
+  ]
+ },
+ "ch02_14": {
+  "line": 610,
+  "heading": "3.5 Worked example 3.B: how much data does the edge save?",
+  "code": "flowchart LR\n    C[\"100 cameras\"] --> V[\"Send raw video<br/>100 × 5 Mbit/s<br/>= <b>500 Mbit/s</b>\"]\n    C --> E[\"Send events from the edge<br/>100 × 200 bytes × 8 × 10 per second<br/>= <b>1.6 Mbit/s</b>\"]\n    V --> R[\"Reduction<br/>500 ÷ 1.6<br/>≈ <b>312.5×</b>\"]\n    E --> R",
+  "size": [
+   1251,
+   783
+  ]
+ },
+ "ch02_15": {
+  "line": 717,
+  "heading": "4.1 Four kinds of delay",
+  "code": "flowchart LR\n    A[\"Node A\"] --> P[\"Processing\"] --> Q[\"Queueing\"] --> T[\"Transmission\"] --> L[\"Propagation<br/>along the link\"] --> B[\"Node B\"]",
+  "size": [
+   365,
+   1331
+  ]
+ },
+ "ch02_16": {
+  "line": 737,
+  "heading": "4.2 Worked example 4.A: the speed-of-light floor, and big downloads",
+  "code": "flowchart LR\n    subgraph PROP[\"Propagation: light in fibre ≈ 2 × 10⁸ m/s\"]\n        direction TB\n        P1[\"1,000 km<br/>5.0 ms one way, 10.0 ms round trip\"]\n        P2[\"3,000 km<br/>15.0 ms one way, 30.0 ms round trip\"]\n        P3[\"10,000 km<br/>50.0 ms one way, 100.0 ms round trip\"]\n    end\n    subgraph TX[\"Transmission: 1.5 GB model = 12 × 10⁹ bits\"]\n        direction TB\n        T1[\"At 100 Mbit/s<br/>120.0 s\"]\n        T2[\"At 1 Gbit/s<br/>12.0 s\"]\n    end",
+  "size": [
+   3689,
+   307
+  ]
+ },
+ "ch02_17": {
+  "line": 773,
+  "heading": "Worked example 4.B",
+  "code": "flowchart LR\n    F[\"P(at least one slow) = 1 − (1 − p)ⁿ<br/>p = 1%\"] --> A[\"1 server<br/><b>1.0%</b>\"]\n    F --> B[\"10 servers<br/><b>9.6%</b>\"]\n    F --> C[\"100 servers<br/><b>63.4%</b>\"]",
+  "size": [
+   1147,
+   688
+  ]
+ },
+ "ch02_18": {
+  "line": 784,
+  "heading": "Worked example 4.B",
+  "code": "xychart-beta\n    title \"P(at least one slow server), p = 1%\"\n    x-axis [\"1\", \"10\", \"100\"]\n    y-axis \"Percent\" 0 --> 70\n    bar [1.0, 9.6, 63.4]",
+  "size": [
+   780,
+   556
+  ]
+ },
+ "ch02_19": {
+  "line": 808,
+  "heading": "Worked example 4.C",
+  "code": "flowchart LR\n    F[\"time ≈ service ÷ (1 − utilisation)<br/>service = 10 ms\"] --> A[\"50% busy<br/>10 ÷ 0.5<br/>= <b>20 ms</b>\"]\n    F --> B[\"90% busy<br/>10 ÷ 0.1<br/>= <b>100 ms</b>\"]\n    F --> C[\"99% busy<br/>10 ÷ 0.01<br/>= <b>1,000 ms</b>\"]",
+  "size": [
+   1094,
+   823
+  ]
+ },
+ "ch02_20": {
+  "line": 817,
+  "heading": "Worked example 4.C",
+  "code": "xychart-beta\n    title \"Response time vs utilisation (service time 10 ms)\"\n    x-axis [\"0.5\", \"0.8\", \"0.9\", \"0.95\", \"0.99\"]\n    y-axis \"ms\" 0 --> 1000\n    line [20, 50, 100, 200, 1000]",
+  "size": [
+   776,
+   556
+  ]
+ },
+ "ch02_21": {
+  "line": 864,
+  "heading": "4.6 Worked example 4.D: the communication cost of training",
+  "code": "flowchart LR\n    V[\"Data per GPU<br/>2 × 7 ÷ 8 × 2 GB<br/>= 3.5 GB\"] --> A[\"50 GB/s link<br/>3.5 ÷ 50 = 70 ms<br/>300 ÷ 370 = <b>81.1%</b>\"]\n    V --> B[\"100 Gbit/s Ethernet (12.5 GB/s)<br/>3.5 ÷ 12.5 = 280 ms<br/>300 ÷ 580 = <b>51.7%</b>\"]\n    C[\"Compute per step<br/>300 ms\"] --> A\n    C --> B",
+  "size": [
+   1262,
+   558
+  ]
+ },
+ "ch02_22": {
+  "line": 876,
+  "heading": "4.6 Worked example 4.D: the communication cost of training",
+  "code": "xychart-beta\n    title \"Training efficiency by network\"\n    x-axis [\"50 GB/s link\", \"100 Gbit/s Ethernet\"]\n    y-axis \"Percent of time computing\" 0 --> 100\n    bar [81.1, 51.7]",
+  "size": [
+   780,
+   555
+  ]
+ },
+ "ch02_23": {
+  "line": 951,
+  "heading": "5.2 The path of a request",
+  "code": "flowchart LR\n    PH[\"Phone\"] -->|\"5G radio\"| GNB[\"Base station<br/>gNB\"]\n    GNB -->|\"transport network\"| UPF[\"5G core<br/>UPF\"]\n    UPF -->|\"local breakout\"| MEC[\"Edge server<br/>MEC, GPU\"]\n    UPF -->|\"internet\"| CLD[\"Cloud data centre<br/>GPU / TPU\"]",
+  "size": [
+   852,
+   1131
+  ]
+ },
+ "ch02_24": {
+  "line": 991,
+  "heading": "5.3 Worked example 5.A: latency budget of the street-sign translation",
+  "code": "xychart-beta\n    title \"End-to-end latency (ms)\"\n    x-axis [\"4G + cloud\", \"5G + cloud\", \"5G + MEC\", \"On-device\"]\n    y-axis \"ms\" 0 --> 160\n    bar [140, 56, 36, 15]",
+  "size": [
+   776,
+   556
+  ]
+ },
+ "ch02_25": {
+  "line": 1001,
+  "heading": "5.3 Worked example 5.A: latency budget of the street-sign translation",
+  "code": "flowchart LR\n    I[\"200 KB photo<br/>inference 10 ms on a server\"] --> A[\"4G + cloud<br/>80 + 50 + 10<br/>= <b>140 ms</b>\"]\n    I --> B[\"5G + cloud<br/>16 + 30 + 10<br/>= <b>56 ms</b>\"]\n    I --> C[\"5G + MEC edge<br/>16 + 10 + 10<br/>= <b>36 ms</b>\"]\n    I --> D[\"On-device NPU<br/>no network<br/>= <b>15 ms</b>\"]",
+  "size": [
+   1125,
+   1116
+  ]
+ },
+ "ch02_26": {
+  "line": 1030,
+  "heading": "5.4 AI for the network: optimization in a 5G system",
+  "code": "flowchart LR\n    NET[\"Network<br/>base stations, traffic\"] -->|\"sense: measurements\"| ML[\"AI model<br/>forecast / classify\"]\n    ML -->|\"decide\"| POL[\"Policy / action\"]\n    POL -->|\"act: change settings\"| NET",
+  "size": [
+   941,
+   803
+  ]
+ },
+ "ch02_27": {
+  "line": 1050,
+  "heading": "Worked example 5.B: a tiny traffic forecast for energy saving",
+  "code": "flowchart TD\n    A([\"Start: forecast = first load (40%)\"]) --> B[\"Take the next measurement\"]\n    B --> C[\"forecast = 0.5 × measurement + 0.5 × previous forecast\"]\n    C --> D{\"Forecast<br/>below 20%?\"}\n    D -- No --> B\n    D -- Yes --> E([\"Switch off spare capacity<br/>at step 6 (forecast 15.7%)\"])",
+  "size": [
+   1309,
+   1482
+  ]
+ },
+ "ch02_28": {
+  "line": 1082,
+  "heading": "5.5 Advantages of 5G-delivered AI services",
+  "code": "flowchart LR\n    G[\"5G network\"] -->|\"faster, closer, sliced\"| S[\"Cloud / edge AI service\"]\n    S -->|\"traffic and demand data\"| A[\"AI-powered optimization\"]\n    A -->|\"better capacity, lower energy\"| G",
+  "size": [
+   1222,
+   713
+  ]
+ },
+ "ch03_01": {
+  "line": 94,
+  "heading": "1.1 What is behaviourist AI?",
+  "code": "flowchart LR\n    T[\"Thorndike 1911<br/>law of effect\"] --> S[\"Skinner 1938<br/>operant conditioning\"]\n    S --> RL[\"Sutton, Watkins 1980s-90s<br/>temporal-difference and Q-learning\"]\n    RL --> DRL[\"2010s onwards<br/>deep reinforcement learning<br/>(for example Mnih et al., 2015)\"]",
+  "size": [
+   821,
+   1056
+  ]
+ },
+ "ch03_02": {
+  "line": 158,
+  "heading": "1.4 Worked example 1.A: the law of effect by hand",
+  "code": "flowchart LR\n    S[\"Start<br/>α = 0.5<br/>sit = 0, bark = 0, roll = 0\"] --> T1[\"Trial 1: sit, reward +1<br/>sit = 0 + 0.5 × (1 − 0)<br/>= 0.5\"]\n    T1 --> T2[\"Trial 2: bark, reward −1<br/>bark = 0 + 0.5 × (−1 − 0)<br/>= −0.5\"]\n    T2 --> T3[\"Trial 3: sit, reward +1<br/>sit = 0.5 + 0.5 × (1 − 0.5)<br/>= 0.75\"]\n    T3 --> R[\"Result<br/>sit 0.75, bark −0.5, roll 0<br/>best action: sit\"]",
+  "size": [
+   569,
+   1508
+  ]
+ },
+ "ch03_03": {
+  "line": 236,
+  "heading": "2.1 The loop",
+  "code": "flowchart LR\n    AG[\"Agent<br/>policy π\"] -->|\"action a\"| EN[\"Environment\"]\n    EN -->|\"new state s'\"| AG\n    EN -->|\"reward r\"| AG",
+  "size": [
+   713,
+   476
+  ]
+ },
+ "ch03_04": {
+  "line": 281,
+  "heading": "Worked example 2.A: a discounted return",
+  "code": "flowchart LR\n    F[\"G = sum of γ^k × r_k<br/>for each step k\"] --> A[\"Rewards 0, 0, 0, 10<br/>γ = 0.9<br/>G = 0.729 × 10 = 7.29\"]\n    F --> B[\"Rewards 0, 0, 0, 10<br/>γ = 0.5<br/>G = 0.125 × 10 = 1.25\"]\n    F --> C[\"Rewards 0, 0, 10<br/>γ = 0.9<br/>G = 0.81 × 10 = 8.1\"]",
+  "size": [
+   1073,
+   823
+  ]
+ },
+ "ch03_05": {
+  "line": 320,
+  "heading": "Worked example 2.B: the value of each square in a corridor",
+  "code": "flowchart LR\n    S0[\"Square 0<br/>V = 0.729\"] --> S1[\"Square 1<br/>V = 0.81\"]\n    S1 --> S2[\"Square 2<br/>V = 0.9\"]\n    S2 --> S3[\"Square 3<br/>V = 1.0\"]\n    S3 -->|\"reward +1\"| G[\"Goal<br/>square 4\"]",
+  "size": [
+   278,
+   1338
+  ]
+ },
+ "ch03_06": {
+  "line": 330,
+  "heading": "Worked example 2.B: the value of each square in a corridor",
+  "code": "flowchart TD\n    A([\"Start: γ = 0.9, all V = 0\"]) --> B[\"For each square s = 0 to 3<br/>move right to s + 1\"]\n    B --> C[\"r = 1 if s + 1 is the goal, else 0<br/>V(s) = r + γ × V(s + 1)\"]\n    C --> D{\"Values<br/>settled?\"}\n    D -- No --> B\n    D -- Yes --> E([\"Result<br/>V = 0.729, 0.81, 0.9, 1.0, 0.0\"])",
+  "size": [
+   865,
+   1489
+  ]
+ },
+ "ch03_07": {
+  "line": 382,
+  "heading": "2.6 Worked example 2.C: what the policy costs to run (a bridge to Modules 01 and 02)",
+  "code": "flowchart LR\n    L[\"Network<br/>45 → 128 → 128 → 12<br/>runs at 50 Hz\"] --> M[\"MACs<br/>5,760 + 16,384 + 1,536<br/>= 23,680\"]\n    M --> F[\"FLOPs<br/>2 × 23,680 = 47,360<br/>× 50 Hz = 2.368 MFLOP/s\"]\n    M --> B[\"Memory (FP16)<br/>23,680 × 2 bytes<br/>= 47,360 bytes ≈ 46.25 KiB\"]\n    L --> T[\"Time budget<br/>1,000 ÷ 50<br/>= 20 ms per step\"]",
+  "size": [
+   1366,
+   873
+  ]
+ },
+ "ch03_08": {
+  "line": 494,
+  "heading": "Worked example 3.B: Q-learning on the corridor",
+  "code": "flowchart TD\n    A([\"Start: γ = 0.9, α = 0.5<br/>all Q = 0\"]) --> B[\"For each square s = 0 to 3<br/>and each action: left, right\"]\n    B --> C[\"Take the step → new square s′, reward r<br/>(r = 1 only when s′ is the goal)\"]\n    C --> D[\"Q(s, a) ← Q(s, a) + α × (r + γ × max Q(s′) − Q(s, a))\"]\n    D --> E{\"30 sweeps<br/>done?\"}\n    E -- No --> B\n    E -- Yes --> F[\"Learned Q-table [left, right]<br/>0: [0.656, 0.729] → right<br/>1: [0.656, 0.81] → right<br/>2: [0.729, 0.9] → right<br/>3: [0.81, 1.0] → right\"]",
+  "size": [
+   1187,
+   2001
+  ]
+ },
+ "ch03_09": {
+  "line": 612,
+  "heading": "4.2 The multi-armed bandit",
+  "code": "flowchart LR\n    C[\"Choose an arm<br/>explore or exploit?\"] --> P[\"Pull it\"]\n    P --> R[\"Receive reward\"]\n    R --> U[\"Update the estimate<br/>Q for that arm\"]\n    U --> C",
+  "size": [
+   580,
+   921
+  ]
+ },
+ "ch03_10": {
+  "line": 648,
+  "heading": "Worked example 4.B: a bandit simulation",
+  "code": "flowchart TD\n    A([\"Start: arms pay 0.2, 0.5, 0.8<br/>all estimates Q = 0\"]) --> B{\"Random number<br/>below ε?\"}\n    B -- \"Yes: explore\" --> C[\"Pick a random arm\"]\n    B -- \"No: exploit\" --> D[\"Pick the arm with the highest Q\"]\n    C --> E[\"Pull it: reward 1 or 0\"]\n    D --> E\n    E --> F[\"n(arm) + 1<br/>Q(arm) ← Q(arm) + (reward − Q(arm)) ÷ n\"]\n    F --> G{\"1,000 pulls<br/>done?\"}\n    G -- No --> B\n    G -- Yes --> H([\"Record average reward<br/>and share of best arm\"])",
+  "size": [
+   1398,
+   2463
+  ]
+ },
+ "ch03_11": {
+  "line": 677,
+  "heading": "Worked example 4.B: a bandit simulation",
+  "code": "xychart-beta\n    title \"Average reward by epsilon (1,000 pulls)\"\n    x-axis [\"0.0\", \"0.01\", \"0.1\", \"0.3\"]\n    y-axis \"Average reward\" 0 --> 1\n    bar [0.197, 0.618, 0.757, 0.705]",
+  "size": [
+   780,
+   556
+  ]
+ },
+ "ch03_12": {
+  "line": 700,
+  "heading": "Worked example 4.C: the UCB rule favours the uncertain",
+  "code": "flowchart LR\n    T[\"t = 100 pulls<br/>score = Q + √(2 × ln t ÷ n)\"] --> A[\"Arm A<br/>Q = 0.6, n = 60<br/>score = 0.992\"]\n    T --> B[\"Arm B<br/>Q = 0.5, n = 10<br/>score = 1.46\"]\n    A --> C{\"Highest<br/>score?\"}\n    B --> C\n    C --> R[\"UCB picks B\"]",
+  "size": [
+   790,
+   1198
+  ]
+ },
+ "ch03_13": {
+  "line": 778,
+  "heading": "5.1 Introduction",
+  "code": "flowchart LR\n    SIM[\"Simulator<br/>thousands of virtual robots<br/>on GPUs\"] --> TR[\"Train policy<br/>reinforcement learning\"]\n    TR --> POL[\"Trained policy<br/>small neural network\"]\n    POL --> ROB[\"Real robot<br/>runs policy 50 times per second\"]\n    ROB -.->|\"optional: fine-tune,<br/>adapt to real conditions\"| TR",
+  "size": [
+   1068,
+   1056
+  ]
+ },
+ "ch03_14": {
+  "line": 831,
+  "heading": "Worked example 5.A: scoring three moments",
+  "code": "flowchart LR\n    F[\"reward = exp(−(v_cmd − v)² ÷ 0.25)<br/>− 0.0001 × Σ torque²<br/>− 0.01 × Σ (Δaction)²<br/>v_cmd = 1.0 m/s\"] --> A[\"Walking well<br/>v = 0.8, torque² 400, Δ² 2.0<br/>0.8521 − 0.04 − 0.02<br/>= 0.7921\"]\n    F --> B[\"Walking slowly<br/>v = 0.5, same effort<br/>0.3679 − 0.06<br/>= 0.3079\"]\n    F --> C[\"Standing still<br/>v = 0, no effort<br/>= 0.0183\"]",
+  "size": [
+   1516,
+   913
+  ]
+ },
+ "ch03_15": {
+  "line": 854,
+  "heading": "5.4 Training in simulation: massively parallel learning",
+  "code": "flowchart LR\n    N[\"Needed<br/>100 million steps\"] --> R[\"One real robot<br/>50 steps/s<br/>100e6 ÷ 50 ÷ 86,400<br/>= 23.1 days\"]\n    N --> S[\"4,096 simulated robots<br/>4,096 × 50 = 204,800 steps/s<br/>100e6 ÷ 204,800 ÷ 60<br/>= 8.1 minutes\"]",
+  "size": [
+   1167,
+   621
+  ]
+ },
+ "ch03_16": {
+  "line": 864,
+  "heading": "5.4 Training in simulation: massively parallel learning",
+  "code": "flowchart LR\n    A[\"1 real robot<br/>23.1 days\"] -->|\"4,096 simulated robots<br/>in parallel on a GPU\"| B[\"8.1 minutes\"]",
+  "size": [
+   502,
+   521
+  ]
+ },
+ "ch03_17": {
+  "line": 887,
+  "heading": "5.5 From simulation to the real robot",
+  "code": "flowchart LR\n    R[\"Randomise<br/>friction, mass, motor strength,<br/>delay, sensor noise\"] --> E[\"Run an episode<br/>in simulation\"]\n    E --> L[\"Update the policy\"]\n    L --> R\n    L -.->|\"after training\"| REAL[\"Real robot<br/>one more variation\"]",
+  "size": [
+   699,
+   1066
+  ]
+ },
+ "ch04_01": {
+  "line": 41,
+  "heading": "Module overview",
+  "code": "flowchart TB\n  subgraph S1[\"S1 Sense\"]\n    direction TB\n    cam[Camera]\n    lidar[LiDAR]\n    ultra[Ultrasonic]\n    radar[Radar]\n  end\n\n  subgraph S2[\"S2 Acquire\"]\n    direction TB\n    adc[ADC]\n    isp[ISP]\n    ts[Timestamps]\n    rt[Real-time deadlines]\n  end\n\n  subgraph S3[\"S3 Fuse & perceive\"]\n    direction TB\n    det[Detect]\n    trk[Track]\n    fuse[Fuse sensors]\n    unc[Estimate uncertainty]\n  end\n\n  subgraph S4[\"S4 Decide & act\"]\n    direction TB\n    pred[Predict]\n    plan[Plan]\n    ctrl[Control]\n    safe[Safety monitors]\n  end\n\n  S5[\"S5 Case study:<br/>Tesla vs sensor-rich designs\"]\n\n  S1 --> S2 --> S3 --> S4\n  S3 --> S5\n\n  classDef item fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f,stroke-width:1px\n  classDef optional fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f,stroke-dasharray:4 3\n  classDef study fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a,stroke-width:1.5px\n\n  class cam,lidar,ultra,adc,isp,ts,rt,det,trk,fuse,unc,pred,plan,ctrl,safe item\n  class radar optional\n  class S5 study\n\n  style S1 fill:#e1f5ee,stroke:#0f6e56,color:#04342c\n  style S2 fill:#e1f5ee,stroke:#0f6e56,color:#04342c\n  style S3 fill:#eeedfe,stroke:#534ab7,color:#26215c\n  style S4 fill:#eeedfe,stroke:#534ab7,color:#26215c",
+  "size": [
+   2171,
+   1319
+  ]
+ },
+ "ch04_02": {
+  "line": 129,
+  "heading": "1.1 What is a sensor?",
+  "code": "flowchart LR\n  WORLD([\"<b>World</b><br/>light, echoes\"])\n  SENS[\"<b>Sensors</b><br/>camera<br/>LiDAR<br/>ultrasonic\"]\n  ACQ[\"<b>Acquisition</b><br/>digitise<br/>timestamp\"]\n  PERC[\"<b>Perception</b><br/>detect<br/>track, fuse\"]\n  PLAN[\"<b>Planning</b><br/>predict<br/>decide\"]\n  CTRL[\"<b>Control</b><br/>steering<br/>braking\"]\n  ACT[\"<b>Actuators</b><br/>motors<br/>brakes\"]\n\n  WORLD --> SENS --> ACQ --> PERC --> PLAN --> CTRL --> ACT\n  ACT -. \"the loop closes\" .-> WORLD\n\n  classDef world fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a,stroke-width:1.5px\n  classDef hw fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1px\n  classDef sw fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px\n\n  class WORLD world\n  class SENS,ACQ,ACT hw\n  class PERC,PLAN,CTRL sw\n\n  linkStyle 6 stroke:#5f5e5a,stroke-width:1.5px,stroke-dasharray:5 4",
+  "size": [
+   686,
+   2143
+  ]
+ },
+ "ch04_03": {
+  "line": 185,
+  "heading": "Worked example 1.A: how many pixels does a child cover?",
+  "code": "flowchart LR\n    A[\"W = 1,920 pixels<br/>FOV = 60°\"] --> B[\"Half width ÷ tan(half FOV)<br/>960 ÷ tan(30°) = 960 ÷ 0.5774\"]\n    B --> C[\"<b>f ≈ 1,663 pixels</b>\"]",
+  "size": [
+   670,
+   693
+  ]
+ },
+ "ch04_04": {
+  "line": 199,
+  "heading": "Worked example 1.A: how many pixels does a child cover?",
+  "code": "flowchart TD\n    A([Start]) --> B[\"Import math\"]\n    B --> C[\"Initialize variables:<br/>W = 1920<br/>hfov = 60<br/>size = 0.5\"]\n    C --> D[\"Calculate focal length:<br/>f = (W / 2) / tan(radians(hfov / 2))\"]\n    D --> E[\"Set distances: (50, 150)\"]\n    E --> F{\"More distances<br/>to process?\"}\n    F -- Yes --> G[\"Get next distance d\"]\n    G --> H[\"Calculate pixel width:<br/>round(f * size / d, 1)\"]\n    H --> I[/\"Print distance and pixel width\"/]\n    I --> F\n    F -- No --> J([End])",
+  "size": [
+   1054,
+   2635
+  ]
+ },
+ "ch04_05": {
+  "line": 213,
+  "heading": "Worked example 1.A: how many pixels does a child cover?",
+  "code": "flowchart LR\n    subgraph OUT[\"Expected output\"]\n        direction LR\n        A[\"<b>50 m</b><br/>16.6 pixels\"] --> B[\"<b>150 m</b><br/>5.5 pixels<br/>(hard to classify)\"]\n    end",
+  "size": [
+   914,
+   401
+  ]
+ },
+ "ch04_06": {
+  "line": 239,
+  "heading": "Worked example 1.B: time of flight",
+  "code": "flowchart LR\n    A[\"Pulse returns after<br/>400 ns = 4 × 10⁻⁷ s\"] --> B[\"Out-and-back path<br/>3 × 10⁸ × 4 × 10⁻⁷<br/>= 120 m\"]\n    B --> C[\"One way ÷ 2<br/><b>distance = 60 m</b>\"]",
+  "size": [
+   481,
+   783
+  ]
+ },
+ "ch04_07": {
+  "line": 249,
+  "heading": "Worked example 1.C: how much data does a LiDAR produce?",
+  "code": "flowchart LR\n    I[\"Inputs<br/>128 beams<br/>1,800 steps per turn<br/>10 Hz, 16 bytes per point\"] --> P[\"Points per frame<br/>128 × 1,800<br/>= 230,400\"]\n    P --> S[\"Points per second<br/>230,400 × 10<br/>= 2,304,000\"]\n    P --> F[\"Data per frame<br/>230,400 × 16 ÷ 1e6<br/>= 3.6864 MB\"]\n    F --> R[\"Data rate<br/>3.6864 × 10<br/>= 36.864 MB/s\"]",
+  "size": [
+   959,
+   1236
+  ]
+ },
+ "ch04_08": {
+  "line": 279,
+  "heading": "Worked example 1.D: echo to distance, and the temperature error",
+  "code": "flowchart LR\n    I[\"True distance 1.00 m<br/>real speed at 0 °C: 331.3 m/s<br/>assumed speed: 343 m/s\"] --> T[\"Echo time<br/>2 × 1.00 ÷ 331.3<br/>= 6.04 ms\"]\n    T --> D[\"Reported distance<br/>343 × 0.00604 ÷ 2<br/>= 1.035 m\"]\n    D --> E[\"Error ≈ 3.5%\"]",
+  "size": [
+   669,
+   1101
+  ]
+ },
+ "ch04_09": {
+  "line": 351,
+  "heading": "2.1 The acquisition chain",
+  "code": "flowchart LR\n  A[\"<b>Sensing element</b><br/>photons in\"]\n  B[\"<b>ADC</b><br/>analog to digital\"]\n  C[\"<b>Pre-processing</b><br/>camera: ISP<br/>LiDAR: filter\"]\n  D[\"<b>Timestamp</b><br/>and sync\"]\n  E[\"<b>Transfer</b><br/>bus, link\"]\n  F[\"<b>Memory</b><br/>DRAM / SRAM\"]\n  G[\"<b>Neural network</b><br/>on CPU / GPU / NPU\"]\n\n  A --> B --> C --> D --> E --> F --> G\n\n  classDef hw fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1px\n  classDef sw fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px\n\n  class A,B,E,F hw\n  class C,D,G sw",
+  "size": [
+   511,
+   1873
+  ]
+ },
+ "ch04_10": {
+  "line": 383,
+  "heading": "Worked example 2.A: data rate of a camera array",
+  "code": "flowchart LR\n  subgraph IN[\"Inputs\"]\n    direction TB\n    W[\"<b>w × h</b><br/>1,920 × 1,080 pixels\"]\n    BITS[\"<b>bits</b><br/>12-bit raw\"]\n    FPS[\"<b>fps</b><br/>36 frames per second\"]\n    N[\"<b>n</b><br/>8 cameras\"]\n  end\n\n  FRAME[\"<b>Frame size</b><br/>w × h × bits ÷ 8<br/>= 3,110,400 bytes\"]\n  CAM[\"<b>Per camera</b><br/>frame × fps ÷ 1e6<br/>≈ 112.0 MB/s\"]\n  TOTAL[\"<b>Total</b><br/>frame × fps × n ÷ 1e9<br/>≈ 0.9 GB/s\"]\n\n  W --> FRAME\n  BITS --> FRAME\n  FRAME --> CAM\n  FPS --> CAM\n  CAM --> TOTAL\n  N --> TOTAL\n\n  classDef input fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f,stroke-width:1px\n  classDef calc fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px\n  classDef result fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1.5px\n\n  class W,BITS,FPS,N input\n  class FRAME,CAM calc\n  class TOTAL result\n\n  style IN fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a",
+  "size": [
+   2264,
+   1086
+  ]
+ },
+ "ch04_11": {
+  "line": 415,
+  "heading": "Worked example 2.A: data rate of a camera array",
+  "code": "flowchart LR\n  subgraph OUT[\"Expected output\"]\n    direction LR\n    A[\"<b>3110400.0</b><br/>bytes per frame\"]\n    B[\"<b>112.0 MB/s</b><br/>per camera\"]\n    C[\"<b>0.9 GB/s</b><br/>total, 8 cameras\"]\n  end\n\n  A --> B --> C\n\n  classDef frame fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f,stroke-width:1px\n  classDef cam fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px\n  classDef total fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1.5px\n\n  class A frame\n  class B cam\n  class C total\n\n  style OUT fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a",
+  "size": [
+   585,
+   827
+  ]
+ },
+ "ch04_12": {
+  "line": 454,
+  "heading": "Worked example 2.B: distance travelled while thinking",
+  "code": "flowchart LR\n  V[\"<b>Speed v</b><br/>100 ÷ 3.6<br/>= 27.78 m/s\"]\n  A[\"<b>Deceleration a</b><br/>6.0 m/s²\"]\n  BRAKE[\"<b>Braking distance</b><br/>v² ÷ (2a)<br/>≈ 64.3 m\"]\n\n  subgraph L1[\"Latency 0.1 s\"]\n    direction TB\n    B1[\"<b>Blind distance</b><br/>v × 0.1<br/>≈ 2.78 m\"]\n    T1[\"<b>Total</b><br/>≈ 67.1 m\"]\n    B1 --> T1\n  end\n\n  subgraph L2[\"Latency 0.3 s\"]\n    direction TB\n    B2[\"<b>Blind distance</b><br/>v × 0.3<br/>≈ 8.33 m\"]\n    T2[\"<b>Total</b><br/>≈ 72.6 m\"]\n    B2 --> T2\n  end\n\n  V --> BRAKE\n  A --> BRAKE\n  V --> B1\n  V --> B2\n  BRAKE --> T1\n  BRAKE --> T2\n\n  classDef input fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f,stroke-width:1px\n  classDef calc fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px\n  classDef result fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1.5px\n\n  class V,A input\n  class BRAKE,B1,B2 calc\n  class T1,T2 result\n\n  style L1 fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a\n  style L2 fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a",
+  "size": [
+   1368,
+   1101
+  ]
+ },
+ "ch04_13": {
+  "line": 493,
+  "heading": "Worked example 2.B: distance travelled while thinking",
+  "code": "flowchart TB\n  subgraph R1[\"Latency 0.1 s\"]\n    direction LR\n    A1[\"<b>0.1</b><br/>latency (s)\"]\n    B1[\"<b>2.78</b><br/>blind distance (m)\"]\n    C1[\"<b>64.3</b><br/>braking distance (m)\"]\n    D1[\"<b>67.1</b><br/>total (m)\"]\n    A1 --> B1 --> C1 --> D1\n  end\n\n  subgraph R2[\"Latency 0.3 s\"]\n    direction LR\n    A2[\"<b>0.3</b><br/>latency (s)\"]\n    B2[\"<b>8.33</b><br/>blind distance (m)\"]\n    C2[\"<b>64.3</b><br/>braking distance (m)\"]\n    D2[\"<b>72.6</b><br/>total (m)\"]\n    A2 --> B2 --> C2 --> D2\n  end\n\n  R1 ~~~ R2\n\n  classDef lat fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f,stroke-width:1px\n  classDef calc fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px\n  classDef total fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1.5px\n\n  class A1,A2 lat\n  class B1,C1,B2,C2 calc\n  class D1,D2 total\n\n  style R1 fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a\n  style R2 fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a",
+  "size": [
+   1868,
+   804
+  ]
+ },
+ "ch04_14": {
+  "line": 562,
+  "heading": "Worked example 2.C: compute needed for a camera array",
+  "code": "flowchart LR\n  subgraph IN[\"Inputs\"]\n    direction TB\n    F[\"<b>flops_per_frame</b><br/>100 GFLOP\"]\n    C[\"<b>cams</b><br/>8 cameras\"]\n    P[\"<b>fps</b><br/>36 frames per second\"]\n  end\n\n  NEED[\"<b>Compute needed</b><br/>flops_per_frame × cams × fps<br/>= 28.8 TFLOP/s\"]\n  PEAK[\"<b>Peak at 40% utilisation</b><br/>need ÷ 0.4<br/>= 72.0 TFLOP/s\"]\n\n  F --> NEED\n  C --> NEED\n  P --> NEED\n  NEED --> PEAK\n\n  classDef input fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f,stroke-width:1px\n  classDef calc fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px\n  classDef result fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1.5px\n\n  class F,C,P input\n  class NEED calc\n  class PEAK result\n\n  style IN fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a",
+  "size": [
+   1548,
+   965
+  ]
+ },
+ "ch04_15": {
+  "line": 590,
+  "heading": "Worked example 2.C: compute needed for a camera array",
+  "code": "flowchart LR\n  subgraph OUT[\"Expected output\"]\n    direction LR\n    A[\"<b>28.8 TFLOP/s</b><br/>compute needed\"]\n    B[\"<b>72.0 TFLOP/s</b><br/>peak at 40% utilisation\"]\n    A --> B\n  end\n\n  classDef need fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px\n  classDef peak fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1.5px\n\n  class A need\n  class B peak\n\n  style OUT fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a",
+  "size": [
+   720,
+   567
+  ]
+ },
+ "ch04_16": {
+  "line": 671,
+  "heading": "3.2 Where does fusion happen? Three levels",
+  "code": "flowchart LR\n  START[\"<b>Start</b><br/>x = 50.0<br/>P = 4.0\"]\n  PRED[\"<b>Predict</b><br/>Q = 1.0<br/>P = P + Q = 5.0\"]\n  U1[\"<b>Update 1</b><br/>z = 52.0, R = 1.0<br/>K = 0.83<br/>x = 51.67, P = 0.83\"]\n  U2[\"<b>Update 2</b><br/>z = 50.5, R = 4.0<br/>K = 0.17<br/>x = 51.47, P = 0.69\"]\n  O1([\"<b>Prints</b><br/>51.67 0.83\"])\n  O2([\"<b>Prints</b><br/>51.47 0.69\"])\n\n  START --> PRED\n  PRED --> U1\n  U1 --> U2\n  U1 --> O1\n  U2 --> O2\n\n  classDef input fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f\n  classDef calc fill:#eeedfe,stroke:#534ab7,color:#26215c\n  classDef result fill:#e1f5ee,stroke:#0f6e56,color:#04342c\n\n  class START input\n  class PRED,U1,U2 calc\n  class O1,O2 result",
+  "size": [
+   811,
+   1553
+  ]
+ },
+ "ch04_17": {
+  "line": 695,
+  "heading": "3.2 Where does fusion happen? Three levels",
+  "code": "flowchart LR\n  R1[\"<b>After update 1</b><br/>x = 51.67<br/>P = 0.83\"]\n  R2[\"<b>After update 2</b><br/>x = 51.47<br/>P = 0.69\"]\n\n  R1 --> R2\n\n  classDef first fill:#eeedfe,stroke:#534ab7,color:#26215c\n  classDef second fill:#e1f5ee,stroke:#0f6e56,color:#04342c\n\n  class R1 first\n  class R2 second",
+  "size": [
+   392,
+   556
+  ]
+ },
+ "ch04_18": {
+  "line": 722,
+  "heading": "Worked example 3.A: radar plus camera",
+  "code": "flowchart LR\n  subgraph S1[\"Sensor 1\"]\n    direction TB\n    Z1[\"<b>z₁ = 50.0</b><br/>measurement\"]\n    S1V[\"<b>s₁ = 0.5</b><br/>uncertainty\"]\n    W1[\"<b>w₁ = 1 ÷ s₁²</b><br/>= 4.00\"]\n    S1V --> W1\n  end\n\n  subgraph S2[\"Sensor 2\"]\n    direction TB\n    Z2[\"<b>z₂ = 52.0</b><br/>measurement\"]\n    S2V[\"<b>s₂ = 2.0</b><br/>uncertainty\"]\n    W2[\"<b>w₂ = 1 ÷ s₂²</b><br/>= 0.25\"]\n    S2V --> W2\n  end\n\n  FUSED[\"<b>Fused estimate</b><br/>Σ(wᵢ × zᵢ) ÷ Σ(wᵢ)<br/>= 213 ÷ 4.25<br/>≈ 50.1\"]\n  SIGMA[\"<b>Fused uncertainty</b><br/>(1 ÷ Σ(wᵢ))^0.5<br/>= (1 ÷ 4.25)^0.5<br/>≈ 0.49\"]\n\n  Z1 --> FUSED\n  Z2 --> FUSED\n  W1 --> FUSED\n  W2 --> FUSED\n  W1 --> SIGMA\n  W2 --> SIGMA\n\n  classDef input fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f,stroke-width:1px\n  classDef calc fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px\n  classDef result fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1.5px\n\n  class Z1,Z2,S1V,S2V input\n  class W1,W2 calc\n  class FUSED,SIGMA result\n\n  style S1 fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a\n  style S2 fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a",
+  "size": [
+   1454,
+   1231
+  ]
+ },
+ "ch04_19": {
+  "line": 761,
+  "heading": "Worked example 3.A: radar plus camera",
+  "code": "flowchart LR\n  subgraph OUT[\"Expected output\"]\n    direction LR\n    A[\"<b>50.1</b><br/>fused estimate\"]\n    B[\"<b>0.49</b><br/>fused uncertainty\"]\n    A --> B\n  end\n\n  classDef est fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1.5px\n  classDef unc fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px\n\n  class A est\n  class B unc\n\n  style OUT fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a",
+  "size": [
+   618,
+   566
+  ]
+ },
+ "ch04_20": {
+  "line": 797,
+  "heading": "Worked example 3.B: one predict step and two updates",
+  "code": "flowchart LR\n  START[\"<b>Start</b><br/>x = 50.0<br/>P = 4.0\"]\n  PRED[\"<b>Predict</b><br/>P = P + Q<br/>Q = 1.0<br/>P = 5.0\"]\n  U1[\"<b>Update 1</b><br/>z = 52.0, R = 1.0<br/>K = 5.0 ÷ 6.0 = 0.83<br/>x = 51.67<br/>P = 0.83\"]\n  U2[\"<b>Update 2</b><br/>z = 50.5, R = 4.0<br/>K = 0.83 ÷ 4.83 = 0.17<br/>x = 51.47<br/>P = 0.69\"]\n  O1([\"<b>Prints</b><br/>51.67 0.83\"])\n  O2([\"<b>Prints</b><br/>51.47 0.69\"])\n\n  START --> PRED --> U1 --> U2\n  U1 --> O1\n  U2 --> O2\n\n  classDef input fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f,stroke-width:1px\n  classDef calc fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px\n  classDef result fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1.5px\n\n  class START input\n  class PRED,U1,U2 calc\n  class O1,O2 result",
+  "size": [
+   876,
+   1688
+  ]
+ },
+ "ch04_21": {
+  "line": 819,
+  "heading": "Worked example 3.B: one predict step and two updates",
+  "code": "flowchart TB\n  subgraph R1[\"After update 1 (z = 52.0)\"]\n    direction LR\n    A1[\"<b>51.67</b><br/>estimate x\"]\n    B1[\"<b>0.83</b><br/>uncertainty P\"]\n    A1 --> B1\n  end\n\n  subgraph R2[\"After update 2 (z = 50.5)\"]\n    direction LR\n    A2[\"<b>51.47</b><br/>estimate x\"]\n    B2[\"<b>0.69</b><br/>uncertainty P\"]\n    A2 --> B2\n  end\n\n  R1 --> R2\n\n  classDef est fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1.5px\n  classDef unc fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px\n\n  class A1,A2 est\n  class B1,B2 unc\n\n  style R1 fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a\n  style R2 fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a",
+  "size": [
+   852,
+   804
+  ]
+ },
+ "ch04_22": {
+  "line": 861,
+  "heading": "3.6 Depth from cameras and why it gets worse with range",
+  "code": "flowchart LR\n  subgraph IN[\"Inputs\"]\n    direction TB\n    F[\"<b>f</b><br/>focal length (pixels)\"]\n    B[\"<b>B</b><br/>baseline (m)\"]\n    D[\"<b>d</b><br/>disparity (pixels)\"]\n  end\n\n  NUM[\"<b>Multiply</b><br/>f × B\"]\n  Z([\"<b>Z = (f × B) ÷ d</b><br/>depth (m)\"])\n\n  F --> NUM\n  B --> NUM\n  NUM --> Z\n  D -- \"divide by\" --> Z\n\n  classDef input fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f,stroke-width:1px\n  classDef calc fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px\n  classDef result fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1.5px\n\n  class F,B,D input\n  class NUM calc\n  class Z result\n\n  style IN fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a",
+  "size": [
+   1435,
+   839
+  ]
+ },
+ "ch04_23": {
+  "line": 893,
+  "heading": "Worked example 3.C: stereo depth and its sensitivity",
+  "code": "flowchart LR\n  subgraph IN[\"Inputs\"]\n    direction TB\n    F[\"<b>f</b><br/>1000\"]\n    B[\"<b>B</b><br/>0.3\"]\n  end\n\n  NUM[\"<b>f × B</b><br/>1000 × 0.3<br/>= 300\"]\n\n  subgraph LOOP[\"Loop over d\"]\n    direction TB\n    D5[\"<b>d = 5</b><br/>300 ÷ 5\"]\n    D6[\"<b>d = 6</b><br/>300 ÷ 6\"]\n    D7[\"<b>d = 7</b><br/>300 ÷ 7\"]\n  end\n\n  subgraph OUT[\"Expected output\"]\n    direction TB\n    O5[\"<b>5 60.0</b>\"]\n    O6[\"<b>6 50.0</b>\"]\n    O7[\"<b>7 42.9</b>\"]\n  end\n\n  F --> NUM\n  B --> NUM\n  NUM --> D5 --> O5\n  NUM --> D6 --> O6\n  NUM --> D7 --> O7\n\n  classDef input fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f,stroke-width:1px\n  classDef calc fill:#eeedfe,stroke:#534ab7,color:#26215c,stroke-width:1px\n  classDef result fill:#e1f5ee,stroke:#0f6e56,color:#04342c,stroke-width:1.5px\n\n  class F,B input\n  class NUM,D5,D6,D7 calc\n  class O5,O6,O7 result\n\n  style IN fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a\n  style LOOP fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a\n  style OUT fill:#f1efe8,stroke:#5f5e5a,color:#2c2c2a",
+  "size": [
+   1601,
+   839
+  ]
+ },
+ "ch04_24": {
+  "line": 1002,
+  "heading": "4.1 The autonomy stack",
+  "code": "flowchart LR\n  SENS([\"<b>Sensors</b>\"])\n  ACQ[\"<b>Acquire</b>\"]\n  PERC[\"<b>Perception</b><br/>detect, track, fuse\"]\n  LOC[\"<b>Localisation</b><br/>where am I?\"]\n  PRED[\"<b>Prediction</b><br/>where will others go?\"]\n  PLAN[\"<b>Planning</b><br/>route, behaviour,<br/>trajectory\"]\n  CTRL[\"<b>Control</b><br/>steering, throttle<br/>commands\"]\n  ACT([\"<b>Actuators</b><br/>steer, brake,<br/>accelerate\"])\n  SAFE[\"<b>Safety monitor</b><br/>runs beside the stack<br/>checks plausibility, deadlines,<br/>sensor health\"]\n\n  SENS --> ACQ\n  ACQ --> PERC\n  PERC --> LOC\n  LOC --> PRED\n  PRED --> PLAN\n  PLAN --> CTRL\n  CTRL --> ACT\n\n  ACT -. \"feedback: the vehicle's own motion\" .-> LOC\n  SAFE -. \"watches\" .- PERC\n  SAFE -. \"can trigger a safe stop\" .-> ACT\n\n  classDef hw fill:#e1f5ee,stroke:#0f6e56,color:#04342c\n  classDef sw fill:#eeedfe,stroke:#534ab7,color:#26215c\n  classDef safety fill:#faece7,stroke:#993c1d,color:#4a1b0c\n\n  class SENS,ACQ,ACT hw\n  class PERC,LOC,PRED,PLAN,CTRL sw\n  class SAFE safety",
+  "size": [
+   1552,
+   2336
+  ]
+ },
+ "ch04_25": {
+  "line": 1083,
+  "heading": "Worked example 4.A: detection range decides the outcome",
+  "code": "flowchart LR\n  IN[\"<b>Inputs</b><br/>v = 50 / 3.6 = 13.89 m/s<br/>a = 7.0 m/s²<br/>lat = 0.15 s\"]\n  BLIND[\"<b>Blind distance</b><br/>v × lat<br/>= 2.08 m\"]\n\n  D25[\"<b>d = 25 m</b><br/>rem = 25 - 2.08 = 22.92 m<br/>v² = 192.90 - 2 × 7.0 × 22.92<br/>= -127.93 (below 0)\"]\n  D15[\"<b>d = 15 m</b><br/>rem = 15 - 2.08 = 12.92 m<br/>v² = 192.90 - 2 × 7.0 × 12.92<br/>= 12.07\"]\n\n  O25([\"<b>25 0.0</b><br/>stops in time\"])\n  O15([\"<b>15 3.5</b><br/>impact at 3.5 m/s\"])\n\n  IN --> BLIND\n  BLIND --> D25\n  BLIND --> D15\n  D25 --> O25\n  D15 --> O15\n\n  classDef input fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f\n  classDef calc fill:#eeedfe,stroke:#534ab7,color:#26215c\n  classDef safe fill:#e1f5ee,stroke:#0f6e56,color:#04342c\n  classDef hit fill:#faece7,stroke:#993c1d,color:#4a1b0c\n\n  class IN input\n  class BLIND,D25,D15 calc\n  class O25 safe\n  class O15 hit",
+  "size": [
+   1316,
+   1236
+  ]
+ },
+ "ch04_26": {
+  "line": 1125,
+  "heading": "Worked example 4.B: when should the car brake?",
+  "code": "flowchart LR\n  FP[\"<b>cost_fp</b><br/>false-positive cost<br/>= 1\"]\n  FN[\"<b>cost_fn</b><br/>false-negative cost<br/>= 1000\"]\n  SUM[\"<b>Add the costs</b><br/>cost_fp + cost_fn<br/>= 1001\"]\n  DIV[\"<b>Divide</b><br/>cost_fp ÷ 1001<br/>= 0.000999000...\"]\n  OUT([\"<b>Prints</b><br/>0.000999<br/>rounded to 6 places\"])\n\n  FP --> SUM\n  FN --> SUM\n  FP --> DIV\n  SUM --> DIV\n  DIV --> OUT\n\n  classDef input fill:#ffffff,stroke:#6d5bd0,color:#1f1f1f\n  classDef calc fill:#eeedfe,stroke:#534ab7,color:#26215c\n  classDef result fill:#e1f5ee,stroke:#0f6e56,color:#04342c\n\n  class FP,FN input\n  class SUM,DIV calc\n  class OUT result",
+  "size": [
+   1001,
+   1191
+  ]
+ },
+ "ch04_27": {
+  "line": 1230,
+  "heading": "5.2 The sensor suite today",
+  "code": "flowchart TB\n    subgraph FRONT[\"Forward cameras\"]\n        direction LR\n        N[\"Narrow<br/>long range, ~250 m\"]\n        M[\"Main\"]\n        W[\"Wide\"]\n    end\n    FL[\"Forward-side left<br/>(B-pillar)\"] --- CAR\n    FRONT --- CAR([\"CAR<br/>8 cameras, 360°\"])\n    FR[\"Forward-side right<br/>(B-pillar)\"] --- CAR\n    CAR --- RL[\"Rear-side left<br/>(front fender)\"]\n    CAR --- RR[\"Rear-side right<br/>(front fender)\"]\n    CAR --- R[\"Rear camera\"]",
+  "size": [
+   1619,
+   1342
+  ]
+ },
+ "ch04_28": {
+  "line": 1252,
+  "heading": "5.3 From pixels to a driving decision",
+  "code": "flowchart TD\n    A[\"8 cameras\"] --> B[\"ISP / calibration\"]\n    B --> C[\"Shared image backbone<br/>per camera\"]\n    C --> D[\"Multi-camera fusion into a 3-D /<br/>bird's-eye-view space<br/>(attention-based; uses several past frames)\"]\n    D --> E[\"Objects, lanes, signs\"]\n    D --> F[\"3-D occupancy<br/>(what is solid, even for unknown objects)\"]\n    D --> G[\"Motion / velocity<br/>per object\"]\n    E --> H[\"End-to-end driving network<br/>(v12 and later)\"]\n    F --> H\n    G --> H\n    H --> I[\"Steering and acceleration commands\"]",
+  "size": [
+   1962,
+   1738
+  ]
+ },
+ "ch04_29": {
+  "line": 1276,
+  "heading": "5.3 From pixels to a driving decision",
+  "code": "flowchart LR\n    A[\"Fleet drives<br/>(inference in the car on the NPU)\"] --> B[\"Rare or difficult<br/>case detected\"]\n    B --> C[\"Clip uploaded\"]\n    C --> D[\"Labelled\"]\n    D --> E[\"Network retrained<br/>(data centre, GPUs)\"]\n    E --> F[\"Validated in simulation<br/>and tests\"]\n    F --> G[\"Over-the-air update\"]\n    G --> A",
+  "size": [
+   821,
+   1693
+  ]
+ },
+ "ch04_30": {
+  "line": 1297,
+  "heading": "Worked example 5.A: how many TOPS?",
+  "code": "flowchart LR\n    I[\"One accelerator<br/>96 × 96 = 9,216 MACs<br/>2 GHz clock\"] --> A[\"Per accelerator<br/>9,216 × 2 × 2e9 ÷ 1e12<br/>= 36.9 TOPS\"]\n    A --> B[\"Four accelerators<br/>36.9 × 4<br/>= 147.5 TOPS peak\"]\n    B --> C[\"At 40% utilisation<br/>147.5 × 0.4<br/>= 59.0 TOPS usable\"]",
+  "size": [
+   510,
+   1191
+  ]
+ },
+ "ch05_01": {
+  "line": 81,
+  "heading": "1.1 The software stack",
+  "code": "flowchart TD\n    A[\"Application / model code<br/>y = relu(W @ x + b)\"] --> B[\"Framework<br/>PyTorch, JAX, TensorFlow<br/>(builds a graph of operations)\"]\n    B --> C[\"Compiler / graph optimiser<br/>XLA, TensorRT, Core ML<br/>(fuses, reorders, assigns to devices)\"]\n    C --> D[\"Runtime and libraries<br/>CUDA libraries, TPU runtime<br/>(launches work, manages memory)\"]\n    D --> E[\"Driver and firmware<br/>talks to the chip\"]\n    E --> F[\"Hardware<br/>MAC units, on-chip memory, HBM, interconnect\"]",
+  "size": [
+   1038,
+   1691
+  ]
+ },
+ "ch05_02": {
+  "line": 121,
+  "heading": "Worked example 1.A: why fusion saves memory traffic",
+  "code": "flowchart LR\n    T[\"Tensor<br/>1,000,000 values × 2 bytes<br/>= 2 MB\"] --> U[\"Unfused<br/>3 ops × (read + write) × 2 MB<br/>= 12 MB\"]\n    T --> F[\"Fused<br/>1 read + 1 write × 2 MB<br/>= 4 MB\"]\n    U --> R[\"Saving<br/>12 ÷ 4 = 3×\"]\n    F --> R",
+  "size": [
+   1260,
+   828
+  ]
+ },
+ "ch05_03": {
+  "line": 207,
+  "heading": "Worked example 2.A: does our 7B model fit on one chip?",
+  "code": "flowchart LR\n    I[\"7 × 10⁹ parameters<br/>× 16 bytes each\"] --> S[\"Training state<br/>= 112 GB\"]\n    S --> C{\"Fits on one<br/>96 GB chip?\"}\n    C -- \"No\" --> M[\"Minimum chips<br/>112 ÷ 96, rounded up<br/>= 2\"]\n    S --> H[\"Sharded 256 ways<br/>112 ÷ 256<br/>≈ 0.44 GB per chip\"]",
+  "size": [
+   991,
+   1381
+  ]
+ },
+ "ch05_04": {
+  "line": 229,
+  "heading": "2.2 Three ways to split the work",
+  "code": "flowchart LR\n    subgraph DP[\"Data parallel\"]\n        direction LR\n        B1[\"Batch part 1\"] --> DA[\"Chip A<br/>full model\"]\n        B2[\"Batch part 2\"] --> DB[\"Chip B<br/>full model\"]\n        DA --> SG[\"Sum gradients\"]\n        DB --> SG\n    end\n    subgraph TP[\"Tensor parallel\"]\n        direction LR\n        TA[\"Chip A<br/>left half of each layer\"] <--> TB[\"Chip B<br/>right half\"]\n    end\n    subgraph PP[\"Pipeline parallel\"]\n        direction LR\n        PA[\"Chip A<br/>layers 1-10\"] --> PB[\"Chip B<br/>layers 11-20\"] --> PC[\"Chip C<br/>layers 21-30\"]\n    end",
+  "size": [
+   1275,
+   1461
+  ]
+ },
+ "ch05_05": {
+  "line": 275,
+  "heading": "Worked example 2.B: communication overhead for the 7B model",
+  "code": "flowchart LR\n    G[\"Gradients 14 GB<br/>N = 256 chips<br/>100 GB/s per chip\"] --> T[\"Traffic per chip<br/>2 × 255 ÷ 256 × 14 GB<br/>= 27.89 GB\"]\n    T --> CM[\"Communication<br/>27.89 ÷ 100<br/>= 0.28 s\"]\n    W[\"Step work<br/>6 × 7e9 × 4e6 FLOPs<br/>cluster: 256 × 200 TFLOP/s × 40%\"] --> CP[\"Compute<br/>= 8.2 s\"]\n    CM --> E[\"Efficiency<br/>8.2 ÷ (8.2 + 0.28)<br/>= 96.7%\"]\n    CP --> E",
+  "size": [
+   1340,
+   1191
+  ]
+ },
+ "ch05_06": {
+  "line": 379,
+  "heading": "Worked example 3.A: the price of recomputation",
+  "code": "flowchart LR\n    B[\"Normal step<br/>3 parts = 8.2 s\"] --> R[\"With recomputation<br/>4 parts: 8.2 × 4 ÷ 3<br/>= 10.9 s\"]\n    R --> X[\"Extra compute<br/>4 ÷ 3 − 1<br/>= 33%\"]",
+  "size": [
+   494,
+   828
+  ]
+ },
+ "ch05_07": {
+  "line": 397,
+  "heading": "Worked example 3.B: the speed limit of one conversation",
+  "code": "flowchart LR\n    I[\"Weights 7 GB (INT8)<br/>bandwidth 1 TB/s\"] --> T[\"Time per token<br/>7 GB ÷ 1,000 GB/s<br/>= 7.0 ms\"]\n    T --> U[\"One user<br/>1 ÷ 0.007<br/>≈ 142.9 tokens/s\"]\n    U --> B[\"Batch of 32 users<br/>32 × 142.9<br/>≈ 4,571.4 tokens/s\"]",
+  "size": [
+   502,
+   1146
+  ]
+ },
+ "ch05_08": {
+  "line": 432,
+  "heading": "Worked example 3.C: why utilisation is a cost issue",
+  "code": "flowchart LR\n    C[\"Chip cost<br/>$2 per hour\"] --> A[\"35% utilisation<br/>2 ÷ 0.35<br/>= $5.71 per useful hour\"]\n    C --> B[\"60% utilisation<br/>2 ÷ 0.60<br/>= $3.33 per useful hour\"]\n    A --> S[\"Saving<br/>1 − 0.35 ÷ 0.60<br/>= 41.7%\"]\n    B --> S",
+  "size": [
+   1148,
+   828
+  ]
+ },
+ "ch05_09": {
+  "line": 492,
+  "heading": "Worked example 4.A: what PUE is worth",
+  "code": "flowchart LR\n    L[\"Computing load 1 MW<br/>8,760 hours per year\"] --> A[\"PUE 1.1<br/>1 × 1.1 × 8,760<br/>= 9,636 MWh\"]\n    L --> B[\"PUE 1.6<br/>1 × 1.6 × 8,760<br/>= 14,016 MWh\"]\n    A --> D[\"Difference<br/>= 4,380 MWh\"]\n    B --> D\n    D --> M[\"Cost at $80 per MWh<br/>= $350,400 per year\"]",
+  "size": [
+   766,
+   1056
+  ]
+ },
+ "ch05_10": {
+  "line": 527,
+  "heading": "Worked example 4.B: the full bill for the running example",
+  "code": "flowchart LR\n    F[\"FLOPs<br/>6 × 7e9 × 1.4e12<br/>= 5.88 × 10²²\"] --> T[\"Time<br/>÷ (256 × 200 TFLOP/s × 40%)<br/>= 33.2 days (797.5 h)\"]\n    T --> H[\"Chip-hours<br/>256 × 797.5<br/>≈ 204,167\"]\n    H --> C[\"Cost<br/>× $2<br/>≈ $408,333\"]\n    T --> E[\"Energy<br/>256 × 0.4 kW × 797.5 h × 1.1 PUE<br/>≈ 89.8 MWh\"]",
+  "size": [
+   1083,
+   1191
+  ]
+ },
+ "ch05_11": {
+  "line": 544,
+  "heading": "Total cost of ownership and the cost of serving",
+  "code": "flowchart LR\n    S[\"5,000 tokens per second\"] --> M[\"Per hour<br/>5,000 × 3,600 ÷ 1e6<br/>= 18 million tokens\"]\n    C[\"Chip cost $2 per hour\"] --> R[\"Cost per million tokens<br/>2 ÷ 18<br/>≈ $0.111\"]\n    M --> R",
+  "size": [
+   1101,
+   783
+  ]
+ },
+ "ch05_12": {
+  "line": 566,
+  "heading": "Worked example 4.C: failures in a 4,096-chip job",
+  "code": "flowchart LR\n    A[\"Chip MTBF<br/>5 years = 43,800 h\"] --> S[\"System MTBF<br/>43,800 ÷ 4,096<br/>≈ 10.69 h\"]\n    C[\"Checkpoint write time<br/>C = 2 min = 0.0333 h\"] --> I[\"Best interval<br/>√(2 × C × MTBF)<br/>≈ 50.7 minutes\"]\n    S --> I\n    I --> O[\"Saving overhead<br/>C ÷ interval<br/>≈ 3.9%\"]",
+  "size": [
+   1009,
+   1146
+  ]
+ },
+ "ch05_13": {
+  "line": 655,
+  "heading": "5.2 Building blocks: from chip to pod",
+  "code": "flowchart LR\n    A[\"Chip\"] --> B[\"Tray<br/>4 chips + host\"]\n    B --> C[\"Cube<br/>64 chips, 4×4×4\"]\n    C --> D[\"Pod<br/>64 cubes = 4,096 chips\"]\n    D --> E[\"Many pods linked by<br/>data-centre network\"]\n    E --> F[\"Multi-slice job\"]",
+  "size": [
+   534,
+   1466
+  ]
+ },
+ "ch05_14": {
+  "line": 685,
+  "heading": "Worked example 5.A: how much do wraparound links help?",
+  "code": "flowchart LR\n    R[\"Diameter rules<br/>mesh: 3 × (side − 1)<br/>torus: 3 × (side ÷ 2)\"] --> A[\"4 × 4 × 4 cube<br/>64 chips<br/>torus 6 hops, mesh 9 hops\"]\n    R --> B[\"16 × 16 × 16 pod<br/>4,096 chips<br/>torus 24 hops, mesh 45 hops\"]",
+  "size": [
+   1215,
+   531
+  ]
+ },
+ "ch05_15": {
+  "line": 719,
+  "heading": "Worked example 5.B: why communicate hierarchically?",
+  "code": "flowchart LR\n    G[\"Gradients 14 GB<br/>slow network 12.5 GB/s per chip\"] --> N[\"Naive<br/>14 ÷ 12.5<br/>= 1.12 s\"]\n    G --> RS[\"Reduce-scatter inside slice (fast ICI)<br/>14 ÷ 256 ≈ 0.055 GB per chip\"]\n    RS --> H[\"Hierarchical<br/>0.055 ÷ 12.5<br/>≈ 4.4 ms\"]\n    N --> S[\"Speed-up<br/>1.12 s ÷ 4.4 ms<br/>= 256×\"]\n    H --> S",
+  "size": [
+   1006,
+   1101
+  ]
+ }
+}

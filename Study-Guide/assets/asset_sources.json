@@ -1,0 +1,510 @@
+{
+ "hosts": [
+  {
+   "asset": "mama_basket",
+   "source": "Assets_temp\\01_Characters\\Gardening-mama-forest-f-54be2f71b6a0b.jpg"
+  },
+  {
+   "asset": "mama_bunny_roses",
+   "source": "Assets_temp\\01_Characters\\Gardening-mama-forest-f-54be2f7775ee3.jpg"
+  },
+  {
+   "asset": "mama_pan_flip",
+   "source": "Assets_temp\\01_Characters\\News-mama.png"
+  },
+  {
+   "asset": "mama_cheer",
+   "source": "Assets_temp\\01_Characters\\Web mama mobile.gif"
+  },
+  {
+   "asset": "mama_arms_crossed",
+   "source": "Assets_temp\\01_Characters\\DrNYzs6VsAA-nHj.jpg"
+  },
+  {
+   "asset": "mama_proud",
+   "source": "Assets_temp\\01_Characters\\CookingMamaHomePage.jpg"
+  },
+  {
+   "asset": "mama_small_proud",
+   "source": "Assets_temp\\01_Characters\\Thumb camp04.jpg"
+  },
+  {
+   "asset": "mama_fire_eyes",
+   "source": "Assets_temp\\01_Characters\\You failed.png"
+  },
+  {
+   "asset": "mama_cry",
+   "source": "Assets_temp\\01_Characters\\YO-YO TEARDROPS.gif"
+  },
+  {
+   "asset": "papa_casual",
+   "source": "Assets_temp\\01_Characters\\D03VnfTUYAAFKex.jpg"
+  },
+  {
+   "asset": "papa_suit",
+   "source": "Assets_temp\\01_Characters\\DKDrgzfVwAA610Y.jpg"
+  },
+  {
+   "asset": "pup_chef",
+   "source": "Assets_temp\\01_Characters\\Dl5i97IVsAAXL9n.jpg-large.jpeg"
+  },
+  {
+   "asset": "kid_boy",
+   "source": "Assets_temp\\01_Characters\\ECd3-hvU8AARF7s.jpg-large.jpeg"
+  },
+  {
+   "asset": "kid_boy_big",
+   "source": "Assets_temp\\01_Characters\\CML 57.png"
+  },
+  {
+   "asset": "family_circle",
+   "source": "Assets_temp\\01_Characters\\Cookies.png"
+  },
+  {
+   "asset": "family_hotspring",
+   "source": "Assets_temp\\01_Characters\\Cooking.png"
+  },
+  {
+   "asset": "family_coins",
+   "source": "Assets_temp\\01_Characters\\CookingMama.png"
+  },
+  {
+   "asset": "family_table",
+   "source": "Assets_temp\\01_Characters\\CookingMamaWorld.png"
+  },
+  {
+   "asset": "family_wide",
+   "source": "Assets_temp\\01_Characters\\100 1654.JPG"
+  },
+  {
+   "asset": "mama_and_pup",
+   "source": "Assets_temp\\01_Characters\\Ready!.png"
+  },
+  {
+   "asset": "mama_pup_kids",
+   "source": "Assets_temp\\01_Characters\\IMG 0687.PNG"
+  },
+  {
+   "asset": "mama_papa_hug",
+   "source": "Assets_temp\\01_Characters\\Lovely.png"
+  },
+  {
+   "asset": "grandma",
+   "source": "Assets_temp\\01_Characters\\CM Grandma.png"
+  },
+  {
+   "asset": "grandpa",
+   "source": "Assets_temp\\01_Characters\\CM Grandpa.png"
+  },
+  {
+   "asset": "baby_girl",
+   "source": "Assets_temp\\01_Characters\\Blonde girl.png"
+  },
+  {
+   "asset": "mama_face_happy",
+   "source": "Assets_temp\\01_Characters\\Camping-mama--outdoor-adventures-ds-papa-2.png"
+  },
+  {
+   "asset": "wok_dish",
+   "source": "Assets_temp\\01_Characters\\CMCO 26.png"
+  },
+  {
+   "asset": "kids_peeking",
+   "source": "Assets_temp\\01_Characters\\Ah!.png"
+  },
+  {
+   "asset": "kids_world",
+   "source": "Assets_temp\\01_Characters\\Clara is giving.jpg"
+  },
+  {
+   "asset": "mama_kid_kitchen",
+   "source": "Assets_temp\\01_Characters\\Deco Chef.png"
+  },
+  {
+   "asset": "prep_table_1",
+   "source": "Assets_temp\\03_Cooking_Techniques_and_Minigames\\Thursday.PNG"
+  },
+  {
+   "asset": "prep_table_2",
+   "source": "Assets_temp\\03_Cooking_Techniques_and_Minigames\\Tuesday.PNG"
+  },
+  {
+   "asset": "prep_table_3",
+   "source": "Assets_temp\\03_Cooking_Techniques_and_Minigames\\Wednesday.PNG"
+  },
+  {
+   "asset": "prep_table_4",
+   "source": "Assets_temp\\03_Cooking_Techniques_and_Minigames\\Friday.PNG"
+  },
+  {
+   "asset": "prep_table_5",
+   "source": "Assets_temp\\03_Cooking_Techniques_and_Minigames\\Ingredients on Sunday.png"
+  },
+  {
+   "asset": "banner_delicious",
+   "source": "Assets_temp\\03_Cooking_Techniques_and_Minigames\\CM2D 11.png"
+  },
+  {
+   "asset": "banner_well_done",
+   "source": "Assets_temp\\03_Cooking_Techniques_and_Minigames\\CM2D 12.png"
+  },
+  {
+   "asset": "sun_happy",
+   "source": "Assets_temp\\03_Cooking_Techniques_and_Minigames\\CM2D 21.png"
+  },
+  {
+   "asset": "dish_fried_rice",
+   "source": "Assets_temp\\03_Cooking_Techniques_and_Minigames\\CM 35.png"
+  },
+  {
+   "asset": "dish_bento",
+   "source": "Assets_temp\\03_Cooking_Techniques_and_Minigames\\CM2 80.png"
+  },
+  {
+   "asset": "dish_steak",
+   "source": "Assets_temp\\03_Cooking_Techniques_and_Minigames\\CM 10.png"
+  },
+  {
+   "asset": "dish_curry",
+   "source": "Assets_temp\\03_Cooking_Techniques_and_Minigames\\CM 08.png"
+  },
+  {
+   "asset": "dish_dumplings",
+   "source": "Assets_temp\\03_Cooking_Techniques_and_Minigames\\CM 12.png"
+  },
+  {
+   "asset": "dish_gyoza_plate",
+   "source": "Assets_temp\\03_Cooking_Techniques_and_Minigames\\CM4 12.png"
+  },
+  {
+   "asset": "dish_feast_cake",
+   "source": "Assets_temp\\03_Cooking_Techniques_and_Minigames\\CM2 30.0.png"
+  },
+  {
+   "asset": "dish_pizza",
+   "source": "Assets_temp\\03_Cooking_Techniques_and_Minigames\\CM4 13.png"
+  },
+  {
+   "asset": "dish_noodles",
+   "source": "Assets_temp\\03_Cooking_Techniques_and_Minigames\\CM 15.png"
+  },
+  {
+   "asset": "dish_onigiri",
+   "source": "Assets_temp\\03_Cooking_Techniques_and_Minigames\\CM 63.png"
+  },
+  {
+   "asset": "dish_ramen",
+   "source": "Assets_temp\\03_Cooking_Techniques_and_Minigames\\CM3 28.png"
+  },
+  {
+   "asset": "dish_sushi",
+   "source": "Assets_temp\\03_Cooking_Techniques_and_Minigames\\CM4 10.png"
+  },
+  {
+   "asset": "dish_dog_cookies",
+   "source": "Assets_temp\\03_Cooking_Techniques_and_Minigames\\CM2 09.png"
+  },
+  {
+   "asset": "dish_mama_omelette",
+   "source": "Assets_temp\\03_Cooking_Techniques_and_Minigames\\CM3 63.png"
+  },
+  {
+   "asset": "dish_tempura",
+   "source": "Assets_temp\\03_Cooking_Techniques_and_Minigames\\CM 30.png"
+  },
+  {
+   "asset": "dish_mapo",
+   "source": "Assets_temp\\03_Cooking_Techniques_and_Minigames\\CM3 38.png"
+  }
+ ],
+ "recipe_book_sources": [
+  "Assets_temp\\02_Food_and_Recipes\\-e1396200590547.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\00000003-20120410204405.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\0000076943 20190521030359.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\00259.JPG",
+  "Assets_temp\\02_Food_and_Recipes\\004.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\0119.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\02d16c65.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\0404-5.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\048-21.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\0515 LL.png",
+  "Assets_temp\\02_Food_and_Recipes\\0524164218 5b066cda440b3.png",
+  "Assets_temp\\02_Food_and_Recipes\\093677 4.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\101 1462985820.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\104 1443220863 0.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\10785 eggnog creme brulee.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\11020001179.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\111-1200x682.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\1200px-FoodApplePie.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\123.JPG",
+  "Assets_temp\\02_Food_and_Recipes\\125387397334316104569 DSC01857.JPG",
+  "Assets_temp\\02_Food_and_Recipes\\125880719217416315612 PICT0192 20091121213950.JPG",
+  "Assets_temp\\02_Food_and_Recipes\\130629002.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\1458566855107.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\14895762836773146.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\1521183387-153c6f5a89294c8ac499d840bd084a1e.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\1566573072-20190822-RoselleWest13.jpg-resize- opacity 100-frame bg color FFF-h 2500-gravity center-q 70-preserve ratio true-w 1400 .jpg",
+  "Assets_temp\\02_Food_and_Recipes\\15RECIPE20DIN-superJumbo.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\181127121401-5bfcb679dbe41.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\186af74d1f319c206e893d6b14cf26ca.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\199703101.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\1a03381e2262b1244780d19e76c05bcd4ea87617.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\2-4.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\200710001.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\20110128 1706971.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\20120419-150651.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\20120605033456.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\201210151316 MGIH1.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\20121029 146926.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\2013 1202 090646-IMG 3006.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\20130701-BBQ.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\2013102107444591013 1.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\201502121207137517.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\20150914013131128.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\2015311172745.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\2015おでん 関西風 -thumb-1805x1205-1735.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\20160218112636.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\20160513221401.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\20160926014327.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\20161212-borscht-vicky-wasik-13-thumb-1500xauto-435799.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\20170411173724.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\20170523-ladyfingers-vicky-wasik-18.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\20190622172216.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\206231 12 KEW9867.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\20COOKING-BANANAS-FOSTER2-videoSixteenByNineJumbo1600.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\2293.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\241 カボチャのニョッキ-5.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\2ab3c8867f2b11e59454b82a72e00100.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\2dcd1b0646e03e4e781f25a3ba3572a035e7ef348d97f58def013929510da420.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\30282 chicken andouille jambalaya.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\3132142912 7bb89e8ba9 o.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\3136-3-large.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\31ca531f48f2c00e5ff9b641a5ec8ea1.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\3b4d.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\3月１５日・4月１５日広告写真 009.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\4.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\41454558 1948993108734829 996259583204224281 n.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\4162685713-6e6fdbaf64-b orig.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\434732c9bbfc3f70e44232064633760c.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\4534BCE6-598D-4B7D-821A-E72CA363DEA1.jpeg",
+  "Assets_temp\\02_Food_and_Recipes\\464679367.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\46849a30bf05.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\48 photo.JPG",
+  "Assets_temp\\02_Food_and_Recipes\\4956418e5a4dd815adc822fbdd060cf4 m.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\4ea9453f.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\527E27A9-D919-469A-B4EA-2AFC5120F0B3.jpeg",
+  "Assets_temp\\02_Food_and_Recipes\\55-seafood-pan-fried-noodles-5.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\56818626.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\6446559a.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\66e67ded.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\67335df94d6df41fd7659726.jpeg",
+  "Assets_temp\\02_Food_and_Recipes\\677.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\689417.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\6a00d8341c9a2453ef0120a50b7e2d970b.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\6ceb66c76c09f4bb3243d88add15b256b840e75c.86.2.3.2.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\7 IMG 4241.JPG",
+  "Assets_temp\\02_Food_and_Recipes\\71cJZOwy9OL. SL1500 .jpg",
+  "Assets_temp\\02_Food_and_Recipes\\7637c8e7f54036af9a50801e550e716b.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\786bc262122ae551d6a7121503922a56.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\799210420 preview ravioli-1.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\8-1.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\802.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\817da2532d1587d83106daa1a5a890ec.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\84 20160731233610.JPG",
+  "Assets_temp\\02_Food_and_Recipes\\865 1.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\8WfQGkLuyKh7OsZWNsusliB43gT5kL4klxtgNmX4.jpeg",
+  "Assets_temp\\02_Food_and_Recipes\\93c10518ad4ef76fdcd3428929517ae7.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\987.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\A3d726fea6e0461ac00447389338c324.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\Ab0c60ca-3724-484a-adeb-bfc3ceca69be h.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\AdtDSC 2096.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\AdtDSC 2603.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\Anova-2-17-15-1.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\Appetizer Recipe Guacamole.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\B.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\B2E8C1FC20442.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\B394fdce.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\Ba162777eb2eaaa34276bff4a555af76.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\Background4.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\Bagel Sandwich.png",
+  "Assets_temp\\02_Food_and_Recipes\\Banana-Muffins 6999.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\Bissell-Breakfast-V2.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\Blat-club-sandwiches-86856-1.jpeg",
+  "Assets_temp\\02_Food_and_Recipes\\Botamochi,Ohagi,Katori-city,Japan.JPG",
+  "Assets_temp\\02_Food_and_Recipes\\C0233920 062096.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\C0e6bf2dd7aa020edb8931e7eda9a664.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\C77386f5.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\C7ab420aece08166b7a41fdb4360ceeea9e8ccf822ec194bd6b9ed626d2e9ce3.jpg",
+  "Assets_temp\\02_Food_and_Recipes\\CM 01.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 03.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 04.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 05.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 06.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 08.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 10.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 15.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 16.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 17.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 22.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 23.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 24.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 26.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 27.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 29.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 33.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 34.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 36.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 39.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 41.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 44.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 47.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 48.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 50.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 52.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 53.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 54.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 56.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 59.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 60.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 61.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 62.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 63.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 65.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 68.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 69.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 71.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 72.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 74.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM 75.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 01.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 02.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 03.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 04.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 06.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 07.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 08.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 09.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 10.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 12.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 15.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 16.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 19.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 22.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 23.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 25.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 26.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 27.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 30.0.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 31.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 32.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 34.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 35.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 38.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 42.1.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 42.3.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 43.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 44.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 45.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 47.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 49.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 50.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 51.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 52.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 55.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 56.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 57.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 59.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 60.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 64.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 69.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 70.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 75.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 79.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2 80.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2F 01.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2F 02.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2F 03.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2F 04.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2F 05.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2F 06.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2F 07.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2F 08.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2F 09.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2F 10.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2F 11.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2F 12.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2F 13.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2F 14.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2F 15.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2F 16.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2F 17.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2F 18.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 02.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 03.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 06.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 16.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 20.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 21.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 22.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 23.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 24.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 29.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 34.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 35.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 36.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 41.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 43.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 44.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 46.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 48.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 52.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 54.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 56.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 58.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 59.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 60.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 62.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 66.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 78.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM2R 79.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 01.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 02.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 03.0.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 03.1.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 03.2.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 03.4.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 04.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 05.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 06.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 07.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 08.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 09.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 10.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 11.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 12.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 13.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 14.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 15.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 16.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 17.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 18.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 19.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 21.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 22.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 23.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 24.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 25.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 26.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 27.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 28.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 29.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 30.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 31.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 32.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 34.0.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 36.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 37.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 38.png",
+  "Assets_temp\\02_Food_and_Recipes\\CM3 39.png"
+ ]
+}
