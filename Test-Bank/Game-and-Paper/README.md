@@ -1,6 +1,6 @@
 # 🍳 Mama's Quiz Kitchen · Stage 2 Test Bank (game + paper)
 
-The same 60 questions as the Test Bank in the folder above (25 True/False, 25 multiple choice, 10 open), remade in two versions.
+Our Stage 2 Test Bank: 60 questions (25 True/False, 25 multiple choice, 10 open) in two versions, a game and a paper version. Both cover all five recipes of the Study Guide and include every answer.
 
 | File | What it is |
 |------|------------|
