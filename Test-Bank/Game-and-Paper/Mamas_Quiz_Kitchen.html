@@ -335,7 +335,16 @@ function drawMenu(){
   });
 }
 $('#go').onclick = () => { sfx.tap(); drawMenu(); show('menu'); };
-$('#home').onclick = () => { if (G && G.i > 0 && G.i < G.qs.length && !confirm('Leave this dish? Your progress in this round is lost.')) return; drawMenu(); show('menu'); };
+let leaveArmed = 0;
+$('#home').onclick = () => {
+  const h = $('#home');
+  if (G && G.i > 0 && G.i < G.qs.length && Date.now() - leaveArmed > 3000) {   // in-page "tap again" instead of confirm()
+    leaveArmed = Date.now(); h.textContent = '↩?'; h.title = 'Tap again to leave this round';
+    say('Tap the home button again to leave this round. Your progress in this round will be lost.');
+    setTimeout(() => { h.textContent = '🏠'; h.title = 'Back to menu'; }, 3000); return;
+  }
+  leaveArmed = 0; h.textContent = '🏠'; drawMenu(); show('menu');
+};
 
 /* ---------- game state */
 let G = null;
