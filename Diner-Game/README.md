@@ -1,4 +1,4 @@
-# 🍳 Hot Wok, Smart Chips · Diner World Tour (study game, preview)
+# 🍳 Fengwei · Diner World Tour (study game, preview)
 
 A cooking-diner game for studying for Stage 2. Run Mama's diners around the world, serve customers before they lose patience, and earn big tips by answering questions from our Stage 2 Test Bank (60 questions across all five recipes of the Study Guide).
 
