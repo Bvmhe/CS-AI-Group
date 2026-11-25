@@ -48,6 +48,12 @@ This repository develops beginner-friendly learning content on **AI hardware, co
 
 See [`module-outline.md`](module-outline.md) for the full outline and development status.
 
+## 🏁 Stage 3 · Final Study Guide and Test Bank (finalized)
+
+The finalized Stage 3 package is in [`Stage3-Final/`](Stage3-Final/): the **Final Study Guide** (168 pages, now with real hardware photos), the **Final Test Bank** (paper + game), the three games with new **"Why this game?"** screens, and the **Improvement Summary** showing how we answered the teacher's feedback.
+
+➡️ **[Open the Stage 3 Final section](Stage3-Final/)**
+
 ## Current Progress (Stage 1 snapshot)
 - [x] Repo created, folders organized
 - [x] Team roles and task list agreed
