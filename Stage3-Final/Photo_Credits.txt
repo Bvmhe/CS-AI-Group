@@ -1,0 +1,79 @@
+Real-world photos in the Final Study Guide
+All from Wikimedia Commons, free licences (CC BY / CC BY-SA / CC0).
+
+Guide page 12: Intel CPU Core i7 6700K Skylake top.jpg
+  Author: Eric Gaba (Sting - fr:Sting)
+  Licence: CC BY-SA 4.0
+  Source: https://commons.wikimedia.org/wiki/File:Intel_CPU_Core_i7_6700K_Skylake_top.jpg
+
+Guide page 13: MSI GeForce RTX 3070 VENTUS 3X OC.jpg
+  Author: TheStriker
+  Licence: CC BY 4.0
+  Source: https://commons.wikimedia.org/wiki/File:MSI_GeForce_RTX_3070_VENTUS_3X_OC.jpg
+
+Guide page 14: Tensor Processing Unit 3.0.jpg
+  Author: Zinskauf
+  Licence: CC BY-SA 4.0
+  Source: https://commons.wikimedia.org/wiki/File:Tensor_Processing_Unit_3.0.jpg
+
+Guide page 15: Apple A14.jpg
+  Author: Henriok
+  Licence: CC0
+  Source: https://commons.wikimedia.org/wiki/File:Apple_A14.jpg
+
+Guide page 25: RAM Module (SDRAM-DDR4).jpg
+  Author: ElooKoN
+  Licence: CC BY-SA 4.0
+  Source: https://commons.wikimedia.org/wiki/File:RAM_Module_(SDRAM-DDR4).jpg
+
+Guide page 29: A11 APL1W72 iPhone8 mlb 820-00872-A.jpg
+  Author: Sonic8400
+  Licence: CC BY-SA 4.0
+  Source: https://commons.wikimedia.org/wiki/File:A11_APL1W72_iPhone8_mlb_820-00872-A.jpg
+
+Guide page 38: BalticServers data center.jpg
+  Author: BalticServers.com
+  Licence: CC BY-SA 3.0
+  Source: https://commons.wikimedia.org/wiki/File:BalticServers_data_center.jpg
+
+Guide page 57: Antennes 5G o2 Munich.jpg
+  Author: Yumikember
+  Licence: CC BY-SA 4.0
+  Source: https://commons.wikimedia.org/wiki/File:Antennes_5G_o2_Munich.jpg
+
+Guide page 83: ANYmal ARCHE 2019 1.jpg
+  Author: Auledas
+  Licence: CC BY-SA 4.0
+  Source: https://commons.wikimedia.org/wiki/File:ANYmal_ARCHE_2019_1.jpg
+
+Guide page 93: Renault front camera.jpg
+  Author: Boevaya mashina
+  Licence: CC BY-SA 4.0
+  Source: https://commons.wikimedia.org/wiki/File:Renault_front_camera.jpg
+
+Guide page 94: Velodyne High-Def LIDAR.jpg
+  Author: Steve Jurvetson
+  Licence: CC BY 2.0
+  Source: https://commons.wikimedia.org/wiki/File:Velodyne_High-Def_LIDAR.jpg
+
+Guide page 95: VW Golf VII - Parking sensor 02.jpg
+  Author: Basotxerri
+  Licence: CC BY-SA 4.0
+  Source: https://commons.wikimedia.org/wiki/File:VW_Golf_VII_-_Parking_sensor_02.jpg
+
+Guide page 95: An automotive-grade 60GHz 4D imaging radar sensor..jpg
+  Author: Amyreed444
+  Licence: CC BY-SA 4.0
+  Source: https://commons.wikimedia.org/wiki/File:An_automotive-grade_60GHz_4D_imaging_radar_sensor..jpg
+
+Guide page 111: Tesla Model 3 (2023) Auto Zuerich 2023 1X7A1313.jpg
+  Author: Alexander-93
+  Licence: CC BY-SA 4.0
+  Source: https://commons.wikimedia.org/wiki/File:Tesla_Model_3_(2023)_Auto_Zuerich_2023_1X7A1313.jpg
+
+Guide page 138: TPU v4.png
+  Author: Norman P. Jouppi, George Kurian, Sheng Li, Peter Ma, Rahul N
+  Licence: CC BY 4.0
+  Source: https://commons.wikimedia.org/wiki/File:TPU_v4.png
+
+Note: photos on p13–15 (GPU, TPU, NPU) appear together on p11 with the CPU photo.
