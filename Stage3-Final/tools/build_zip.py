@@ -12,11 +12,12 @@ FILES = {
     'FengweiFriedRice_Stage3_FinalTestBank.pdf': 'FengweiFriedRice_Stage3_FinalTestBank.pdf',
     'Improvement_Summary.docx': 'Improvement_Summary.docx',
     'Improvement_Summary.pdf': 'Improvement_Summary.pdf',
-    r'Supplements\Mamas_Quiz_Kitchen.html': r'Interactive\Mamas_Quiz_Kitchen.html',
-    r'Supplements\Pup_Pantry_Maze_offline.html': r'Interactive\Pup_Pantry_Maze_offline.html',
-    r'Supplements\Fengwei_24H_Diner_Study_Guide.html': r'Interactive\Fengwei_24H_Diner_Study_Guide.html',
-    r'shots\why_Pup_Pantry_Maze_offline.png': r'Interactive\screenshots\Pup_Pantry_Maze_why_screen.png',
-    r'shots\why_diner2.png': r'Interactive\screenshots\24H_Diner_why_screen.png',
+    r'Supplements\Mamas_Quiz_Kitchen.html': r'Supplements\Mamas_Quiz_Kitchen.html',
+    r'Supplements\Pup_Pantry_Maze_offline.html': r'Supplements\Pup_Pantry_Maze_offline.html',
+    r'Supplements\Fengwei_24H_Diner_Study_Guide.html': r'Supplements\Fengwei_24H_Diner_Study_Guide.html',
+    r'shots\Mamas_Quiz_Kitchen_start.png': r'Supplements\screenshots\Mamas_Quiz_Kitchen_start_screen.png',
+    r'shots\why_Pup_Pantry_Maze_offline.png': r'Supplements\screenshots\Pup_Pantry_Maze_why_screen.png',
+    r'shots\why_diner2.png': r'Supplements\screenshots\24H_Diner_why_screen.png',
 }
 
 README = """# Fengwei Fried Rice · Stage 3 Final Study Guide and Test Bank
@@ -28,39 +29,54 @@ Hardware, Networks & Behaviourist AI · Introduction to Artificial Intelligence 
 | File | What it is |
 |------|------------|
 | `FengweiFriedRice_Stage3_FinalStudyGuide.pdf` | **Final Study Guide** (168 pages). Open in any PDF reader; the menu, page links and web links are clickable. |
-| `FengweiFriedRice_Stage3_FinalTestBank.docx` | **Final Test Bank**, paper edition (60 questions: 25 true/false, 25 multiple choice, 10 open, with answer key). Editable Word. |
+| `FengweiFriedRice_Stage3_FinalTestBank.docx` | **Final Test Bank**, editable Word (60 questions: 25 true/false, 25 multiple choice, 10 open). Questions first, "Mama's Answer Key" after. |
 | `FengweiFriedRice_Stage3_FinalTestBank.pdf` | PDF copy of the Test Bank (links work). |
-| `Improvement_Summary.docx` / `.pdf` | What we changed since Stage 2, why, and how we checked it, with before/after pictures. |
-| `Interactive/Mamas_Quiz_Kitchen.html` | The Test Bank as a game (same 60 questions). |
-| `Interactive/Pup_Pantry_Maze_offline.html` | Bonus Kitchen Lab for Recipe 03 (reinforcement learning), see guide p145. |
-| `Interactive/Fengwei_24H_Diner_Study_Guide.html` | The whole guide as a review game: 5 rooms = Recipes 01–05. |
+| `Improvement_Summary.docx` / `.pdf` | What we changed since Stage 2, why, where to find it and how we checked it, with before/after pictures. |
+| `Supplements/` | The three games, their setup instructions (`Supplements/README.md`) and fallback screenshots. |
 | `Photo_Credits.txt` | Source, author and licence of every real photo in the guide. |
 
-## How to open the games (setup)
+Everything needed to study is in these files; no internet link is required for the core content.
 
-1. Unzip the whole folder first (do not open the files from inside the ZIP).
-2. Double-click an `.html` file in `Interactive/`. It opens in your browser (Edge, Chrome, Firefox or Safari; phone or computer).
-3. No internet, no install and no account are needed; the game code is inside the file, so it also works in
-   mainland China. (Pup's Pantry Maze asks Google Fonts for its rounded font; without it, it uses a normal system font.)
-4. Each game opens with a **"Why this game?"** screen: the learning goal, what each part of the game stands for and
-   3 debrief questions. Press **Start playing**; the **❓ Why this game?** button (bottom left) opens it again.
+Team repository: github.com/Bvmhe/CS-AI-Group
+"""
+
+SUPP_README = """# Supplements · Fengwei Fried Rice
+
+Three optional games that go with the Final Study Guide. They are extra practice; the guide and the Test Bank
+work without them.
+
+| File | What it is | What learners should do |
+|------|------------|-------------------------|
+| `Mamas_Quiz_Kitchen.html` | The Final Test Bank as a game: the same 60 questions, with Mama's feedback after every answer. | Pick a station (one per recipe), answer, read the explanation for every wrong answer, then retry the station. |
+| `Pup_Pantry_Maze_offline.html` | Bonus Kitchen Lab for Recipe 03 (reinforcement learning), see guide p145. Rule Chef, Map Chef and the Learner Pup (Q-learning) solve the same mazes. | Predict which chef wins each kitchen, run it, compare the steps and rewards, then answer the 3 debrief questions on the start screen. |
+| `Fengwei_24H_Diner_Study_Guide.html` | The whole guide as a 3D review game: 5 rooms = Recipes 01–05; customers' orders are Test Bank questions. | Walk into each room after finishing that recipe, serve the orders, then take the Professor's Final Exam. |
+
+## How to open them (setup)
+
+1. Unzip the whole ZIP first (do not open the files from inside the ZIP).
+2. Double-click an `.html` file in this folder. It opens in your browser (Edge, Chrome, Firefox or Safari; phone or computer).
+3. No install and no account are needed. The game code is inside each file, so they work offline and in mainland
+   China. (Pup's Pantry Maze asks Google Fonts for its rounded font; without internet it uses a normal system font.)
+4. Each game opens with a start screen. Pup's Pantry Maze and the 24-Hour Diner show **"Why this game?"**: the learning
+   goal, what each game part stands for and 3 debrief questions. The **❓ Why this game?** button (bottom left) opens it again.
 5. The 24-Hour Diner is a 3D game (about 5 MB). On an old phone it may load slowly; a laptop works best.
 
-Screenshots of the start screens are in `Interactive/screenshots/`.
+## If a game will not open
 
-## Built by us vs borrowed
+The `screenshots/` folder shows what each start screen should look like:
+`Mamas_Quiz_Kitchen_start_screen.png`, `Pup_Pantry_Maze_why_screen.png`, `24H_Diner_why_screen.png`.
+If your browser blocks the file, try another browser. You can always use the paper Test Bank and guide p145–150 instead.
 
-**Built by the team:** all guide text, diagrams, worked examples and exercises; all 60 Test Bank questions and answers;
-the game code, levels and in-game text of all three games; the music and sound effects (made in code).
+## Built by our team vs borrowed
+
+**Built by the team:** the game code, levels and in-game text of all three games; all 60 questions and answers;
+the music and sound effects (made in code); the "Why this game?" screens.
 
 **Borrowed (with credit):**
 - Cooking Mama characters and pictures © Office Create. Used for class only, not for sale.
-- Real-world photos from Wikimedia Commons under CC BY, CC BY-SA or CC0 (full list in `Photo_Credits.txt` and on guide p167).
 - Fredoka and Nunito fonts (SIL Open Font License), from Google Fonts.
 - The 24-Hour Diner uses the three.js 3D library (MIT License), included inside the file.
-- Curated YouTube videos are linked, not copied.
-
-Team repository: github.com/Bvmhe/CS-AI-Group
+- Curated YouTube videos in the guide are linked, not copied.
 """
 
 
@@ -84,6 +100,7 @@ def main():
         os.makedirs(os.path.dirname(d), exist_ok=True)
         shutil.copy2(os.path.join(BASE, src), d)
     open(os.path.join(STAGE, 'README.md'), 'w', encoding='utf8').write(README)
+    open(os.path.join(STAGE, 'Supplements', 'README.md'), 'w', encoding='utf8').write(SUPP_README)
     open(os.path.join(STAGE, 'Photo_Credits.txt'), 'w', encoding='utf8').write(credits_txt())
     with zipfile.ZipFile(ZIP, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as z:
         for root, _, files in os.walk(STAGE):
