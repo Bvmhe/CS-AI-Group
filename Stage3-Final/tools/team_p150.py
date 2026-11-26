@@ -18,8 +18,6 @@ Test Bank questions were built by 曾富良; all 60 Test Bank questions were che
 28 Oct – 5 Nov 2026. Team roles: 纪小佩 CEO (plan, coordination) · 林元甲 CIO (repository, packaging) ·
 温俊强 and 汤丽嘉 Content Leads · 曾富良 Visual Design Lead · 李秀春 Video Lead · 黄施杰 Quality Lead.</p>
 <p><b>Classmate try-out:</b> 2 classmates from team DOOM tried the arcade.</p>
-<p><b>AI use:</b> built with help from an AI assistant (Claude); the team chose the design, checked every number
-against Recipe 03 and the test script, and is responsible for the content.</p>
 """
 CSS = """
 @font-face { font-family: yh; src: url(msyh.ttc); }
