@@ -68,6 +68,15 @@ ROWS = [
      'α γ ε) compared with the game code and with sections 3.2–3.3.',
      [('pair', 145, 'p145.png')], True),
     ('Study Guide',
+     'Assignment: the final guide must have no placeholders. The Bonus Kitchen Arcade page still had '
+     '“[TEAM: add names and roles]” and “[TEAM: add how many testers…]”.',
+     'Filled the “Team contribution” box with real details: Pup\'s Pantry Maze and the Test Bank questions built by '
+     '曾富良, all 60 questions checked by 黄施杰 (Darren, Quality Lead), every member\'s role, and the classmate '
+     'try-out (2 classmates from team DOOM). Removed the “(fill in before submitting)” note.',
+     'Where: guide p150.\nChecked: names and roles match the team roster in our GitHub README; a text search of the '
+     'whole Final PDF finds no “[TEAM” placeholder left.',
+     [], False),
+    ('Study Guide',
      'Own check: the guide still said “Stage 2” / “V1.0”; the final guide must show final version information.',
      'Cover now says “FINAL STUDY GUIDE”, Version: Final (Stage 3), 28 November 2026; the back page footer says '
      '“Final Study Guide”.',
