@@ -274,6 +274,20 @@ def game_box(doc):
     p.insert_htmlbox(pymupdf.Rect(r.x0 + 16, r.y0 + 15, r.x1 - 16, r.y1 - 6), html, css=CSS.replace('15.5px', '13.5px'), scale_low=0.6)
 
 
+def play_box(doc):
+    """p3 How to use: point PDF readers to the game versions (planner: introduce every supporting resource)."""
+    p = doc[2]
+    r = card(p, free_rect(p, pad=44, bottom=1346), 'Prefer to play?')
+    html = ('<p><b>The whole guide is also a game.</b> Open <b>Supplements/Fengwei_24H_Diner_Study_Guide.html</b> '
+            '(in the ZIP) in any browser: each room of the 24-Hour Diner is one recipe, and the customers\' orders are '
+            'Test Bank questions. No internet or install needed.</p>'
+            '<p style="margin-top:6px"><b>Quick practice:</b> <b>Mama\'s Quiz Kitchen</b> '
+            '(Supplements/Mamas_Quiz_Kitchen.html) turns the 60 Test Bank questions into a game with feedback. '
+            '<b>Recipe 03 lab:</b> Pup\'s Pantry Maze, see page 145.</p>')
+    p.insert_htmlbox(pymupdf.Rect(r.x0 + 20, r.y0 + 24, r.x1 - 20, r.y1 - 10), html,
+                     css=CSS.replace('15.5px', '19px').replace('1.28', '1.32'), scale_low=0.6)
+
+
 def footer(doc):
     p = doc[167]
     strip_text(p, [(72, 1179, 738, 1198)])
@@ -305,7 +319,7 @@ def main():
     cover(doc); prerequisites(doc); menu_numbers(doc); real_crew(doc)
     for pn, (key, html) in PHOTO_PAGES.items():
         photo_card(doc[pn - 1], free_rect(doc[pn - 1]), key, f'<p>{html}</p>')
-    sensors_p95(doc); video_notes(doc); game_box(doc); footer(doc); photo_credits(doc)
+    sensors_p95(doc); video_notes(doc); game_box(doc); play_box(doc); footer(doc); photo_credits(doc)
     doc.save(OUT, garbage=3, deflate=True)
     print('saved', OUT, round(os.path.getsize(OUT) / 1e6, 1), 'MB', len(doc), 'pages')
 

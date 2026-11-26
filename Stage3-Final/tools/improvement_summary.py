@@ -82,6 +82,14 @@ ROWS = [
      'Where: guide p4 and p5.\nChecked: clicked every menu link in the Final PDF; each jumps to the right page.',
      [], False),
     ('Study Guide',
+     'Own check: a learner reading only the PDF was never told that the whole guide is also a game (24-Hour Diner) '
+     'or that the Test Bank can be played (Mama\'s Quiz Kitchen).',
+     'Added a “Prefer to play?” card that names both games, where to find them in the ZIP and what each one does, '
+     'so learners who get bored of reading can switch to the game version of the same content.',
+     'Where: guide p3 (How to use this guide).\nChecked: both file names match the Supplements folder, and both '
+     'games open offline from the extracted ZIP.',
+     [], False),
+    ('Study Guide',
      'Own check: classmates in mainland China cannot open YouTube.',
      'Added a “Can\'t watch?” note: use the English captions, or read the matching guide section and do its '
      '“How to read this” task instead, so no learner is stuck without the video.',
