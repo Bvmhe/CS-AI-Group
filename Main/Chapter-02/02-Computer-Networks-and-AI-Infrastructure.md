@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Course** | Hardware, Networks & Behaviourist AI |
-| **Version** | V1.0 (substantive draft) |
+| **Version** | Final (Stage 3), 28 November 2026 |
 | **Audience** | Beginners with basic programming knowledge and no networking background |
 | **Prerequisites** | Module 01 (MACs, bandwidth, memory hierarchy, batch size). Basic arithmetic and the idea of a variable and a loop. |
 | **Position in course** | Second of five modules; builds on the vocabulary of Module 01 and is reused by Modules 03-05 |
@@ -504,6 +504,10 @@ By the end of this section you should be able to:
 
 The US National Institute of Standards and Technology (NIST) defines **cloud computing** as a model for on-demand network access to a shared pool of configurable computing resources, and lists five essential characteristics: on-demand self-service, broad network access, resource pooling, rapid elasticity, and measured service (Mell & Grance, 2011).
 
+![Rows of server racks with blue lights inside a data centre](assets/photos/data-centre-balticservers.jpg)
+
+**Photo 3.1 — The cloud is a building.** Server racks in a data centre. Cloud computing means renting machines like these, far from the user, which is where the network delay of Section 4 comes from. *Photo: BalticServers.com, CC BY-SA 3.0, via Wikimedia Commons ([source](https://commons.wikimedia.org/wiki/File:BalticServers_data_center.jpg)).*
+
 For AI this means you can rent a rack of GPUs for a weekend, scale a model service up when traffic spikes and down when it drops, and pay for what you used.
 
 | Service model | What the provider runs | AI example |
@@ -927,6 +931,10 @@ By the end of this section, you should be able to:
 
 **Cloud-based AI service.** A *cloud-based AI service* is a model hosted in a data centre and offered over the network: a translation API, a speech recognition service, an image classifier or a chatbot. Developers and apps send requests and receive results, as in the running example. The provider handles the hardware (Module 01) and scaling (Section 4); the user needs only a connection.
 
+![A 5G mobile antenna mast on a rooftop against a blue sky](assets/photos/5g-antennas-munich.jpg)
+
+**Photo 5.1 — A 5G base station.** 5G antennas on a rooftop in Munich: the first network hop of the request traced in Section 5.2. *Photo: Yumikember, CC BY-SA 4.0, via Wikimedia Commons ([source](https://commons.wikimedia.org/wiki/File:Antennes_5G_o2_Munich.jpg)).*
+
 **5G.** The fifth generation of mobile networks, defined by the ITU as IMT-2020 and standardised by 3GPP. The ITU set three usage scenarios for it (ITU-R, 2015):
 
 | Scenario | Goal | Example |
@@ -1298,3 +1306,10 @@ Benefit: the slice's capacity and latency are reserved and isolated from other t
 - Rescorla, E. (2018). *The Transport Layer Security (TLS) Protocol Version 1.3* (RFC 8446). IETF.
 - Satyanarayanan, M. (2017). The emergence of edge computing. *Computer*, 50(1), 30-39.
 - Shi, W., Cao, J., Zhang, Q., Li, Y., & Xu, L. (2016). Edge computing: Vision and challenges. *IEEE Internet of Things Journal*, 3(5), 637-646.
+
+## Photo credits
+
+All real-world photos in this module come from Wikimedia Commons under free licences (CC BY, CC BY-SA or CC0). They are the same photos used in the Final Study Guide (see `Stage3-Final/Photo_Credits.txt`).
+
+- *BalticServers data center.jpg*. BalticServers.com, CC BY-SA 3.0. <https://commons.wikimedia.org/wiki/File:BalticServers_data_center.jpg> (file: `assets/photos/data-centre-balticservers.jpg`)
+- *Antennes 5G o2 Munich.jpg*. Yumikember, CC BY-SA 4.0. <https://commons.wikimedia.org/wiki/File:Antennes_5G_o2_Munich.jpg> (file: `assets/photos/5g-antennas-munich.jpg`)

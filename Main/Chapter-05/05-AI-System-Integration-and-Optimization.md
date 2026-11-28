@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Course** | Hardware, Networks & Behaviourist AI |
-| **Version** | V1.0 (substantive draft, Stage 1) |
+| **Version** | Final (Stage 3), 28 November 2026 |
 | **Audience** | Beginners with basic programming knowledge and no hardware background |
 | **Prerequisites** | Module 01 (MACs, FLOPs, precision, memory hierarchy, roofline model). Module 02 (links between chips) is helpful. |
 | **Position in course** | Fifth and final module; it integrates the vocabulary of Modules 01–04 into whole systems |
@@ -641,6 +641,10 @@ The pattern is the one from Section 4: each generation moved attention from *the
 
 Using the TPU v4 description in Jouppi et al. (2023) as a concrete example:
 
+![A Google TPU v4 board with four chips connected by coloured cables](assets/photos/tpu-v4-pod.jpg)
+
+**Photo 5.2 — From chip to pod.** A TPU v4 board with four chips. Boards like this are joined by the interconnect of Section 5.3 to form a pod. *Photo: Norman P. Jouppi et al., CC BY 4.0, via Wikimedia Commons ([source](https://commons.wikimedia.org/wiki/File:TPU_v4.png)).*
+
 | Level | What it is | Why it exists |
 |---|---|---|
 | **Chip** | Matrix-multiply units, a vector unit, on-chip memory, HBM, and inter-chip network ports | Executes MACs efficiently (Module 01) |
@@ -891,3 +895,9 @@ The lesson of the TPU case study is that **AI performance is a property of syste
 - Xu, Y., et al. (2021). GSPMD: General and scalable parallelization for ML computation graphs. *arXiv:2105.04663*.
 - Young, J. W. (1974). A first order approximation to the optimum checkpoint interval. *Communications of the ACM*, 17(9), 530–531.
 - Williams, S., Waterman, A., & Patterson, D. (2009). Roofline: an insightful visual performance model for multicore architectures. *Communications of the ACM*, 52(4), 65–76.
+
+## Photo credits
+
+All real-world photos in this module come from Wikimedia Commons under free licences (CC BY, CC BY-SA or CC0). They are the same photos used in the Final Study Guide (see `Stage3-Final/Photo_Credits.txt`).
+
+- *TPU v4.png*. Norman P. Jouppi et al., CC BY 4.0. <https://commons.wikimedia.org/wiki/File:TPU_v4.png> (file: `assets/photos/tpu-v4-pod.jpg`)

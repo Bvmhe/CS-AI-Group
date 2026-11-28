@@ -3,7 +3,7 @@
 |                        |                                                                                                                   |
 |------------------------|-------------------------------------------------------------------------------------------------------------------|
 | **Course**             | Hardware, Networks & Behaviourist AI                                                                              |
-| **Version**            | V1.0 (substantive draft, Stage 1)                                                                                 |
+| **Version**            | Final (Stage 3), 28 November 2026                                                                                 |
 | **Audience**           | Beginners with basic programming knowledge and no hardware background                                             |
 | **Prerequisites**      | Basic arithmetic and Module 01 vocabulary: MAC, TOPS, bandwidth, latency, throughput, batch size, utilisation     |
 | **Position in course** | Fourth of five modules; builds on Module 01 (AI hardware) and bridges to Module 02 (networks) and behaviourist AI |
@@ -167,6 +167,10 @@ This module concentrates on three exteroceptive sensors (camera, LiDAR, ultrason
 
 A **camera** is a passive sensor. A lens focuses light onto an image sensor, a grid of light-sensitive cells (pixels). Each pixel measures how much light reached it, and a colour filter pattern gives red, green and blue values.
 
+![A small forward-facing camera built into the front badge area of a car](assets/photos/car-front-camera.jpg)
+
+**Photo 1.2 — A car camera.** A front camera on a Renault. Cameras are cheap and see colour and text, but do not measure distance directly. *Photo: Boevaya mashina, CC BY-SA 4.0, via Wikimedia Commons ([source](https://commons.wikimedia.org/wiki/File:Renault_front_camera.jpg)).*
+
 **What a camera is good at.** It gives very high resolution and colour, so it can read traffic signs, lane markings, traffic-light colour and brake lights. It is cheap, small and has no moving parts. Because a camera produces a 2-D image, a neural network must *infer* distance from visual cues (object size, perspective, motion, or two cameras at once).
 
 **What it is bad at.** It does not measure distance directly. It depends on ambient light, so low light, glare from a low sun or oncoming headlights, and fast changes in brightness hurt it. Rain, fog and dirt on the lens degrade the image.
@@ -226,6 +230,10 @@ flowchart LR
 distance = (c × t) / 2        (divide by 2 because the pulse goes out and back)
 ```
 
+![A spinning Velodyne LiDAR unit mounted on top of a vehicle](assets/photos/velodyne-lidar.jpg)
+
+**Photo 1.3 — LiDAR.** A Velodyne high-definition LiDAR. The head spins and fires laser pulses; the time of flight of each pulse gives a distance (Worked example 1.B). *Photo: Steve Jurvetson, CC BY 2.0, via Wikimedia Commons ([source](https://commons.wikimedia.org/wiki/File:Velodyne_High-Def_LIDAR.jpg)).*
+
 By sweeping the laser in many directions (a spinning head, a mirror, or a solid-state design), the sensor builds a **point cloud**: a set of 3-D points (x, y, z) plus an intensity value for the strength of each return.
 
 **What LiDAR is good at.** It measures distance directly and accurately (typically to a few centimetres), works in darkness because it brings its own light, and gives a 3-D shape of the surroundings. It is excellent for detecting obstacles that a camera might not recognise (an unusual object lying in the road).
@@ -264,6 +272,10 @@ An **ultrasonic sensor** is an active sensor that emits a short burst of sound a
 distance = (v × t) / 2,   where v ≈ 343 m/s in air at 20 °C
 ```
 
+![A round ultrasonic parking sensor set into a car bumper next to the wheel](assets/photos/parking-sensor-ultrasonic.jpg)
+
+**Photo 1.4 — Ultrasonic sensor.** A parking sensor in a Volkswagen Golf bumper. It sends a sound pulse and times the echo, which works well only at short range (Worked example 1.D). *Photo: Basotxerri, CC BY-SA 4.0, via Wikimedia Commons ([source](https://commons.wikimedia.org/wiki/File:VW_Golf_VII_-_Parking_sensor_02.jpg)).*
+
 The speed of sound depends on temperature: v ≈ 331.3 + 0.606 × T (T in °C).
 
 **What it is good at.** It is very cheap, works in the dark and measures short distances to nearly any solid object, including low obstacles below a camera's view. This is why it is used for parking assistance.
@@ -286,6 +298,10 @@ flowchart LR
 ## 1.5 A fourth sensor: radar
 
 Radar emits radio waves (automotive radar commonly uses the 76–81 GHz band) and measures the echo. Its special strength is velocity: by the **Doppler effect**, a moving object shifts the frequency of the echo, so radar measures speed directly, and it keeps working in rain, fog and darkness. Its weakness is coarse angular resolution, so it struggles to separate nearby objects or identify shapes.
+
+![A hand holding a small automotive radar circuit board](assets/photos/radar-60ghz-4d.jpg)
+
+**Photo 1.5 — Radar.** An automotive-grade 60 GHz 4D imaging radar board. Radar measures distance and speed directly and keeps working in rain and fog. *Photo: Amyreed444, CC BY-SA 4.0, via Wikimedia Commons ([source](https://commons.wikimedia.org/wiki/File:An_automotive-grade_60GHz_4D_imaging_radar_sensor..jpg)).*
 
 ```
 v = (Δf × c) / (2 × f0)
@@ -1225,6 +1241,10 @@ Table 5.1. Timeline of Tesla's sensor and computing changes. Sources: Tesla Supp
 
 Current Tesla cars use **eight external cameras** giving 360° coverage, with no radar, no LiDAR and no ultrasonic sensors (in markets where Tesla Vision is fully deployed). In Tesla's earlier public descriptions of the layout, three cameras look forward with different lenses (wide, main, narrow; the narrow one for long range, with a maximum range quoted as about 250 m), two look forward and sideways from the B-pillars, two look backward and sideways from the front fenders, and one looks to the rear. Camera resolution is reported to have risen from about 1.2 megapixels (HW3) to about 5 megapixels (HW4).
 
+![A white Tesla Model 3 car on display](assets/photos/tesla-model-3.jpg)
+
+**Photo 5.2 — The case-study car.** A 2023 Tesla Model 3, the kind of car whose camera-based sensor suite this section describes. *Photo: Alexander-93, CC BY-SA 4.0, via Wikimedia Commons ([source](https://commons.wikimedia.org/wiki/File:Tesla_Model_3_(2023)_Auto_Zuerich_2023_1X7A1313.jpg)).*
+
 **Figure 5.1.** Camera coverage (top view, schematic, not to scale).
 
 ```mermaid
@@ -1548,3 +1568,13 @@ All web sources were accessed in early November 2026.
 - Not a Tesla App. (2026). Coverage of Tesla AI5 chip timing. notateslaapp.com.
 - Elluswamy, A. (2026, April 27). Post on X on camera-only FSD, as reported by Basenor. *Company claim; not independently verified.*
 - National Highway Traffic Safety Administration. (n.d.). *Investigations and recalls*. nhtsa.gov.
+
+## Photo credits
+
+All real-world photos in this module come from Wikimedia Commons under free licences (CC BY, CC BY-SA or CC0). They are the same photos used in the Final Study Guide (see `Stage3-Final/Photo_Credits.txt`).
+
+- *Renault front camera.jpg*. Boevaya mashina, CC BY-SA 4.0. <https://commons.wikimedia.org/wiki/File:Renault_front_camera.jpg> (file: `assets/photos/car-front-camera.jpg`)
+- *Velodyne High-Def LIDAR.jpg*. Steve Jurvetson, CC BY 2.0. <https://commons.wikimedia.org/wiki/File:Velodyne_High-Def_LIDAR.jpg> (file: `assets/photos/velodyne-lidar.jpg`)
+- *VW Golf VII - Parking sensor 02.jpg*. Basotxerri, CC BY-SA 4.0. <https://commons.wikimedia.org/wiki/File:VW_Golf_VII_-_Parking_sensor_02.jpg> (file: `assets/photos/parking-sensor-ultrasonic.jpg`)
+- *An automotive-grade 60GHz 4D imaging radar sensor..jpg*. Amyreed444, CC BY-SA 4.0. <https://commons.wikimedia.org/wiki/File:An_automotive-grade_60GHz_4D_imaging_radar_sensor..jpg> (file: `assets/photos/radar-60ghz-4d.jpg`)
+- *Tesla Model 3 (2023) Auto Zuerich 2023 1X7A1313.jpg*. Alexander-93, CC BY-SA 4.0. <https://commons.wikimedia.org/wiki/File:Tesla_Model_3_(2023)_Auto_Zuerich_2023_1X7A1313.jpg> (file: `assets/photos/tesla-model-3.jpg`)
