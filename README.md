@@ -68,6 +68,7 @@ CS-AI-Group/
 │   └── tools/                 ← scripts used to build the guide, test bank and ZIP
 ├── docs/
 │   ├── resource-mapping.md    ← where each Markdown topic is used in the guide, test bank, slides and videos
+│   ├── FengweiFriedRice_Stage3_Final_Submission_Report.pdf / .docx   ← Stage 3 report (public copy, without student IDs)
 │   ├── planning/              ← project plan, task list, Stage 1 outline (kept as a record)
 │   └── history/               ← Stage 1 resubmission report
 ├── Quality-&-Reviews/         ← content review drafts for each chapter + quality standards
@@ -93,7 +94,7 @@ CS-AI-Group/
 
 - **Version:** Final (Stage 3), 28 November 2026, branch `main`, Git tag `stage3-final`.
 - **Content:** 5 chapters, 25 sections, 129 Mermaid diagrams, 19 images (15 real-world photos from Wikimedia Commons), 5 answer keys.
-- **Change history:** every revision since Stage 1 is visible in the commit history. The Stage 3 changes to the Markdown are listed in the Final Submission Report and in `AI-Logs/Stage-3-AI-use-log.md`.
+- **Change history:** every revision since Stage 1 is visible in the commit history. The Stage 3 changes to the Markdown are listed in the [Final Submission Report](docs/FengweiFriedRice_Stage3_Final_Submission_Report.pdf) ([Word](docs/FengweiFriedRice_Stage3_Final_Submission_Report.docx)) and in `AI-Logs/Stage-3-AI-use-log.md`.
 
 ## Known limitations
 
