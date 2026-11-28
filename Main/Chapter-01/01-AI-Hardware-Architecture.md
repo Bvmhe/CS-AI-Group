@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Course** | Hardware, Networks & Behaviourist AI |
-| **Version** | V1.0 (substantive draft, Stage 1) |
+| **Version** | Final (Stage 3), 28 November 2026 |
 | **Audience** | Beginners with basic programming knowledge and no hardware background |
 | **Prerequisites** | Basic arithmetic, the idea of a variable and a loop. No electronics knowledge needed. |
 | **Position in course** | First of five modules; Modules 02-05 reuse the vocabulary introduced here |
@@ -21,6 +21,7 @@
 - [Glossary (all sections)](#glossary-all-sections)
 - [Answer Key (all sections)](#answer-key-all-sections)
 - [References (all sections)](#references-all-sections)
+- [Photo credits](#photo-credits)
 
 ---
 
@@ -382,6 +383,18 @@ By the end of this section you should be able to:
 - **GPU (Graphics Processing Unit):** thousands of simpler cores that do the same operation on many data items at once. Originally built to draw graphics, it turned out to be ideal for neural networks, because drawing millions of pixels and multiplying large matrices are both "same operation, lots of data" problems.
 - **TPU (Tensor Processing Unit):** a chip designed by Google specifically for tensor (multi-dimensional array) arithmetic, built around a grid of multiply-accumulate units.
 
+![An Intel Core i7-6700K desktop CPU seen from the top: a silver metal lid on a green circuit board](assets/photos/cpu-intel-core-i7-6700k.jpg)
+
+**Photo 2.1a — CPU.** An Intel Core i7-6700K desktop processor. Under the metal lid are a few large, flexible cores, each good at complicated step-by-step work. *Photo: Eric Gaba (Sting), CC BY-SA 4.0, via Wikimedia Commons ([source](https://commons.wikimedia.org/wiki/File:Intel_CPU_Core_i7_6700K_Skylake_top.jpg)).*
+
+![An MSI GeForce RTX 3070 graphics card with three cooling fans](assets/photos/gpu-msi-geforce-rtx-3070.jpg)
+
+**Photo 2.1b — GPU.** An NVIDIA GeForce RTX 3070 graphics card. The fans cool thousands of small parallel cores that apply the same operation to many numbers at once. *Photo: TheStriker, CC BY 4.0, via Wikimedia Commons ([source](https://commons.wikimedia.org/wiki/File:MSI_GeForce_RTX_3070_VENTUS_3X_OC.jpg)).*
+
+![A Google Cloud TPU v3 board with four chips under copper cold plates connected by water-cooling tubes](assets/photos/tpu-v3-board.jpg)
+
+**Photo 2.1c — TPU.** A Google Cloud TPU v3 board. The four chips sit under water-cooled plates; each contains the matrix-multiply units (systolic arrays) explained in Section 2.4. *Photo: Zinskauf, CC BY-SA 4.0, via Wikimedia Commons ([source](https://commons.wikimedia.org/wiki/File:Tensor_Processing_Unit_3.0.jpg)).*
+
 A related term you will meet in Section 5 is **NPU** (Neural Processing Unit): a general name for a small, low-power AI accelerator inside a phone or laptop chip.
 
 **Figure 2.1.** The three chip families on the flexibility–efficiency trade-off. Moving right trades generality for efficiency on tensor arithmetic. *Source: author's own diagram, based on Hennessy & Patterson (2019).*
@@ -532,6 +545,10 @@ flowchart LR
 ## 2.6 The NPU: AI on small devices
 
 A phone cannot carry a 300-watt accelerator. An NPU applies the same ideas as a TPU (a grid of MAC units, low-precision numbers, on-chip memory) but scaled down to run in a few watts inside a **system-on-a-chip (SoC)**, which puts the CPU, GPU, NPU, memory controllers and other blocks on a single piece of silicon.
+
+![Close-up of the Apple A14 Bionic chip package with the Apple logo](assets/photos/npu-apple-a14.jpg)
+
+**Photo 2.6 — An NPU inside a phone chip.** The Apple A14 Bionic. Its Neural Engine (an NPU) shares one small package with the CPU and GPU, which is why NPUs must be small and power-efficient. *Photo: Henriok, CC0, via Wikimedia Commons ([source](https://commons.wikimedia.org/wiki/File:Apple_A14.jpg)).*
 
 | Company | Name of its NPU |
 |---|---|
@@ -880,8 +897,14 @@ By the end of this section you should be able to:
 ## 4.1 The memory hierarchy
 
 Computers have several kinds of memory. Fast memory is small and expensive; large memory is slow and cheap. The arrangement from fastest to slowest is called the **memory hierarchy**.
+
+![A red DDR4 RAM memory module](assets/photos/ram-ddr4-module.jpg)
+
+**Photo 4.1 — DRAM.** A DDR4 main-memory module. It holds gigabytes, far more than on-chip SRAM, but every trip to it costs much more time and energy (Section 4.2). *Photo: ElooKoN, CC BY-SA 4.0, via Wikimedia Commons ([source](https://commons.wikimedia.org/wiki/File:RAM_Module_(SDRAM-DDR4).jpg)).*
  
-![Alt text describing the image](assets/Memory%20Hierarchy.png)
+![Pyramid diagram of the memory hierarchy: registers at the top, then on-chip SRAM, HBM/GDDR, main memory (DRAM), flash/SSD and network storage at the bottom](assets/Memory%20Hierarchy.png)
+
+**Figure 4.1.** The memory hierarchy: faster, smaller and costlier per byte at the top; slower, larger and cheaper at the bottom. *Source: team's own diagram.*
 #### Terms
  
 - **Cache:** a small, fast memory that keeps copies of recently used data close to the processor. Managed automatically by hardware.
@@ -1119,7 +1142,9 @@ flowchart LR
 
 # Section 5: Case Study — Apple Neural Engine (On-Device AI)
 
-![Alt text describing the image](assets/CS-01.png)
+![Apple A17 Pro chip layout with the 16-core Neural Engine highlighted](assets/CS-01.png)
+
+**Figure 5.1.** Apple A17 Pro chip layout with the 16-core Neural Engine highlighted. *Source: Apple Inc. (2023), A17 Pro product presentation; reproduced for teaching purposes only.*
 
 > [!IMPORTANT]
 > **Big idea.** The Apple Neural Engine is the module's ideas in one real device: parallel MACs, low-precision numbers, and on-chip, shared memory, all working inside a few watts.
@@ -1139,6 +1164,10 @@ By the end of this section, you should be able to:
 ## 5.1 Introduction
 
 **Figure 5.1.** The Neural Engine sits inside an Apple system-on-a-chip alongside the CPU, GPU and shared memory. *Source: Apple Inc. (2024), Apple Platform Security guide; diagram adapted by the author.*
+
+![The logic board of an iPhone 8 beside a centimetre ruler, with the A11 Bionic chip in the middle](assets/photos/iphone8-a11-logic-board.jpg)
+
+**Photo 5.1 — Where the Neural Engine lives.** The main board of an iPhone 8, about 9 cm long. The A11 Bionic on this board was the first Apple chip with a Neural Engine (2017). *Photo: Sonic8400, CC BY-SA 4.0, via Wikimedia Commons ([source](https://commons.wikimedia.org/wiki/File:A11_APL1W72_iPhone8_mlb_820-00872-A.jpg)).*
 
 ```mermaid
 flowchart TB
@@ -1209,7 +1238,7 @@ flowchart LR
 
 ## 5.3 Connection between training and inference
 
-![Alt text describing the image](assets/CS-02.png)
+![Two boxes, Training and Inference, with the Face ID example: train model, deploy to iPhone, recognise face](assets/CS-02.png)
 
 Training and inference are two important stages of AI processing (Section 1.5).
 
@@ -1232,7 +1261,7 @@ This shows how specialised AI hardware supports the practical use of trained AI 
 
 ## 5.4 Real-life application: Face ID
 
-![Alt text describing the image](assets/CS-03.png)
+![Top edge of an iPhone with labels for the infrared camera, flood illuminator and dot projector used by Face ID](assets/CS-03.png)
 
 **Figure 5.4.** An iPhone using the TrueDepth camera for Face ID. *Source: Apple Inc. (2024), Face ID and privacy documentation; photograph reproduced by the author for teaching purposes only.*
 
@@ -1534,3 +1563,14 @@ Without copying between CPU, GPU and NPU, fewer off-chip memory accesses are nee
 - Qualcomm. (2024). *Hexagon NPU documentation*.
 - Sze, V., et al. (2017). Efficient processing of deep neural networks: A tutorial and survey. *Proceedings of the IEEE*.
 - Williams, S., Waterman, A., & Patterson, D. (2009). Roofline: an insightful visual performance model for multicore architectures. *Communications of the ACM*, 52(4), 65–76.
+
+## Photo credits
+
+All real-world photos in this module come from Wikimedia Commons under free licences (CC BY, CC BY-SA or CC0). They are the same photos used in the Final Study Guide (see `Stage3-Final/Photo_Credits.txt`).
+
+- *Intel CPU Core i7 6700K Skylake top.jpg*. Eric Gaba (Sting), CC BY-SA 4.0. <https://commons.wikimedia.org/wiki/File:Intel_CPU_Core_i7_6700K_Skylake_top.jpg> (file: `assets/photos/cpu-intel-core-i7-6700k.jpg`)
+- *MSI GeForce RTX 3070 VENTUS 3X OC.jpg*. TheStriker, CC BY 4.0. <https://commons.wikimedia.org/wiki/File:MSI_GeForce_RTX_3070_VENTUS_3X_OC.jpg> (file: `assets/photos/gpu-msi-geforce-rtx-3070.jpg`)
+- *Tensor Processing Unit 3.0.jpg*. Zinskauf, CC BY-SA 4.0. <https://commons.wikimedia.org/wiki/File:Tensor_Processing_Unit_3.0.jpg> (file: `assets/photos/tpu-v3-board.jpg`)
+- *Apple A14.jpg*. Henriok, CC0. <https://commons.wikimedia.org/wiki/File:Apple_A14.jpg> (file: `assets/photos/npu-apple-a14.jpg`)
+- *RAM Module (SDRAM-DDR4).jpg*. ElooKoN, CC BY-SA 4.0. <https://commons.wikimedia.org/wiki/File:RAM_Module_(SDRAM-DDR4).jpg> (file: `assets/photos/ram-ddr4-module.jpg`)
+- *A11 APL1W72 iPhone8 mlb 820-00872-A.jpg*. Sonic8400, CC BY-SA 4.0. <https://commons.wikimedia.org/wiki/File:A11_APL1W72_iPhone8_mlb_820-00872-A.jpg> (file: `assets/photos/iphone8-a11-logic-board.jpg`)

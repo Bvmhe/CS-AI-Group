@@ -2,7 +2,7 @@
 
 A cooking-diner game for studying for Stage 2. Run Mama's diners around the world, serve customers before they lose patience, and earn big tips by answering questions from our Stage 2 Test Bank (60 questions across all five recipes of the Study Guide).
 
-**To play:** download `HotWok_Diner_World_Tour_PREVIEW.html` and open it in any browser (phone sideways or computer). It's one file and works with no internet.
+**To play:** download `Fengwei_Diner_World_Tour_PREVIEW.html` and open it in any browser (phone sideways or computer). It's one file and works with no internet.
 
 ## What's inside
 

@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Course** | Hardware, Networks & Behaviourist AI |
-| **Version** | V1.0 (substantive draft) |
+| **Version** | Final (Stage 3), 28 November 2026 |
 | **Audience** | Beginners with basic programming knowledge and no machine-learning background |
 | **Prerequisites** | Basic arithmetic, variables, loops and lists. Modules 01 and 02 help (MACs, batch size, latency) but each bridge to them is explained again where it appears. |
 | **Position in course** | Third of five modules; uses the hardware (Module 01) and network (Module 02) vocabulary and prepares Modules 04-05 |
@@ -21,6 +21,7 @@
 - [Glossary (all sections)](#glossary-all-sections)
 - [Answer Key (all sections)](#answer-key-all-sections)
 - [References (all sections)](#references-all-sections)
+- [Photo credits](#photo-credits)
 
 ---
 
@@ -773,6 +774,10 @@ By the end of this section, you should be able to:
 
 Four-legged ("quadruped") robots, often called **robot dogs**, are used for inspection, research and exploration. Walking is hard to program by hand: the robot is unstable, the ground varies, contact with the floor is brief and violent, and small errors can cause a fall. Traditionally, engineers designed controllers from models of the robot's physics. Over the last decade, researchers have shown that policies *learned* by reinforcement learning can walk, run, recover from falls and cross rough ground on real quadrupeds (Hwangbo et al., 2019; Lee et al., 2020).
 
+![The ANYmal four-legged robot standing outdoors](assets/photos/anymal-robot-dog.jpg)
+
+**Photo 5.1 — A real robot dog.** ANYmal, a quadruped robot whose walking controllers are trained with reinforcement learning in simulation (Section 5.4) before running on the real machine. *Photo: Auledas, CC BY-SA 4.0, via Wikimedia Commons ([source](https://commons.wikimedia.org/wiki/File:ANYmal_ARCHE_2019_1.jpg)).*
+
 **Figure 5.1.** The learning pipeline for a robot dog. Training happens in simulation on GPUs in a data centre; the learned policy is then copied onto the robot, where it runs in real time. *Source: author's own diagram, based on Hwangbo et al. (2019) and Rudin et al. (2022).*
 
 ```mermaid
@@ -1111,3 +1116,9 @@ Benefit: the policy becomes robust to differences between the simulator and real
 - Tobin, J., Fong, R., Ray, A., Schneider, J., Zaremba, W., & Abbeel, P. (2017). Domain randomization for transferring deep neural networks from simulation to the real world. *Proceedings of IROS 2017*.
 - Watkins, C. J. C. H., & Dayan, P. (1992). Q-learning. *Machine Learning*, 8(3-4), 279-292.
 - Watson, J. B. (1913). Psychology as the behaviorist views it. *Psychological Review*, 20(2), 158-177.
+
+## Photo credits
+
+All real-world photos in this module come from Wikimedia Commons under free licences (CC BY, CC BY-SA or CC0). They are the same photos used in the Final Study Guide (see `Stage3-Final/Photo_Credits.txt`).
+
+- *ANYmal ARCHE 2019 1.jpg*. Auledas, CC BY-SA 4.0. <https://commons.wikimedia.org/wiki/File:ANYmal_ARCHE_2019_1.jpg> (file: `assets/photos/anymal-robot-dog.jpg`)
