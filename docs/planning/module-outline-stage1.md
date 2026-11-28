@@ -1,5 +1,7 @@
 # Module Outline — Hardware, Networks & Behaviourist AI
 
+> **Superseded (kept as a record).** This was the Stage 1 outline. The final module overview, learning outcomes and prerequisites are in [`Main/00-Module-Overview.md`](../../Main/00-Module-Overview.md).
+
 ## Intended Learning Outcomes
 By the end of this module, learners should be able to:
 1. Identify CPU, GPU, TPU, memory, and sensors and explain their functions in AI systems.
