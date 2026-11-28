@@ -21,6 +21,7 @@
 - [Glossary (all sections)](#glossary-all-sections)
 - [Answer Key (all sections)](#answer-key-all-sections)
 - [References (all sections)](#references-all-sections)
+- [Photo credits](#photo-credits)
 
 ---
 

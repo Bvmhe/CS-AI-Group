@@ -21,7 +21,7 @@
 9. [Glossary (all sections)](#glossary-all-sections)
 10. [Answer Key (all sections)](#answer-key-all-sections)
 11. [References (all sections)](#references-all-sections)
-12. [Scope notes and known gaps](#scope-notes-and-known-gaps)
+12. [Photo credits](#photo-credits)
 
 ## Module overview
 
